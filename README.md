@@ -6,10 +6,31 @@
 [![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## 📖 Executive Summary
+## Summary
 The **Hybrid Cloud and Distributed Ledger E-Voting System** is an enterprise-grade, tamper-proof electronic voting application. This project bridges traditional serverless cloud computing with Web3 Distributed Ledger Technology (DLT).
 
 By decoupling user management from vote immutability, the system utilizes an AWS serverless backend for fast user authentication, authorization, and API routing, alongside the Hedera public network for consensus and immutable vote logging. This architecture achieves high throughput for public elections while maintaining complete cryptographic security against database manipulation.
+
+---
+##  Core Components & Tech Stack
+
+| Layer | Component | Function |
+| --- | --- | --- |
+| **Frontend** | **React & Amazon CloudFront/S3** | Delivers a fast, responsive user dashboard with global low-latency content distribution. |
+| **Identity** | **Amazon Cognito** | Authenticates users, issues secure JWT tokens, and enforces electoral registration constraints. |
+| **API & Compute** | **Amazon API Gateway & AWS Lambda** | Serverless architecture that validates API payloads and securely signs Hedera ledger transactions via `@hashgraph/sdk`. |
+| **State Tracking** | **Amazon DynamoDB** | Tracks voter participation states to enforce a strict "one person, one vote" policy before sending data to the chain. |
+| **Consensus** | **Hedera Consensus Service (HCS)** | Assigns immutable, cryptographic timestamps to transactions across a decentralized consensus network. |
+| **Public Audit** | **Hedera Mirror Nodes & HashScan** | Provides read-only APIs allowing voters and external auditors to independently aggregate vote tallies. |
+
+---
+
+##  Key Features
+
+* **Cryptographic Immutability:** Votes logged to the Hedera Consensus Service cannot be modified or deleted by any cloud administrator or malicious actor.
+* **High Performance & Low Latency:** Leverages Hashgraph's aBFT consensus, processing 10,000+ TPS with finality in 3–5 seconds.
+* **Predictable Micro-Transaction Costs:** Uses Hedera Consensus Service topics rather than gas-heavy smart contracts, keeping transaction fees fixed at $0.0001 USD.
+* **Decoupled Verification:** Live election results are tallied directly from Hedera Mirror Nodes, bypassing the AWS database to ensure transparent auditing.
 
 ---
 
@@ -117,27 +138,7 @@ graph TD
 
 ---
 
-##  Core Components & Tech Stack
 
-| Layer | Component | Function |
-| --- | --- | --- |
-| **Frontend** | **React & Amazon CloudFront/S3** | Delivers a fast, responsive user dashboard with global low-latency content distribution. |
-| **Identity** | **Amazon Cognito** | Authenticates users, issues secure JWT tokens, and enforces electoral registration constraints. |
-| **API & Compute** | **Amazon API Gateway & AWS Lambda** | Serverless architecture that validates API payloads and securely signs Hedera ledger transactions via `@hashgraph/sdk`. |
-| **State Tracking** | **Amazon DynamoDB** | Tracks voter participation states to enforce a strict "one person, one vote" policy before sending data to the chain. |
-| **Consensus** | **Hedera Consensus Service (HCS)** | Assigns immutable, cryptographic timestamps to transactions across a decentralized consensus network. |
-| **Public Audit** | **Hedera Mirror Nodes & HashScan** | Provides read-only APIs allowing voters and external auditors to independently aggregate vote tallies. |
-
----
-
-##  Key Features
-
-* **Cryptographic Immutability:** Votes logged to the Hedera Consensus Service cannot be modified or deleted by any cloud administrator or malicious actor.
-* **High Performance & Low Latency:** Leverages Hashgraph's aBFT consensus, processing 10,000+ TPS with finality in 3–5 seconds.
-* **Predictable Micro-Transaction Costs:** Uses Hedera Consensus Service topics rather than gas-heavy smart contracts, keeping transaction fees fixed at $0.0001 USD.
-* **Decoupled Verification:** Live election results are tallied directly from Hedera Mirror Nodes, bypassing the AWS database to ensure transparent auditing.
-
----
 
 ##  Setup & Installation
 
