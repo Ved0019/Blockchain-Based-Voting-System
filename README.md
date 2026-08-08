@@ -4,7 +4,7 @@
 [![AWS Serverless](https://img.shields.io/badge/AWS-Serverless-FF9900?logo=amazonaws)](https://aws.amazon.com/)
 [![Hedera Hashgraph](https://img.shields.io/badge/Hedera-HCS-222222?logo=hedera)](https://hedera.com/)
 [![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react)](https://reactjs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## 📖 Executive Summary
 The **Hybrid Cloud and Distributed Ledger E-Voting System** is an enterprise-grade, tamper-proof electronic voting application. This project bridges traditional serverless cloud computing with Web3 Distributed Ledger Technology (DLT).
@@ -13,7 +13,7 @@ By decoupling user management from vote immutability, the system utilizes an AWS
 
 ---
 
-## 📂 Project Directory Structure
+## Project Directory Structure
 
 ```text
 hybrid-cloud-evoting-system/
@@ -43,7 +43,7 @@ hybrid-cloud-evoting-system/
 
 ---
 
-## 📐 System Architecture
+##  System Architecture
 
 The following diagram illustrates the hybrid data pipeline, moving from user authentication through serverless AWS compute down to Hedera's decentralized ledger.
 
@@ -117,7 +117,7 @@ graph TD
 
 ---
 
-## ⚡ Core Components & Tech Stack
+##  Core Components & Tech Stack
 
 | Layer | Component | Function |
 | --- | --- | --- |
@@ -130,7 +130,7 @@ graph TD
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
 * **Cryptographic Immutability:** Votes logged to the Hedera Consensus Service cannot be modified or deleted by any cloud administrator or malicious actor.
 * **High Performance & Low Latency:** Leverages Hashgraph's aBFT consensus, processing 10,000+ TPS with finality in 3–5 seconds.
@@ -139,7 +139,7 @@ graph TD
 
 ---
 
-## 🛠️ Setup & Installation
+##  Setup & Installation
 
 ### 1. Prerequisites
 
@@ -204,7 +204,7 @@ npm start
 
 ---
 
-## 🔄 Transaction Lifecycle Workflow
+##  Transaction Lifecycle Workflow
 
 1. **Authentication:** Voter logs in via React UI; Amazon Cognito issues a signed JWT token.
 2. **Payload Submission:** The React app sends an HTTP `POST` request with the selected `candidateId` and JWT to Amazon API Gateway.
@@ -215,10 +215,10 @@ npm start
 
 ---
 
-## 🤝 Contributing & License
+##  Contributing & License
 
 * **Contributing:** Issues and pull requests are welcome. Feel free to open an issue to discuss proposed architectural modifications.
-* **License:** This project is open-source and available under the [MIT License](https://www.google.com/search?q=LICENSE).
+* **License:** This project is open-source and available under the Apache License 2.0.
 
 ```
 
