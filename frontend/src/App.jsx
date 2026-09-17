@@ -9,7 +9,7 @@ const CANDIDATES = [
 ];
 
 // Hedera Testnet Mirror Node URL and your Topic ID
-const HCS_TOPIC_ID = "0.0.yyyyy"; // <-- REPLACE WITH YOUR HCS_TOPIC_ID
+const HCS_TOPIC_ID = "0.0.10589786"; // <-- REPLACE WITH YOUR HCS_TOPIC_ID
 const MIRROR_NODE_URL = `https://testnet.mirrornode.hedera.com/api/v1/topics/${HCS_TOPIC_ID}/messages`;
 
 export default function App() {
