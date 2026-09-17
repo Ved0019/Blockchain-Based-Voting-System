@@ -7,66 +7,78 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 1. Initialize Hedera Client from .env variables
-const myAccountId = process.env.HEDERA_ACCOUNT_ID;
-const myPrivateKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
+// Initialize Hedera Client
+const client = Client.forTestnet();
+client.setOperator(process.env.HEDERA_ACCOUNT_ID, PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY));
 const topicId = process.env.HCS_TOPIC_ID;
 
-const client = Client.forTestnet();
-client.setOperator(myAccountId, myPrivateKey);
-
-// 2. Simulate Amazon DynamoDB (In-memory Set for local testing)
+// Local Memory Database (Simulating DynamoDB)
 const voterRegistry = new Set();
 
-// 3. Create the API endpoint to cast a vote
-app.post('/castVote', async (req, res) => {
+// ----------------------------------------------------
+// MOCK AUTHENTICATION MIDDLEWARE (Simulating Cognito)
+// ----------------------------------------------------
+function requireRole(requiredRole) {
+    return (req, res, next) => {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) return res.status(401).json({ error: "Unauthorized: No token provided" });
+
+        const token = authHeader.split(" ")[1];
+
+        // Simulate decoding an Admin JWT
+        if (token === "mock-admin-token" && requiredRole === "Admins") {
+            req.user = { sub: "admin-system", group: "Admins" };
+            return next();
+        }
+        
+        // Simulate decoding a Voter JWT (Format: mock-voter-token-[ID])
+        if (token.startsWith("mock-voter-token") && requiredRole === "Voters") {
+            const extractedId = token.split("token-")[1];
+            req.user = { sub: extractedId, group: "Voters" };
+            return next();
+        }
+        
+        return res.status(403).json({ error: "Forbidden: Insufficient privileges for this action." });
+    };
+}
+
+// ----------------------------------------------------
+// SECURE ENDPOINTS
+// ----------------------------------------------------
+
+// 1. Voter Endpoint (Strictly for Voters)
+app.post('/castVote', requireRole("Voters"), async (req, res) => {
     try {
-        const { voterId, candidateId } = req.body;
+        const voterId = req.user.sub; // Identity is strictly pulled from the token
+        const { candidateId } = req.body;
 
-        if (!voterId || !candidateId) {
-            return res.status(400).json({ error: "Missing voterId or candidateId" });
-        }
-
-        // AWS Lambda Step: Prevent Double Voting
         if (voterRegistry.has(voterId)) {
-            return res.status(403).json({ error: "This user has already cast a vote." });
+            return res.status(403).json({ error: "Transaction Denied: You have already cast a vote." });
         }
 
-        // Construct the vote payload
-        const votePayload = JSON.stringify({
-            candidateId: candidateId,
-            timestamp: new Date().toISOString()
-        });
-
-        console.log(`Submitting vote for Candidate ${candidateId} to Hedera...`);
-
-        // Hedera Step: Submit to Consensus Service
+        const votePayload = JSON.stringify({ candidateId, timestamp: new Date().toISOString() });
         const sendResponse = await new TopicMessageSubmitTransaction({
-            topicId: topicId,
+            topicId,
             message: votePayload,
         }).execute(client);
-
-        const getReceipt = await sendResponse.getReceipt(client);
         
-        // Lock the voter's ID so they can't vote again
         voterRegistry.add(voterId);
-
-        console.log(`Success! Transaction ID: ${sendResponse.transactionId.toString()}`);
 
         res.status(200).json({
             message: "Vote successfully recorded on Hedera!",
-            transactionId: sendResponse.transactionId.toString(),
-            status: getReceipt.status.toString()
+            transactionId: sendResponse.transactionId.toString()
         });
-
     } catch (error) {
-        console.error("Error casting vote:", error);
+        console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-// 4. Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Backend Server running on http://localhost:${PORT}`);
+// 2. Admin Endpoint (Strictly for Admins)
+app.post('/api/admin/reset', requireRole("Admins"), (req, res) => {
+    voterRegistry.clear(); // Clears the local database for the next election
+    res.status(200).json({ message: "Election registry reset. Ready for new voters." });
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
