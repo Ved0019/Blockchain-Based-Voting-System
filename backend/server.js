@@ -56,6 +56,28 @@ function requireRole(requiredRole) {
 
 // ------------------- ROUTES -------------------
 
+// Public: Get API Information
+app.get("/api/info", (req, res) => {
+  res.json({
+    name: "Blockchain-Based Voting System API",
+    version: "1.0.0",
+    description: "Hybrid Web2.5 architecture for secure electronic voting",
+    endpoints: {
+      "GET /api/election": "Get election status and candidate list",
+      "POST /castVote": "Submit a vote (requires voter authentication)",
+      "GET /api/config": "Get frontend configuration",
+      "POST /api/admin/candidates": "Register a new candidate (admin only)",
+      "POST /api/admin/voters": "Enroll a new voter (admin only)",
+      "POST /api/admin/toggle-status": "Toggle election active status (admin only)",
+      "POST /api/admin/reset": "Reset voter participation (admin only)"
+    },
+    authentication: {
+      "admin": "Authorization: Bearer mock-admin-token",
+      "voter": "Authorization: Bearer mock-voter-token-[VOTER_ID]"
+    }
+  });
+}
+
 // Public: Get Configuration
 app.get("/api/config", (req, res) => {
   res.json({
@@ -63,7 +85,7 @@ app.get("/api/config", (req, res) => {
     mirrorNodeUrl: `https://testnet.mirrornode.hedera.com/api/v1/topics/${process.env.HCS_TOPIC_ID}/messages`,
     backendUrl: process.env.BACKEND_URL || "http://localhost:5000"
   });
-});
+}
 
 // Public: Get Election State & Candidates
 app.get("/api/election", async (req, res) => {

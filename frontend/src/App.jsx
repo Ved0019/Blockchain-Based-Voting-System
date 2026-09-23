@@ -252,7 +252,6 @@ function AdminDashboard({ onLogout }) {
         </div>
         <form onSubmit={handleRegisterCandidate}>
           <div>
-            <label>
             <label>Candidate Name</label>
             <input
               type="text"
