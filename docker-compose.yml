@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: voting-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=evoting_db
+
+  backend:
+    build: ./backend
+    container_name: voting-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/evoting_db
+      - PORT=5000
+      - HEDERA_NETWORK=testnet
+      - HEDERA_ACCOUNT_ID=0.0.9733911
+      - HEDERA_PRIVATE_KEY=3030020100300706052b8104000a040a22042098b625dd2d39735d8fd2d337b51ce8cf5e359a32d880315960925196a22bd668
+      - HCS_TOPIC_ID=0.0.10589786
+      - FRONTEND_API_URL=http://localhost:5173
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./frontend
+    container_name: voting-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_BACKEND_URL=http://localhost:5000
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+volumes:
+  mongodb_data:

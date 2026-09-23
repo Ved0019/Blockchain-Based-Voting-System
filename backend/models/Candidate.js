@@ -1,9 +1,26 @@
 const mongoose = require("mongoose");
 
 const candidateSchema = new mongoose.Schema({
-  candidateId: { type: String, required: true, unique: true },
-  name: { type: String, required: true },
-  party: { type: String, required: true }
+  candidateId: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true
+  },
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  party: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  ipfsPhotoHash: {
+    type: String,
+    default: ""
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Candidate", candidateSchema);

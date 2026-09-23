@@ -19,7 +19,12 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error("MongoDB Connection Error:", err));
 
 // 2. Hedera Client Initialization
-const client = Client.forTestnet();
+let client;
+if (process.env.HEDERA_NETWORK === "localnet") {
+  client = Client.forLocalnet();
+} else {
+  client = Client.forTestnet();
+}
 client.setOperator(
   process.env.HEDERA_ACCOUNT_ID,
   PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY)
@@ -51,6 +56,15 @@ function requireRole(requiredRole) {
 
 // ------------------- ROUTES -------------------
 
+// Public: Get Configuration
+app.get("/api/config", (req, res) => {
+  res.json({
+    hederaTopicId: process.env.HCS_TOPIC_ID,
+    mirrorNodeUrl: `https://testnet.mirrornode.hedera.com/api/v1/topics/${process.env.HCS_TOPIC_ID}/messages`,
+    backendUrl: process.env.BACKEND_URL || "http://localhost:5000"
+  });
+});
+
 // Public: Get Election State & Candidates
 app.get("/api/election", async (req, res) => {
   try {
@@ -76,19 +90,27 @@ app.post("/castVote", requireRole("Voters"), async (req, res) => {
     const voterId = req.user.sub;
     const { candidateId } = req.body;
 
-    // Check voter enrollment and double-voting state
-    const voter = await Voter.findOne({ voterId });
-    if (!voter) {
-      return res.status(401).json({ error: "Voter ID not found in electoral roll." });
-    }
-    if (voter.hasVoted) {
-      return res.status(403).json({ error: "Duplicate ballot: You have already cast a vote." });
-    }
-
     // Validate candidate
     const candidate = await Candidate.findOne({ candidateId });
     if (!candidate) {
       return res.status(400).json({ error: "Invalid candidate selected." });
+    }
+
+    // Atomically update voter if they haven't voted yet
+    const voter = await Voter.findOneAndUpdate(
+      { voterId, hasVoted: false },
+      { hasVoted: true, votedAt: new Date() },
+      { new: true }
+    );
+
+    if (!voter) {
+      // Check if the voter exists at all (to give appropriate error)
+      const existingVoter = await Voter.findOne({ voterId });
+      if (!existingVoter) {
+        return res.status(401).json({ error: "Voter ID not found in electoral roll." });
+      } else {
+        return res.status(403).json({ error: "Duplicate ballot: You have already cast a vote." });
+      }
     }
 
     // Submit payload to Hedera Consensus Service
@@ -103,11 +125,6 @@ app.post("/castVote", requireRole("Voters"), async (req, res) => {
     }).execute(client);
 
     const receipt = await txResponse.getReceipt(client);
-
-    // Update MongoDB status
-    voter.hasVoted = true;
-    voter.votedAt = new Date();
-    await voter.save();
 
     res.json({
       message: "Vote recorded on Hedera!",
