@@ -195,11 +195,11 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
     }
 
     // Atomically update voter (TEMPORARILY DISABLED UNIQUE VOTE CONSTRAINT FOR TESTING)
-    // Normally we would check { voterId: voterId, hasVoted: false } to prevent double voting
+// Normally we would check { voterId: voterId, hasVoted: false } to prevent double voting
     const voter = await Voter.findOneAndUpdate(
       { voterId: voterId }, // TEMPORARY: Removed hasVoted check to allow testing multiple votes
       { hasVoted: true, votedAt: new Date() },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!voter) {
