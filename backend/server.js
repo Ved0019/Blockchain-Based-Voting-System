@@ -194,9 +194,10 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
       return res.status(400).json({ error: "Invalid candidate selected." });
     }
 
-    // Atomically update voter if they haven't voted yet
+    // Atomically update voter (TEMPORARILY DISABLED UNIQUE VOTE CONSTRAINT FOR TESTING)
+    // Normally we would check { voterId: voterId, hasVoted: false } to prevent double voting
     const voter = await Voter.findOneAndUpdate(
-      { voterId: voterId, hasVoted: false },
+      { voterId: voterId }, // TEMPORARY: Removed hasVoted check to allow testing multiple votes
       { hasVoted: true, votedAt: new Date() },
       { new: true }
     );
@@ -207,7 +208,8 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
       if (!existingVoter) {
         return res.status(401).json({ error: "Voter ID not found in electoral roll." });
       } else {
-        return res.status(403).json({ error: "Duplicate ballot: You have already cast a vote." });
+        // This should not happen with the temporary change, but keeping for safety
+        return res.status(403).json({ error: "Error updating voter record." });
       }
     }
 

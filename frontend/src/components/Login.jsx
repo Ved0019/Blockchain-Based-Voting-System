@@ -14,7 +14,8 @@ export function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL || "http://localhost:5000"}/api/auth/login`, {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+      const res = await axios.post(`${backendUrl}/api/auth/login`, {
         voterId: voterId.toUpperCase(),
         password,
       });
