@@ -106,7 +106,7 @@ app.get("/api/info", (req, res) => {
       "JWT": "Authorization: Bearer <access_token>",
       "token_obtainment": "POST /api/auth/login with { voterId, password }"
     }
-  );
+  });
 });
 
 // Public: Get Configuration
