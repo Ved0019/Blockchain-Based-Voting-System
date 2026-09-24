@@ -9,7 +9,7 @@ require("dotenv").config();
 const Voter = require("./models/Voter");
 const Candidate = require("./models/Candidate");
 const Election = require("./models/Election");
-const { requestOTP, verifyOTP, adminLogin } = require("./controllers/auth");
+const { login } = require("./controllers/auth");
 
 // Environment validation
 const requiredEnvVars = [
@@ -85,12 +85,7 @@ const requireRole = (requiredRole) => {
   };
 };
 
-// OTP endpoints
-app.post('/api/auth/request-otp', requestOTP);
-app.post('/api/auth/verify-otp', verifyOTP);
-
-// Admin login endpoint (bypasses OTP)
-app.post('/api/admin/login', adminLogin);
+app.post('/api/auth/login', login);
 
 // Public: Get API Information
 app.get("/api/info", (req, res) => {
@@ -99,9 +94,7 @@ app.get("/api/info", (req, res) => {
     version: "1.0.0",
     description: "Hybrid Web2.5 architecture for secure electronic voting",
     endpoints: {
-      "POST /api/auth/request-otp": "Request OTP for voter ID",
-      "POST /api/auth/verify-otp": "Verify OTP and obtain JWT token",
-      "POST /api/admin/login": "Admin login (bypasses OTP) to obtain JWT token",
+      "POST /api/auth/login": "Login with voterId and password to obtain JWT token",
       "GET /api/election": "Get election status and candidate list",
       "POST /castVote": "Submit a vote (requires voter authentication)",
       "GET /api/config": "Get frontend configuration",
@@ -112,8 +105,7 @@ app.get("/api/info", (req, res) => {
     },
     authentication: {
       "JWT": "Authorization: Bearer <access_token>",
-      "token_obtainment_voters": "POST /api/auth/request-otp with { voterId }, then POST /api/auth/verify-otp with { voterId, otp }",
-      "token_obtainment_admin": "POST /api/admin/login with { voterId, password }"
+      "token_obtainment": "POST /api/auth/login with { voterId, password }"
     }
   });
 });
@@ -185,12 +177,23 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
       timestamp: new Date().toISOString()
     });
 
-    const txResponse = await new TopicMessageSubmitTransaction({
-      topicId,
-      message: payload,
-    }).execute(client);
-
-    const receipt = await txResponse.getReceipt(client);
+    let txResponse;
+    let receipt;
+    try {
+      txResponse = await new TopicMessageSubmitTransaction({
+        topicId,
+        message: payload,
+      }).execute(client);
+      receipt = await txResponse.getReceipt(client);
+    } catch (hederaErr) {
+      // Revert voter update on Hedera failure
+      await Voter.findOneAndUpdate(
+        { voterId: voterId },
+        { hasVoted: false, votedAt: null }
+      );
+      console.error("Hedera transaction failed, voter rollback executed:", hederaErr);
+      return res.status(500).json({ error: "Failed to broadcast vote to ledger. Voter participation reset." });
+    }
 
     res.json({
       message: "Vote recorded on Hedera!",
