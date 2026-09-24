@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import * as jwt_decode from "jwt-decode";
 
 // --- 1. LOGIN SCREEN ---
 function Login({ onLogin }) {
@@ -12,7 +12,7 @@ function Login({ onLogin }) {
   const [error, setError] = useState("");
 
   const handleAuth = async (e) => {
-    e.preventError();
+    e.preventDefault();
     setError("");
     setLoading(true);
 
@@ -24,7 +24,7 @@ function Login({ onLogin }) {
       });
 
       // Decode token to get user info
-      const decoded = jwt_decode(res.data.token);
+      const decoded = jwt_decode.default(res.data.token);
       onLogin({
         token: res.data.token,
         voterId: decoded.voterId,
@@ -297,7 +297,7 @@ function AdminDashboard({ token, onLogout }) {
         ) : (
           <button className="outline-button" disabled>
             Loading...
-          </button>
+          )
         )}
       </section>
 
@@ -335,7 +335,7 @@ function AdminDashboard({ token, onLogout }) {
       <section className="admin-action">
         <div>
           <p className="eyebrow">Enroll Voter</p>
-          <h2>Add voter to electoral roll</h2>
+          <h2>Add voter to electoral roll</p>
           <p className="section-copy">Enter voter ID and name to enroll a new voter.</p>
         </div>
         <form onSubmit={handleEnrollVoter}>
