@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
-import * as jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 // --- 1. LOGIN SCREEN ---
 function Login({ onLogin }) {
-  const [role, setRole] = useState("Voters");
-  const [identifier, setIdentifier] = useState("");
+  const [voterId, setVoterId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,19 +16,17 @@ function Login({ onLogin }) {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/login", {
-        identifier: identifier.toUpperCase(),
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        voterId: voterId.toUpperCase(),
         password,
-        role: role.toLowerCase()
       });
 
       // Decode token to get user info
-      const decoded = jwt_decode.default(res.data.token);
+      const decoded = jwtDecode(res.data.token);
       onLogin({
         token: res.data.token,
-        voterId: decoded.voterId,
+        voterId: decoded.sub,
         role: decoded.role,
-        name: decoded.name
       });
     } catch (err) {
       setError(err.response?.data?.error || "Authentication failed");
@@ -50,20 +47,14 @@ function Login({ onLogin }) {
       <section className="auth-panel">
         <div className="panel-heading"><p className="eyebrow">Secure access</p><h2>Welcome to the ballot</h2><p>Authenticate to continue to your voting workspace.</p></div>
         <form onSubmit={handleAuth}>
-          <label htmlFor="role">Account type</label>
-          <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="Voters">Login as Voter</option>
-            <option value="Admins">Login as Administrator</option>
-          </select>
-
           <div className="mb-3">
-            <label htmlFor="identifier">Identifier</label>
+            <label htmlFor="voterId">Voter ID</label>
             <input
-              id="identifier"
+              id="voterId"
               type="text"
-              placeholder="Enter your Voter ID or Admin ID"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder="Enter your Voter ID"
+              value={voterId}
+              onChange={(e) => setVoterId(e.target.value)}
               required
             />
           </div>
@@ -99,11 +90,11 @@ function Login({ onLogin }) {
   );
 }
 
-// --- 2. ADMIN DASHBOARD ---
-function AdminDashboard({ token, onLogout }) {
+// --- 2. ADMIN CONSOLE ---
+function AdminConsole({ token, onLogout }) {
   const [tallies, setTallies] = useState({});
   const [newCandidate, setNewCandidate] = useState({ name: "", party: "" });
-  const [newVoter, setNewVoter] = useState({ voterId: "", name: "" });
+  const [newVoter, setNewVoter] = useState({ voterId: "", name: "", password: "" });
   const [adminMessage, setAdminMessage] = useState("");
   const [electionData, setElectionData] = useState(null);
   const [config, setConfig] = useState(null);
@@ -114,7 +105,12 @@ function AdminDashboard({ token, onLogout }) {
     const fetchConfig = async () => {
       try {
         const res = await axios.get("/api/config");
-        setConfig(res.data);
+        setConfig({
+          ...res.data,
+          hederaTopicId: res.data.hederaTopicId || "0.0.10589786",
+          mirrorNodeUrl: res.data.mirrorNodeUrl || `https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10589786/messages`,
+          backendUrl: res.data.backendUrl || "http://localhost:5000"
+        });
       } catch (err) {
         console.error("Failed to load config:", err);
         // Fallback defaults
@@ -195,17 +191,17 @@ function AdminDashboard({ token, onLogout }) {
 
   const handleEnrollVoter = async (e) => {
     e.preventDefault();
-    if (!newVoter.voterId) {
-      setAdminMessage("Voter ID is required.");
+    if (!newVoter.voterId || !newVoter.name || !newVoter.password) {
+      setAdminMessage("Voter ID, name, and password are required.");
       return;
     }
     try {
       const res = await axios.post(`${config.backendUrl}/api/admin/voters`,
-        { voterId: newVoter.voterId, name: newVoter.name },
+        { voterId: newVoter.voterId, name: newVoter.name, password: newVoter.password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAdminMessage("Voter enrolled: " + newVoter.voterId);
-      setNewVoter({ voterId: "", name: "" });
+      setNewVoter({ voterId: "", name: "", password: "" });
       // Refetch election data
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
@@ -297,7 +293,7 @@ function AdminDashboard({ token, onLogout }) {
         ) : (
           <button className="outline-button" disabled>
             Loading...
-          )
+          </button>
         )}
       </section>
 
@@ -335,8 +331,8 @@ function AdminDashboard({ token, onLogout }) {
       <section className="admin-action">
         <div>
           <p className="eyebrow">Enroll Voter</p>
-          <h2>Add voter to electoral roll</p>
-          <p className="section-copy">Enter voter ID and name to enroll a new voter.</p>
+          <h2>Add voter to electoral roll</h2>
+          <p className="section-copy">Enter voter ID, name, and password to enroll a new voter.</p>
         </div>
         <form onSubmit={handleEnrollVoter}>
           <div>
@@ -354,6 +350,16 @@ function AdminDashboard({ token, onLogout }) {
               type="text"
               value={newVoter.name}
               onChange={(e) => setNewVoter({ ...newVoter, name: e.target.value })}
+              required
+            />
+          </div>
+          <div>
+            <label>Password</label>
+            <input
+              type="password"
+              value={newVoter.password}
+              onChange={(e) => setNewVoter({ ...newVoter, password: e.target.value })}
+              required
             />
           </div>
           <button className="primary-button" type="submit">Enroll Voter <span aria-hidden="true">↗</span></button>
@@ -398,21 +404,27 @@ function AdminDashboard({ token, onLogout }) {
   );
 }
 
-// --- 3. VOTER BALLOT ---
-function VoterDashboard({ token, onLogout }) {
+// --- 3. VOTER BOOTH ---
+function VoterBooth({ token, onLogout }) {
   const [selected, setSelected] = useState("");
   const [status, setStatus] = useState("");
   const [votedTxId, setVotedTxId] = useState("");
   const [electionData, setElectionData] = useState(null);
   const [config, setConfig] = useState(null);
   const [loadingConfig, setLoadingConfig] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   // Fetch configuration on mount
   useEffect(() => {
     const fetchConfig = async () => {
       try {
         const res = await axios.get("/api/config");
-        setConfig(res.data);
+        setConfig({
+          ...res.data,
+          hederaTopicId: res.data.hederaTopicId || "0.0.10589786",
+          mirrorNodeUrl: res.data.mirrorNodeUrl || `https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10589786/messages`,
+          backendUrl: res.data.backendUrl || "http://localhost:5000"
+        });
       } catch (err) {
         console.error("Failed to load config:", err);
         // Fallback defaults
@@ -452,6 +464,7 @@ function VoterDashboard({ token, onLogout }) {
     e.preventDefault();
     if (!selected) return setStatus("Please select a candidate.");
     if (!isActive) return setStatus("Voting is currently closed.");
+    setSubmitLoading(true);
     setStatus("Submitting cryptographic vote...");
 
     try {
@@ -459,10 +472,16 @@ function VoterDashboard({ token, onLogout }) {
         { candidateId: selected },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setStatus(`✅ Success! Tx ID: ${res.data.transactionId}`);
-      setVotedTxId(res.data.transactionId);
+      const rawTxId = res.data.transactionId;
+      // Format transactionId for HashScan: replace @ and . in timestamp with hyphens
+      // Example: 0.0.1234@1598924675.82525000 -> 0.0.1234-1598924675-82525000
+      const formattedTxId = rawTxId.replace('@', '-').replace('.', '-');
+      setVotedTxId(formattedTxId);
+      setStatus(`✅ Success! Your vote has been recorded.`);
     } catch (err) {
       setStatus(`❌ Error: ${err.response?.data?.error || "Failed to vote"}`);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -521,7 +540,7 @@ function VoterDashboard({ token, onLogout }) {
                       value={c.candidateId}
                       checked={selected === c.candidateId}
                       onChange={(e) => setSelected(e.target.value)}
-                      disabled={!isActive || votedTxId}
+                      disabled={!isActive || submitLoading || votedTxId}
                     />
                     <span className="radio-mark" />
                     <span className="candidate-details">
@@ -536,9 +555,9 @@ function VoterDashboard({ token, onLogout }) {
               <button
                 className="primary-button"
                 type="submit"
-                disabled={!isActive || !selected || votedTxId}
+                disabled={!isActive || !selected || submitLoading || votedTxId}
               >
-                Submit encrypted vote <span aria-hidden="true">↗</span>
+                {submitLoading ? "Submitting..." : "Submit encrypted vote"} <span aria-hidden="true">↗</span>
               </button>
             </form>
           )}
@@ -546,7 +565,16 @@ function VoterDashboard({ token, onLogout }) {
           {votedTxId && (
             <div className="vote-confirmation">
               <p>Your vote has been successfully recorded on the ledger.</p>
-              <p>Transaction ID: <code>{votedTxId}</code></p>
+              <p>
+                Transaction ID: <code>{votedTxId}</code>{' '}
+                <a
+                  href={`https://hashscan.io/testnet/transaction/${votedTxId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View on HashScan
+                </a>
+              </p>
             </div>
           )}
           <p className="privacy-note">Your selection is recorded once and cannot be changed.</p>
@@ -592,15 +620,15 @@ export default function App() {
       <Routes>
         <Route
           path="/admin"
-          element={auth.role === "admin" ? <AdminDashboard token={auth.token} onLogout={handleLogout} /> : <Navigate to="/vote" />}
+          element={auth.role === "Admins" ? <AdminConsole token={auth.token} onLogout={handleLogout} /> : <Navigate to="/vote" />}
         />
         <Route
           path="/vote"
-          element={auth.role === "voter" ? <VoterDashboard token={auth.token} onLogout={handleLogout} /> : <Navigate to="/admin" />}
+          element={auth.role === "Voters" ? <VoterBooth token={auth.token} onLogout={handleLogout} /> : <Navigate to="/admin" />}
         />
         <Route
           path="*"
-          element={<Navigate to={auth.role === "admin" ? "/admin" : "/vote"} />}
+          element={<Navigate to={auth.role === "Admins" ? "/admin" : "/vote"} />}
         />
       </Routes>
     </Router>

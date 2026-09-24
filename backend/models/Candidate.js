@@ -17,7 +17,7 @@ const candidateSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  ipfsPhotoHash: {
+  ipfsHash: {
     type: String,
     default: ""
   }

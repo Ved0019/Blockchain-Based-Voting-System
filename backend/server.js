@@ -2,13 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const { Client, PrivateKey, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
 require("dotenv").config();
 
 const Voter = require("./models/Voter");
 const Candidate = require("./models/Candidate");
 const Election = require("./models/Election");
+const { login } = require("./controllers/auth");
 
 // Environment validation
 const requiredEnvVars = [
@@ -33,108 +34,12 @@ app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Authentication middleware
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) return res.status(401).json({ error: 'Access token required' });
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: 'Invalid or expired token' });
-    req.user = user;
-    next();
-  });
-};
-
-// Role-based middleware
-const requireRole = (requiredRole) => {
-  return (req, res, next) => {
-    if (!req.user || !req.user.role) {
-      return res.status(403).json({ error: 'Insufficient permissions' });
-    }
-
-    if (req.user.role !== requiredRole) {
-      return res.status(403).json({ error: 'Insufficient permissions' });
-    }
-
-    next();
-  };
-};
-
-// Login endpoint
-app.post('/api/login', async (req, res) => {
-  try {
-    const { identifier, password, role } = req.body;
-
-    if (!identifier || !password || !role) {
-      return res.status(400).json({ error: 'Identifier, password, and role are required' });
-    }
-
-    if (role !== 'admin' && role !== 'voter') {
-      return res.status(400).json({ error: 'Role must be either admin or voter' });
-    }
-
-    // Find user by identifier (voterId for voters, or special handling for admin)
-    let user;
-    if (role === 'admin') {
-      // For admin, we'll check if there's a voter record with admin role
-      // Or we could use environment variables for admin credentials
-      user = await Voter.findOne({
-        $or: [
-          { voterId: identifier.toUpperCase(), role: 'admin' },
-          { voterId: 'ADMIN', role: 'admin' } // Default admin voterId
-        ]
-      });
-    } else {
-      // For voter, find by voterId
-      user = await Voter.findOne({ voterId: identifier.toUpperCase(), role: 'voter' });
-    }
-
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    // Check password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign(
-      {
-        id: user._id,
-        voterId: user.voterId,
-        role: user.role
-      },
-      JWT_SECRET,
-      { expiresIn: '24h' }
-    );
-
-    res.json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: user._id,
-        voterId: user.voterId,
-        role: user.role,
-        name: user.name
-      }
-    });
-  } catch (err) {
-    console.error('Login error:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-// 1. Database Connection
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/evoting_db";
-mongoose.connect(MONGO_URI)
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Connected to MongoDB."))
   .catch(err => console.error("MongoDB Connection Error:", err));
 
-// 2. Hedera Client Initialization
+// Hedera Client Initialization
 let client;
 if (process.env.HEDERA_NETWORK === "localnet") {
   client = Client.forLocalnet();
@@ -147,7 +52,39 @@ client.setOperator(
 );
 const topicId = process.env.HCS_TOPIC_ID;
 
-// ------------------- ROUTES -------------------
+// Authentication middleware
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.status(401).json({ error: 'Access token required' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid or expired token' });
+    // Set voterId and role from token claims
+    req.voterId = user.sub;
+    req.role = user.role;
+    next();
+  });
+};
+
+// Role-based middleware
+const requireRole = (requiredRole) => {
+  return (req, res, next) => {
+    if (!req.voterId || !req.role) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+
+    if (req.role !== requiredRole) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+
+    next();
+  };
+};
+
+// Login endpoint
+app.post('/api/auth/login', login);
 
 // Public: Get API Information
 app.get("/api/info", (req, res) => {
@@ -156,7 +93,7 @@ app.get("/api/info", (req, res) => {
     version: "1.0.0",
     description: "Hybrid Web2.5 architecture for secure electronic voting",
     endpoints: {
-      "POST /api/login": "Login to obtain JWT token (requires identifier, password, and role)",
+      "POST /api/auth/login": "Login to obtain JWT token (requires voterId and password)",
       "GET /api/election": "Get election status and candidate list",
       "POST /castVote": "Submit a vote (requires voter authentication)",
       "GET /api/config": "Get frontend configuration",
@@ -167,9 +104,9 @@ app.get("/api/info", (req, res) => {
     },
     authentication: {
       "JWT": "Authorization: Bearer <access_token>",
-      "token_obtainment": "POST /api/login with { identifier, password, role }"
+      "token_obtainment": "POST /api/auth/login with { voterId, password }"
     }
-  });
+  );
 });
 
 // Public: Get Configuration
@@ -188,7 +125,7 @@ app.get("/api/election", async (req, res) => {
     if (!election) {
       election = await Election.create({
         title: "General Campus Election",
-        isActive: true,
+        isActive: false, // Default to false as per requirement
         topicId: process.env.HCS_TOPIC_ID
       });
     }
@@ -200,14 +137,14 @@ app.get("/api/election", async (req, res) => {
 });
 
 // Voter: Submit Ballot to Hedera HCS
-app.post("/castVote", authenticateToken, requireRole("voter"), async (req, res) => {
+app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res) => {
   try {
     const election = await Election.findOne();
     if (!election || !election.isActive) {
       return res.status(403).json({ error: "Voting is currently closed." });
     }
 
-    const voterId = req.user.voterId;
+    const voterId = req.voterId; // Extract from JWT sub claim
     const { candidateId } = req.body;
 
     // Validate candidate
@@ -218,14 +155,14 @@ app.post("/castVote", authenticateToken, requireRole("voter"), async (req, res) 
 
     // Atomically update voter if they haven't voted yet
     const voter = await Voter.findOneAndUpdate(
-      { voterId: req.user.voterId, hasVoted: false },
+      { voterId: voterId, hasVoted: false },
       { hasVoted: true, votedAt: new Date() },
       { new: true }
     );
 
     if (!voter) {
       // Check if the voter exists at all (to give appropriate error)
-      const existingVoter = await Voter.findOne({ voterId: req.user.voterId });
+      const existingVoter = await Voter.findOne({ voterId: voterId });
       if (!existingVoter) {
         return res.status(401).json({ error: "Voter ID not found in electoral roll." });
       } else {
@@ -258,7 +195,7 @@ app.post("/castVote", authenticateToken, requireRole("voter"), async (req, res) 
 });
 
 // Admin: Add Candidate
-app.post("/api/admin/candidates", authenticateToken, requireRole("admin"), async (req, res) => {
+app.post("/api/admin/candidates", authenticateToken, requireRole("Admins"), async (req, res) => {
   try {
     const { name, party } = req.body;
     if (!name || !party) return res.status(400).json({ error: "Name and Party are required." });
@@ -274,16 +211,20 @@ app.post("/api/admin/candidates", authenticateToken, requireRole("admin"), async
 });
 
 // Admin: Enroll Voter
-app.post("/api/admin/voters", authenticateToken, requireRole("admin"), async (req, res) => {
+app.post("/api/admin/voters", authenticateToken, requireRole("Admins"), async (req, res) => {
   try {
-    const { voterId, name } = req.body;
-    if (!voterId) return res.status(400).json({ error: "Voter ID required." });
+    const { voterId, name, password } = req.body;
+    if (!voterId || !password) return res.status(400).json({ error: "Voter ID and password are required." });
 
     const cleanId = voterId.trim().toUpperCase();
     const existing = await Voter.findOne({ voterId: cleanId });
     if (existing) return res.status(409).json({ error: "Voter already registered." });
 
-    await Voter.create({ voterId: cleanId, name: name || "Verified Voter" });
+    // Hash the password before saving
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await Voter.create({ voterId: cleanId, name: name || "Verified Voter", password: hashedPassword });
     res.json({ message: `Voter ${cleanId} enrolled.` });
   } catch (err) {
     res.status(500).json({ error: "Could not enroll voter." });
@@ -291,7 +232,7 @@ app.post("/api/admin/voters", authenticateToken, requireRole("admin"), async (re
 });
 
 // Admin: Toggle Poll Status
-app.post("/api/admin/toggle-status", authenticateToken, requireRole("admin"), async (req, res) => {
+app.post("/api/admin/toggle-status", authenticateToken, requireRole("Admins"), async (req, res) => {
   try {
     const election = await Election.findOne();
     if (election) {
@@ -307,7 +248,7 @@ app.post("/api/admin/toggle-status", authenticateToken, requireRole("admin"), as
 });
 
 // Admin: Reset Ballots
-app.post("/api/admin/reset", authenticateToken, requireRole("admin"), async (req, res) => {
+app.post("/api/admin/reset", authenticateToken, requireRole("Admins"), async (req, res) => {
   try {
     await Voter.updateMany({}, { hasVoted: false, votedAt: null });
     res.json({ message: "Voter participation registry reset." });

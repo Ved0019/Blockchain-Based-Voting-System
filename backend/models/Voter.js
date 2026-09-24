@@ -9,11 +9,11 @@ const voterSchema = new mongoose.Schema({
     trim: true,
     index: true
   },
-  name: {
+  password: {
     type: String,
     required: true
   },
-  password: {
+  name: {
     type: String,
     required: true
   },
