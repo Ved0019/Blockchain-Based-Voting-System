@@ -48,7 +48,9 @@ if (process.env.HEDERA_NETWORK === "localnet") {
 }
 client.setOperator(
   process.env.HEDERA_ACCOUNT_ID,
-  PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY)
+  process.env.HEDERA_PRIVATE_KEY.startsWith('0x') || process.env.HEDERA_PRIVATE_KEY.length === 66 
+    ? PrivateKey.fromStringECDSA(process.env.HEDERA_PRIVATE_KEY)
+    : PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY)
 );
 const topicId = process.env.HCS_TOPIC_ID;
 
