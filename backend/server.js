@@ -137,6 +137,46 @@ app.get("/api/election", async (req, res) => {
   }
 });
 
+// Create default test accounts if no voters exist
+const createDefaultAccounts = async () => {
+  try {
+    const voterCount = await Voter.countDocuments();
+    if (voterCount === 0) {
+      console.log("No voters found. Creating default test accounts...");
+
+      // Hash passwords for default accounts
+      const salt = await bcrypt.genSalt(10);
+      const adminPasswordHash = await bcrypt.hash("admin123", salt);
+      const voterPasswordHash = await bcrypt.hash("voter123", salt);
+
+      // Create admin voter
+      await Voter.create({
+        voterId: "ADMIN001",
+        name: "Admin User",
+        password: adminPasswordHash,
+        role: "admin"
+      });
+
+      // Create regular voter
+      await Voter.create({
+        voterId: "VOTER001",
+        name: "Test Voter",
+        password: voterPasswordHash,
+        role: "voter"
+      });
+
+      console.log("Default test accounts created:");
+      console.log("Admin - VoterID: ADMIN001, Password: admin123");
+      console.log("Voter - VoterID: VOTER001, Password: voter123");
+    }
+  } catch (err) {
+    console.error("Error creating default accounts:", err);
+  }
+};
+
+// Call the function to create default accounts
+createDefaultAccounts();
+
 // Voter: Submit Ballot to Hedera HCS
 app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res) => {
   try {

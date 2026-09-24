@@ -51,11 +51,19 @@ export function Login({ onLogin }) {
 
         <form onSubmit={handleLogin}>
           <div className="form-group">
-            <label htmlFor="voterId">Voter ID</label>
+            <label htmlFor="role">Account type</label>
+            <select id="role">
+              <option value="voter">Login as Voter</option>
+              <option value="admin">Login as Administrator</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="voterId">Identifier</label>
             <input
               id="voterId"
               type="text"
-              placeholder="Enter your Voter ID"
+              placeholder="Enter your Voter ID or Admin ID"
               value={voterId}
               onChange={(e) => setVoterId(e.target.value)}
               required

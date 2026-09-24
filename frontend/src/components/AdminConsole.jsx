@@ -2,53 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export function AdminConsole({ token, onLogout }) {
-  const [tallies, setTallies] = useState({}); // We don't use tallies in AdminConsole? Actually we do in the original? Wait, the original AdminConsole does not use tallies. It uses electionData and config.
-  // Actually, the original AdminConsole does not have tallies state. We removed it by mistake. Let's check the original App.jsx lines 98-408.
-  // In the original, AdminConsole has:
-  //   const [tallies, setTallies] = useState({});
-  //   const [newCandidate, setNewCandidate] = useState({ name: "", party: "" });
-  //   const [newVoter, setNewVoter] = useState({ voterId: "", name: "", password: "" });
-  //   const [adminMessage, setAdminMessage] = useState("");
-  //   const [electionData, setElectionData] = useState(null);
-  //   const [config, setConfig] = useState(null);
-  //   const [loadingConfig, setLoadingConfig] = useState(true);
-  // So we need to keep tallies? Actually, the AdminConsole does not use tallies. It is only used in the VoterBooth? Wait, the original App.jsx has two separate uses of tallies: one in AdminConsole and one in VoterBooth? Let's check:
-  // In the original App.jsx, the AdminConsole (lines 98-408) does not have tallies. I see now: I made a mistake when copying. The original AdminConsole does not have tallies. The tallies are in the VoterBooth? Actually, no, the VoterBooth does not have tallies either. The tallies are in the AdminConsole? Let's look at the original App.jsx again (from the earlier read):
-  //   // --- 2. ADMIN CONSOLE ---
-  //   function AdminConsole({ token, onLogout }) {
-  //     const [tallies, setTallies] = useState({});
-  //     const [newCandidate, setNewCandidate] = useState({ name: "", party: "" });
-  //     const [newVoter, setNewVoter] = useState({ voterId: "", name: "", password: "" });
-  //     const [adminMessage, setAdminMessage] = useState("");
-  //     const [electionData, setElectionData] = useState(null);
-  //     const [config, setConfig] = useState(null);
-  //     const [loadingConfig, setLoadingConfig] = useState(true);
-  // So the original AdminConsole does have tallies state. But then in the JSX, I don't see tallies being used. Let's check the JSX of AdminConsole in the original:
-  //   {/* Audit Section */}
-  //   <section className="audit-section">
-  //     <div className="section-title-row">
-  //       <div>
-  //         <h2>Election snapshot</h2>
-  //         <p>Read-only tallies from the Hedera mirror node.</p>
-  //       </div>
-  //       <span className="refresh-label">Updates every 4 seconds</span>
-  //     </div>
-  //     <div className="tally-grid">
-  //       {(electionData.candidates || []).map(c => (
-  //         <article className="tally-card" key={c.candidateId}>
-  //           <div className="candidate-index">0{c.candidateId}</div>
-  //           <p className="eyebrow">Candidate</p>
-  //           <h3>{c.name}</h3>
-  //           <p className="party-name">{c.party}</p>
-  //           <div className="vote-count">{tallies[c.candidateId] || 0}</div>
-  //           <p className="vote-label">verified votes</p>
-  //         </article>
-  //       ))}
-  //     </div>
-  //   </section>
-  // So yes, the AdminConsole uses tallies in the audit section. We must keep it.
-  // We'll include all the state variables.
-
   const [tallies, setTallies] = useState({});
   const [newCandidate, setNewCandidate] = useState({ name: "", party: "", avatarIpfs: "" });
   const [newVoter, setNewVoter] = useState({ voterId: "", name: "", password: "" });
@@ -56,6 +9,7 @@ export function AdminConsole({ token, onLogout }) {
   const [electionData, setElectionData] = useState(null);
   const [config, setConfig] = useState(null);
   const [stats, setStats] = useState({ totalVoters: 0, votedVoters: 0, turnoutPercentage: 0 });
+  const totalVotesCast = Object.values(tallies).reduce((a, b) => a + b, 0);
   const [loadingConfig, setLoadingConfig] = useState(true);
 
   // Fetch configuration on mount
@@ -242,6 +196,11 @@ const handleRegisterCandidate = async (e) => {
           <p className="section-copy">Monitor the election ledger and manage the local registry.</p>
         </div>
         <div className="live-indicator"><span className="status-dot" /> Live mirror node</div>
+        {tallies && (
+          <div className="total-votes-cast">
+            Total votes cast: {totalVotesCast}
+          </div>
+        )}
       </section>
 
       {/* Admin Message */}

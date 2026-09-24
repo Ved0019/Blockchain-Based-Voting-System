@@ -70,13 +70,9 @@ export function VoterBooth({ token, onLogout }) {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const rawTxId = res.data.transactionId;
-      // Format transactionId for HashScan: replace @ and last period with hyphens
-      // Example: 0.0.1234@1598924675.82525000 -> 0.0.1234-1598924675-82525000
-      let formattedTxId = rawTxId.replace('@', '-');
-      const lastDotIndex = formattedTxId.lastIndexOf('.');
-      if (lastDotIndex !== -1) {
-        formattedTxId = formattedTxId.substring(0, lastDotId) + '-' + formattedTxId.substring(lastDotIndex + 1);
-      }
+      // Format transactionId for HashScan: split at '@' and replace '.' in timestamp
+      const [accountId, timestamp] = rawTxId.split('@');
+      const formattedTxId = accountId + '-' + timestamp.replace('.', '-');
       setVotedTxId(formattedTxId);
       setStatus(`✅ Success! Your vote has been recorded.`);
     } catch (err) {
@@ -118,7 +114,7 @@ export function VoterBooth({ token, onLogout }) {
           <p className="eyebrow">2026 Community Election</p>
           <h1>Your voice<br /><em>matters here.</em></h1>
           <p className="section-copy">Select one candidate to submit your encrypted vote to the public ledger.</p>
-          <div className="ballot-meta"><span>01</span><span>of 01</span><div className="progress-line"><i /></div></div>
+          <div className="ballot-meta"><span>01</span><span>01</span><div className="progress-line"><i /></div></div>
         </div>
         <section className="ballot-card">
           <div className="section-title-row">
@@ -147,11 +143,9 @@ export function VoterBooth({ token, onLogout }) {
                     <span className="candidate-details">
                       {c.avatarIpfs ? (
                         <img
-                          src={`https://ipfs.io/ipfs/${c.avatarIpfs}`}
-                          alt={`${c.name} avatar`}
-                          width="34"
-                          height="34"
-                          style={{ borderRadius: "50%", objectFit: "cover", marginRight: "10px" }}
+                          src={`https://gateway.pinata.cloud/ipfs/${c.avatarIpfs}`}
+                          alt={c.name}
+                          className="candidate-avatar"
                         />
                       ) : (
                         <span className="candidate-number">0{index + 1}</span>

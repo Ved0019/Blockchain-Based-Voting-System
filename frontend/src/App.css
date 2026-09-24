@@ -6,9 +6,9 @@
   --line: #e5e7eb;
   --paper: #f9fafb;
   --white: #ffffff;
-  --primary: #3b82f6;
-  --primary-dark: #2563eb;
-  --secondary: #10b981;
+  --primary: #10b981; /* Green theme */
+  --primary-dark: #059669;
+  --secondary: #3b82f6;
   --accent: #f59e0b;
   --success: #10b981;
   --error: #ef4444;
