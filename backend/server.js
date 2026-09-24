@@ -9,7 +9,7 @@ require("dotenv").config();
 const Voter = require("./models/Voter");
 const Candidate = require("./models/Candidate");
 const Election = require("./models/Election");
-const { login } = require("./controllers/auth");
+const { requestOTP, verifyOTP, adminLogin } = require("./controllers/auth");
 
 // Environment validation
 const requiredEnvVars = [
@@ -85,8 +85,12 @@ const requireRole = (requiredRole) => {
   };
 };
 
-// Login endpoint
-app.post('/api/auth/login', login);
+// OTP endpoints
+app.post('/api/auth/request-otp', requestOTP);
+app.post('/api/auth/verify-otp', verifyOTP);
+
+// Admin login endpoint (bypasses OTP)
+app.post('/api/admin/login', adminLogin);
 
 // Public: Get API Information
 app.get("/api/info", (req, res) => {
@@ -95,7 +99,9 @@ app.get("/api/info", (req, res) => {
     version: "1.0.0",
     description: "Hybrid Web2.5 architecture for secure electronic voting",
     endpoints: {
-      "POST /api/auth/login": "Login to obtain JWT token (requires voterId and password)",
+      "POST /api/auth/request-otp": "Request OTP for voter ID",
+      "POST /api/auth/verify-otp": "Verify OTP and obtain JWT token",
+      "POST /api/admin/login": "Admin login (bypasses OTP) to obtain JWT token",
       "GET /api/election": "Get election status and candidate list",
       "POST /castVote": "Submit a vote (requires voter authentication)",
       "GET /api/config": "Get frontend configuration",
@@ -106,7 +112,8 @@ app.get("/api/info", (req, res) => {
     },
     authentication: {
       "JWT": "Authorization: Bearer <access_token>",
-      "token_obtainment": "POST /api/auth/login with { voterId, password }"
+      "token_obtainment_voters": "POST /api/auth/request-otp with { voterId }, then POST /api/auth/verify-otp with { voterId, otp }",
+      "token_obtainment_admin": "POST /api/admin/login with { voterId, password }"
     }
   });
 });
@@ -199,13 +206,13 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
 // Admin: Add Candidate
 app.post("/api/admin/candidates", authenticateToken, requireRole("Admins"), async (req, res) => {
   try {
-    const { name, party } = req.body;
+    const { name, party, avatarIpfs } = req.body;
     if (!name || !party) return res.status(400).json({ error: "Name and Party are required." });
 
     const count = await Candidate.countDocuments();
     const candidateId = (count + 1).toString();
 
-    const newCandidate = await Candidate.create({ candidateId, name, party });
+    const newCandidate = await Candidate.create({ candidateId, name, party, avatarIpfs: avatarIpfs || "" });
     res.json({ message: "Candidate registered.", candidate: newCandidate });
   } catch (err) {
     res.status(500).json({ error: "Could not create candidate." });
@@ -256,6 +263,19 @@ app.post("/api/admin/reset", authenticateToken, requireRole("Admins"), async (re
     res.json({ message: "Voter participation registry reset." });
   } catch (err) {
     res.status(500).json({ error: "Failed to reset registry." });
+  }
+});
+
+// Admin: Get voter statistics
+app.get("/api/admin/stats", authenticateToken, requireRole("Admins"), async (req, res) => {
+  try {
+    const totalVoters = await Voter.countDocuments();
+    const votedVoters = await Voter.countDocuments({ hasVoted: true });
+    const turnoutPercentage = totalVoters > 0 ? (votedVoters / totalVoters) * 100 : 0;
+
+    res.json({ totalVoters, votedVoters, turnoutPercentage: turnoutPercentage.toFixed(2) });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch voter statistics." });
   }
 });
 

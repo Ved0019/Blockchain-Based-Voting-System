@@ -17,7 +17,7 @@ const candidateSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  ipfsHash: {
+  avatarIpfs: {
     type: String,
     default: ""
   }

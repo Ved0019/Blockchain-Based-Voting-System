@@ -4,15 +4,6 @@ const Voter = require("../models/Voter");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Admin override credentials from environment variables
-const ADMIN_VOTER_ID = process.env.ADMIN_VOTER_ID || "ADMIN";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD; // Must be set in .env
-
-/**
- * Login controller
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const login = async (req, res) => {
   try {
     const { voterId, password } = req.body;
@@ -22,39 +13,24 @@ const login = async (req, res) => {
     }
 
     const cleanVoterId = voterId.trim().toUpperCase();
-    let user = null;
-    let role = "";
+    const voter = await Voter.findOne({ voterId: cleanVoterId });
 
-    // Check for admin override credentials
-    if (
-      ADMIN_PASSWORD &&
-      cleanVoterId === ADMIN_VOTER_ID.toUpperCase() &&
-      password === ADMIN_PASSWORD
-    ) {
-      // Admin override successful
-      user = { voterId: ADMIN_VOTER_ID };
-      role = "Admins";
-    } else {
-      // Find voter in database
-      user = await Voter.findOne({ voterId: cleanVoterId });
-      if (!user) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      // Verify password
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      // Set role based on voter's role field (default to voter)
-      role = user.role === "admin" ? "Admins" : "Voters";
+    if (!voter) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
+
+    const isMatch = await bcrypt.compare(password, voter.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // Determine role for token
+    const role = voter.role === "admin" ? "Admins" : "Voters";
 
     // Generate JWT token
     const token = jwt.sign(
       {
-        sub: user.voterId,
+        sub: voter.voterId,
         role: role
       },
       JWT_SECRET,
@@ -65,7 +41,7 @@ const login = async (req, res) => {
       message: "Login successful",
       token,
       user: {
-        voterId: user.voterId,
+        voterId: voter.voterId,
         role: role
       }
     });
