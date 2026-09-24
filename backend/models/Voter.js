@@ -11,7 +11,16 @@ const voterSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    default: "Enrolled Voter"
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ["voter", "admin"],
+    default: "voter"
   },
   hasVoted: {
     type: Boolean,

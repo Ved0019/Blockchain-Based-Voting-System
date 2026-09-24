@@ -1,19 +1,40 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 // --- 1. LOGIN SCREEN ---
 function Login({ onLogin }) {
   const [role, setRole] = useState("Voters");
-  const [voterId, setVoterId] = useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleAuth = (e) => {
-    e.preventDefault();
-    if (role === "Admins") {
-      onLogin({ token: "mock-admin-token", group: "Admins" });
-    } else {
-      if (!voterId) return alert("Please enter a Voter ID");
-      onLogin({ token: `mock-voter-token-${voterId}`, group: "Voters" });
+  const handleAuth = async (e) => {
+    e.preventError();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/login", {
+        identifier: identifier.toUpperCase(),
+        password,
+        role: role.toLowerCase()
+      });
+
+      // Decode token to get user info
+      const decoded = jwt_decode(res.data.token);
+      onLogin({
+        token: res.data.token,
+        voterId: decoded.voterId,
+        role: decoded.role,
+        name: decoded.name
+      });
+    } catch (err) {
+      setError(err.response?.data?.error || "Authentication failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,19 +56,43 @@ function Login({ onLogin }) {
             <option value="Admins">Login as Administrator</option>
           </select>
 
-          {role === "Voters" && (
-            <>
-              <label htmlFor="voter-id">Voter ID</label>
-              <input
-                id="voter-id"
-                type="text"
-                placeholder="e.g. VIT-123"
-                value={voterId}
-                onChange={(e) => setVoterId(e.target.value)}
-              />
-            </>
+          <div className="mb-3">
+            <label htmlFor="identifier">Identifier</label>
+            <input
+              id="identifier"
+              type="text"
+              placeholder="Enter your Voter ID or Admin ID"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && (
+            <div className="alert alert-danger">
+              {error}
+            </div>
           )}
-          <button className="primary-button" type="submit">Continue securely <span aria-hidden="true">↗</span></button>
+
+          <button
+            className="primary-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Logging in..." : "Continue securely"} <span aria-hidden="true">↗</span>
+          </button>
         </form>
       </section>
     </main>
@@ -55,7 +100,7 @@ function Login({ onLogin }) {
 }
 
 // --- 2. ADMIN DASHBOARD ---
-function AdminDashboard({ onLogout }) {
+function AdminDashboard({ token, onLogout }) {
   const [tallies, setTallies] = useState({});
   const [newCandidate, setNewCandidate] = useState({ name: "", party: "" });
   const [newVoter, setNewVoter] = useState({ voterId: "", name: "" });
@@ -136,7 +181,7 @@ function AdminDashboard({ onLogout }) {
     try {
       const res = await axios.post(`${config.backendUrl}/api/admin/candidates`,
         { name: newCandidate.name, party: newCandidate.party },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setAdminMessage("Candidate registered: " + res.data.candidate.name);
       setNewCandidate({ name: "", party: "" });
@@ -157,7 +202,7 @@ function AdminDashboard({ onLogout }) {
     try {
       const res = await axios.post(`${config.backendUrl}/api/admin/voters`,
         { voterId: newVoter.voterId, name: newVoter.name },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setAdminMessage("Voter enrolled: " + newVoter.voterId);
       setNewVoter({ voterId: "", name: "" });
@@ -172,7 +217,7 @@ function AdminDashboard({ onLogout }) {
   const handleToggleStatus = async () => {
     try {
       const res = await axios.post(`${config.backendUrl}/api/admin/toggle-status`, {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setAdminMessage("Election status updated to: " + (res.data.isActive ? "Active" : "Closed"));
       // Refetch election data
@@ -186,7 +231,7 @@ function AdminDashboard({ onLogout }) {
   const handleReset = async () => {
     try {
       await axios.post(`${config.backendUrl}/api/admin/reset`, {},
-        { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } });
+        { headers: { Authorization: `Bearer ${token}` } });
       setAdminMessage("Backend registry cleared. Voters can now vote again.");
       // Refetch election data
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
@@ -198,7 +243,8 @@ function AdminDashboard({ onLogout }) {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    localStorage.removeItem("authGroup");
+    localStorage.removeItem("authVoterId");
+    localStorage.removeItem("authRole");
     onLogout();
   };
 
@@ -210,11 +256,11 @@ function AdminDashboard({ onLogout }) {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark small">V</div>
-          <span>VOTE<span className="brand-accent">/</span>LEDGER</span></div>
-          <div className="topbar-actions">
-            <span className="role-chip admin-chip">Administrator</span>
-            <button className="text-button" onClick={handleLogout}>Log out <span aria-hidden="true">↗</span></button>
-          </div>
+          <span>VOTE<span className="brand-accent">/</span>LEDGER</span>
+        </div>
+        <div className="topbar-actions">
+          <span className="role-chip admin-chip">Administrator</span>
+          <button className="text-button" onClick={handleLogout}>Log out <span aria-hidden="true">↗</span></button>
         </div>
       </header>
       <section className="dashboard-heading">
@@ -234,13 +280,25 @@ function AdminDashboard({ onLogout }) {
         <div className="section-title-row">
           <div>
             <p className="eyebrow">Election Status</p>
-            <h2>{electionData.election.title}</h2>
-            <p className="section-copy">Status: {electionData.election.isActive ? "Active" : "Closed"}</p>
+            {electionData && electionData.election ? (
+              <>
+                <h2>{electionData.election.title}</h2>
+                <p className="section-copy">Status: {electionData.election.isActive ? "Active" : "Closed"}</p>
+              </>
+            ) : (
+              <p>Loading election details...</p>
+            )}
           </div>
         </div>
-        <button className="outline-button" onClick={handleToggleStatus}>
-          {electionData.election.isActive ? "Close Election" : "Open Election"}
-        </button>
+        {electionData && electionData.election ? (
+          <button className="outline-button" onClick={handleToggleStatus}>
+            {electionData.election.isActive ? "Close Election" : "Open Election"}
+          </button>
+        ) : (
+          <button className="outline-button" disabled>
+            Loading...
+          </button>
+        )}
       </section>
 
       {/* Candidate Registration */}
@@ -341,7 +399,7 @@ function AdminDashboard({ onLogout }) {
 }
 
 // --- 3. VOTER BALLOT ---
-function VoterDashboard({ onLogout }) {
+function VoterDashboard({ token, onLogout }) {
   const [selected, setSelected] = useState("");
   const [status, setStatus] = useState("");
   const [votedTxId, setVotedTxId] = useState("");
@@ -399,7 +457,7 @@ function VoterDashboard({ onLogout }) {
     try {
       const res = await axios.post(`${config.backendUrl}/castVote`,
         { candidateId: selected },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("authToken")}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setStatus(`✅ Success! Tx ID: ${res.data.transactionId}`);
       setVotedTxId(res.data.transactionId);
@@ -410,7 +468,8 @@ function VoterDashboard({ onLogout }) {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    localStorage.removeItem("authGroup");
+    localStorage.removeItem("authVoterId");
+    localStorage.removeItem("authRole");
     onLogout();
   };
 
@@ -422,11 +481,11 @@ function VoterDashboard({ onLogout }) {
       <header className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark small">V</div>
-          <span>VOTE<span className="brand-accent">/</span>LEDGER</span></div>
-          <div className="topbar-actions">
-            <span className="role-chip">Verified voter</span>
-            <button className="text-button" onClick={handleLogout}>Exit booth <span aria-hidden="true">↗</span></button>
-          </div>
+          <span>VOTE<span className="brand-accent">/</span>LEDGER</span>
+        </div>
+        <div className="topbar-actions">
+          <span className="role-chip">Verified voter</span>
+          <button className="text-button" onClick={handleLogout}>Exit booth <span aria-hidden="true">↗</span></button>
         </div>
       </header>
       {!isActive && (
@@ -511,9 +570,10 @@ export default function App() {
   // Check for existing auth in localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    const group = localStorage.getItem("authGroup");
-    if (token && group) {
-      setAuth({ token, group });
+    const voterId = localStorage.getItem("authVoterId");
+    const role = localStorage.getItem("authRole");
+    if (token && voterId && role) {
+      setAuth({ token, voterId, role });
     }
     setLoading(false);
   }, []);
@@ -522,7 +582,8 @@ export default function App() {
 
   if (!auth) return <Login onLogin={(authData) => {
     localStorage.setItem("authToken", authData.token);
-    localStorage.setItem("authGroup", authData.group);
+    localStorage.setItem("authVoterId", authData.voterId);
+    localStorage.setItem("authRole", authData.role);
     setAuth(authData);
   }} />;
 
@@ -531,15 +592,15 @@ export default function App() {
       <Routes>
         <Route
           path="/admin"
-          element={auth.group === "Admins" ? <AdminDashboard onLogout={handleLogout} /> : <Navigate to="/vote" />}
+          element={auth.role === "admin" ? <AdminDashboard token={auth.token} onLogout={handleLogout} /> : <Navigate to="/vote" />}
         />
         <Route
           path="/vote"
-          element={auth.group === "Voters" ? <VoterDashboard onLogout={handleLogout} /> : <Navigate to="/admin" />}
+          element={auth.role === "voter" ? <VoterDashboard token={auth.token} onLogout={handleLogout} /> : <Navigate to="/admin" />}
         />
         <Route
           path="*"
-          element={<Navigate to={auth.group === "Admins" ? "/admin" : "/vote"} />}
+          element={<Navigate to={auth.role === "admin" ? "/admin" : "/vote"} />}
         />
       </Routes>
     </Router>

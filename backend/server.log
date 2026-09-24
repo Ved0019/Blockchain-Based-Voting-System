@@ -1,0 +1,15 @@
+C:\Users\vedya\Developer\Projects\Blockchain-Based-Voting-System\backend\server.js:151
+function requireRole(requiredRole) {
+^
+
+SyntaxError: Identifier 'requireRole' has already been declared
+[90m    at wrapSafe (node:internal/modules/cjs/loader:1861:18)[39m
+[90m    at Module._compile (node:internal/modules/cjs/loader:1903:20)[39m
+[90m    at Object..js (node:internal/modules/cjs/loader:2060:10)[39m
+[90m    at Module.load (node:internal/modules/cjs/loader:1651:32)[39m
+[90m    at Module._load (node:internal/modules/cjs/loader:1443:12)[39m
+[90m    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)[39m
+[90m    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)[39m
+[90m    at node:internal/main/run_main_module:33:47[39m
+
+Node.js v24.21.0
