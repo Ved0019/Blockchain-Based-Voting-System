@@ -46,11 +46,13 @@ if (process.env.HEDERA_NETWORK === "localnet") {
 } else {
   client = Client.forTestnet();
 }
+const hederaAccountId = process.env.HEDERA_ACCOUNT_ID.trim();
+const hederaPrivateKey = process.env.HEDERA_PRIVATE_KEY.trim();
 client.setOperator(
-  process.env.HEDERA_ACCOUNT_ID,
-  process.env.HEDERA_PRIVATE_KEY.startsWith('0x') || process.env.HEDERA_PRIVATE_KEY.length === 66 
-    ? PrivateKey.fromStringECDSA(process.env.HEDERA_PRIVATE_KEY)
-    : PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY)
+  hederaAccountId,
+  hederaPrivateKey.startsWith('0x') || hederaPrivateKey.length === 66
+    ? PrivateKey.fromStringECDSA(hederaPrivateKey)
+    : PrivateKey.fromString(hederaPrivateKey)
 );
 const topicId = process.env.HCS_TOPIC_ID;
 
@@ -194,10 +196,9 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
       return res.status(400).json({ error: "Invalid candidate selected." });
     }
 
-    // Atomically update voter (TEMPORARILY DISABLED UNIQUE VOTE CONSTRAINT FOR TESTING)
-// Normally we would check { voterId: voterId, hasVoted: false } to prevent double voting
+    // Atomically claim the voter's ballot before broadcasting it.
     const voter = await Voter.findOneAndUpdate(
-      { voterId: voterId }, // TEMPORARY: Removed hasVoted check to allow testing multiple votes
+      { voterId: voterId, hasVoted: false },
       { hasVoted: true, votedAt: new Date() },
       { returnDocument: 'after' }
     );
@@ -208,8 +209,7 @@ app.post("/castVote", authenticateToken, requireRole("Voters"), async (req, res)
       if (!existingVoter) {
         return res.status(401).json({ error: "Voter ID not found in electoral roll." });
       } else {
-        // This should not happen with the temporary change, but keeping for safety
-        return res.status(403).json({ error: "Error updating voter record." });
+        return res.status(403).json({ error: "This voter has already voted." });
       }
     }
 

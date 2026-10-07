@@ -15,20 +15,26 @@ export function VoterBooth({ token, onLogout }) {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const res = await axios.get("/api/config");
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const topicId = import.meta.env.VITE_HEDERA_TOPIC_ID || "0.0.10697996";
+        const mirrorNodeUrl = import.meta.env.VITE_MIRROR_NODE_URL ||
+          `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`;
+        const res = await axios.get(`${backendUrl}/api/config`);
         setConfig({
           ...res.data,
-          hederaTopicId: res.data.hederaTopicId || "0.0.10589786",
-          mirrorNodeUrl: res.data.mirrorNodeUrl || `https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10589786/messages`,
-          backendUrl: res.data.backendUrl || "http://localhost:5000"
+          hederaTopicId: res.data.hederaTopicId || topicId,
+          mirrorNodeUrl: res.data.mirrorNodeUrl || mirrorNodeUrl,
+          backendUrl: res.data.backendUrl || backendUrl
         });
       } catch (err) {
         console.error("Failed to load config:", err);
-        // Fallback defaults
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+        const topicId = import.meta.env.VITE_HEDERA_TOPIC_ID || "0.0.10697996";
         setConfig({
-          hederaTopicId: "0.0.10589786",
-          mirrorNodeUrl: `https://testnet.mirrornode.hedera.com/api/v1/topics/0.0.10589786/messages`,
-          backendUrl: "http://localhost:5000"
+          hederaTopicId: topicId,
+          mirrorNodeUrl: import.meta.env.VITE_MIRROR_NODE_URL ||
+            `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`,
+          backendUrl
         });
       } finally {
         setLoadingConfig(false);
@@ -124,7 +130,9 @@ export function VoterBooth({ token, onLogout }) {
             </div>
             <span className="lock-mark">⌁</span>
           </div>
-          {!isActive || votedTxId ? (
+          {votedTxId ? (
+            <p className="voting-disabled">Your vote has already been submitted.</p>
+          ) : !isActive ? (
             <p className="voting-disabled">Voting is currently disabled.</p>
           ) : (
             <form onSubmit={handleVote}>
