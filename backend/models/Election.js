@@ -4,7 +4,23 @@ const electionSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    default: "Institutional Election"
+    default: "Student Council General Election"
+  },
+  institutionName: {
+    type: String,
+    default: "Apex Institute of Technology & Engineering"
+  },
+  academicYear: {
+    type: String,
+    default: "2025–2026"
+  },
+  electionPhase: {
+    type: String,
+    default: "Official Voting Phase"
+  },
+  votingDeadline: {
+    type: Date,
+    default: () => new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
   },
   isActive: {
     type: Boolean,

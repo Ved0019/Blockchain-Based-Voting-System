@@ -11,6 +11,8 @@ export function AdminConsole({ token, onLogout }) {
   const [stats, setStats] = useState({ totalVoters: 0, votedVoters: 0, turnoutPercentage: 0 });
   const totalVotesCast = Object.values(tallies).reduce((a, b) => a + b, 0);
   const [loadingConfig, setLoadingConfig] = useState(true);
+  const [editingCandidate, setEditingCandidate] = useState(null);
+  const [manifestoLoading, setManifestoLoading] = useState(false);
 
   // Fetch configuration on mount
   useEffect(() => {
@@ -91,7 +93,9 @@ export function AdminConsole({ token, onLogout }) {
     if (!loadingConfig && config) {
       const fetchStats = async () => {
         try {
-          const res = await axios.get(`${config.backendUrl}/api/admin/stats`);
+          const res = await axios.get(`${config.backendUrl}/api/admin/stats`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
           setStats(res.data);
         } catch (err) {
           console.error("Failed to fetch voter stats:", err);
@@ -170,6 +174,40 @@ const handleRegisterCandidate = async (e) => {
       setElectionData(res2.data);
     } catch (err) {
       setAdminMessage("Admin action failed: " + (err.response?.data?.error || "Unknown error"));
+    }
+  };
+
+  const handleSeedManifesto = async () => {
+    setManifestoLoading(true);
+    try {
+      const res = await axios.post(`${config.backendUrl}/api/admin/seed-manifesto`, {},
+        { headers: { Authorization: `Bearer ${token}` } });
+      setAdminMessage("✅ " + res.data.message);
+      const res2 = await axios.get(`${config.backendUrl}/api/election`);
+      setElectionData(res2.data);
+    } catch (err) {
+      setAdminMessage("Failed to seed manifesto: " + (err.response?.data?.error || "Unknown error"));
+    } finally {
+      setManifestoLoading(false);
+    }
+  };
+
+  const handleSaveCandidateProfile = async (candidateId) => {
+    if (!editingCandidate) return;
+    setManifestoLoading(true);
+    try {
+      const res = await axios.put(`${config.backendUrl}/api/admin/candidates/${candidateId}`,
+        editingCandidate,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setAdminMessage("✅ " + res.data.message);
+      setEditingCandidate(null);
+      const res2 = await axios.get(`${config.backendUrl}/api/election`);
+      setElectionData(res2.data);
+    } catch (err) {
+      setAdminMessage("Failed to update candidate: " + (err.response?.data?.error || "Unknown error"));
+    } finally {
+      setManifestoLoading(false);
     }
   };
 
@@ -346,6 +384,197 @@ const handleRegisterCandidate = async (e) => {
           ))}
         </div>
       </section>
+
+      {/* Manifesto & Candidate Profiles Management */}
+      <section className="audit-section" style={{ marginTop: 40 }}>
+        <div className="section-title-row">
+          <div>
+            <p className="eyebrow">Manifesto Management</p>
+            <h2>Candidate Manifestos & Track Records</h2>
+            <p className="section-copy">Manage candidate profiles, manifesto commitments, and seed demonstration records.</p>
+          </div>
+          <button
+            className="outline-button"
+            onClick={handleSeedManifesto}
+            disabled={manifestoLoading}
+          >
+            {manifestoLoading ? "Seeding..." : "⚡ Seed / Reset Demo Manifestos"}
+          </button>
+        </div>
+
+        <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+          {(electionData.candidates || []).map(c => {
+            const isEditing = editingCandidate && editingCandidate.candidateId === c.candidateId;
+            return (
+              <div
+                key={c.candidateId}
+                style={{
+                  background: "var(--white)",
+                  border: "1px solid var(--line)",
+                  borderRadius: "var(--radius)",
+                  padding: 20
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <div>
+                    <strong style={{ fontSize: 16, color: "var(--ink)" }}>{c.name}</strong>
+                    <span style={{ marginLeft: 8, fontSize: 13, color: "var(--muted)" }}>({c.party})</span>
+                    {c.isIncumbent && (
+                      <span style={{
+                        marginLeft: 8,
+                        fontSize: 10,
+                        fontFamily: "'DM Mono', monospace",
+                        background: "#fef3c7",
+                        color: "#92400e",
+                        padding: "2px 8px",
+                        borderRadius: 12
+                      }}>Incumbent</span>
+                    )}
+                  </div>
+                  <div>
+                    <span style={{ fontSize: 12, fontFamily: "'DM Mono', monospace", color: "var(--muted)", marginRight: 12 }}>
+                      📋 {(c.manifesto || []).length} promises · 📊 {(c.performanceRecords || []).length} perf records
+                    </span>
+                    {!isEditing ? (
+                      <button
+                        className="text-button"
+                        style={{ color: "var(--primary)", fontWeight: 700 }}
+                        onClick={() => setEditingCandidate({
+                          candidateId: c.candidateId,
+                          name: c.name,
+                          party: c.party,
+                          tagline: c.tagline || "",
+                          bio: c.bio || "",
+                          department: c.department || "",
+                          year: c.year || "",
+                          position: c.position || "Student Council President",
+                          priorities: c.priorities || []
+                        })}
+                      >
+                        Edit Profile ✎
+                      </button>
+                    ) : (
+                      <button
+                        className="text-button"
+                        style={{ color: "var(--muted)" }}
+                        onClick={() => setEditingCandidate(null)}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {isEditing ? (
+                  <div style={{ marginTop: 16, borderTop: "1px solid var(--line)", paddingTop: 16 }}>
+                    <div className="form-group" style={{ marginBottom: 12 }}>
+                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Tagline / Slogan</label>
+                      <input
+                        type="text"
+                        value={editingCandidate.tagline}
+                        onChange={e => setEditingCandidate({ ...editingCandidate, tagline: e.target.value })}
+                        placeholder="Candidate campaign slogan"
+                      />
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 12 }}>
+                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Department & Year</label>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        <input
+                          type="text"
+                          value={editingCandidate.department}
+                          onChange={e => setEditingCandidate({ ...editingCandidate, department: e.target.value })}
+                          placeholder="Department"
+                        />
+                        <input
+                          type="text"
+                          value={editingCandidate.year}
+                          onChange={e => setEditingCandidate({ ...editingCandidate, year: e.target.value })}
+                          placeholder="Year / Level"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 12 }}>
+                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Biography / Intro</label>
+                      <textarea
+                        style={{
+                          width: "100%",
+                          border: "1px solid var(--line)",
+                          borderRadius: "var(--radius)",
+                          padding: "10px 14px",
+                          fontFamily: "inherit",
+                          fontSize: 13,
+                          lineHeight: 1.5,
+                          minHeight: 80,
+                          resize: "vertical"
+                        }}
+                        value={editingCandidate.bio}
+                        onChange={e => setEditingCandidate({ ...editingCandidate, bio: e.target.value })}
+                        placeholder="Brief candidate biography..."
+                      />
+                    </div>
+                    <div className="form-group" style={{ marginBottom: 16 }}>
+                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Top Priorities (comma-separated)</label>
+                      <input
+                        type="text"
+                        value={Array.isArray(editingCandidate.priorities) ? editingCandidate.priorities.join(", ") : ""}
+                        onChange={e => setEditingCandidate({
+                          ...editingCandidate,
+                          priorities: e.target.value.split(",").map(s => s.trim()).filter(Boolean)
+                        })}
+                        placeholder="Priority 1, Priority 2, Priority 3"
+                      />
+                    </div>
+                    <div style={{ display: "flex", gap: 10 }}>
+                      <button
+                        className="primary-button"
+                        style={{ width: "auto", margin: 0, padding: "10px 20px" }}
+                        onClick={() => handleSaveCandidateProfile(c.candidateId)}
+                        disabled={manifestoLoading}
+                      >
+                        {manifestoLoading ? "Saving..." : "Save Changes"}
+                      </button>
+                      <button
+                        className="outline-button"
+                        style={{ padding: "10px 16px" }}
+                        onClick={() => setEditingCandidate(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    {c.tagline && (
+                      <p style={{ margin: "4px 0 8px", fontStyle: "italic", fontSize: 13, color: "var(--muted)" }}>
+                        "{c.tagline}"
+                      </p>
+                    )}
+                    {c.priorities && c.priorities.length > 0 && (
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                        {c.priorities.slice(0, 3).map((p, i) => (
+                          <span
+                            key={i}
+                            style={{
+                              fontSize: 11,
+                              background: "var(--muted-bg)",
+                              color: "var(--ink)",
+                              padding: "2px 8px",
+                              borderRadius: 4
+                            }}
+                          >
+                            → {p}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="admin-action">
         <div>
           <p className="eyebrow">Local demo utility</p>
