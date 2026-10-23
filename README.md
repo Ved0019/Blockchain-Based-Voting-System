@@ -142,65 +142,51 @@ graph TD
 
 ##  Setup & Installation
 
-### 1. Prerequisites
+### Prerequisites
 
-* [Node.js](https://nodejs.org/) (v16.x or later)
-* [AWS CLI](https://aws.amazon.com/cli/) configured with proper IAM credentials.
-* A free [Hedera Developer Portal](https://portal.hedera.com/) account (Testnet credentials).
+* [Node.js](https://nodejs.org/) 22.12 or later (the Docker images use Node 24).
+* MongoDB 8, or Docker Compose to run MongoDB and the application together.
+* Hedera Testnet account credentials and an existing HCS topic.
 
-### 2. Clone the Repository
+### Configure Backend Environment
 
-```bash
-git clone [https://github.com/YOUR-USERNAME/hybrid-cloud-evoting-system.git](https://github.com/YOUR-USERNAME/hybrid-cloud-evoting-system.git)
-cd hybrid-cloud-evoting-system
+Create `backend/.env` with your local settings. Do not commit this file or share the private key.
 
+```env
+PORT=5000
+MONGO_URI=mongodb://127.0.0.1:27017/evoting_db
+JWT_SECRET=replace-with-a-long-random-secret
+HEDERA_NETWORK=testnet
+HEDERA_ACCOUNT_ID=0.0.xxxxx
+HEDERA_PRIVATE_KEY=your-testnet-private-key
+HCS_TOPIC_ID=0.0.yyyyy
 ```
 
-### 3. Configure Backend Environment
+### Run with Docker Compose
 
-Navigate to the `backend/` directory, install dependencies, and create your environment file:
+```bash
+docker compose up --build
+```
+
+The frontend is available at `http://localhost:5173`, the API at `http://localhost:5000`, and MongoDB at `localhost:27017`. Compose reads Hedera credentials and `JWT_SECRET` from `backend/.env`; it supplies the MongoDB container URL to the backend. Set `VITE_BACKEND_URL` in the shell before building if the browser should use a different API address.
+
+The Hedera operator account ID and private key in `backend/.env` must be a matching pair, and the account must have testnet HBAR to pay transaction fees. If the ballot reports `INVALID_SIGNATURE`, update both values to the matching account credentials and restart the backend. Never share or commit the private key.
+
+### Run Locally Without Docker
+
+Start MongoDB separately, then install dependencies and launch the backend and frontend in separate terminals:
 
 ```bash
 cd backend
-npm install
-
-```
-
-Create a `.env` file inside `/backend`:
-
-```env
-HEDERA_ACCOUNT_ID=0.0.xxxxx
-HEDERA_PRIVATE_KEY=302e020100300506032b657004220420...
-HCS_TOPIC_ID=0.0.yyyyy
-DYNAMODB_TABLE_NAME=VoterRegistry
-
-```
-
-To automatically generate a new `HCS_TOPIC_ID` on the Hedera Testnet, run:
-
-```bash
-node createTopic.js
-
-```
-
-### 4. Deploy the AWS Backend
-
-Deploy your Lambda functions, API Gateway, and DynamoDB table using your preferred deployment framework (AWS SAM, Serverless Framework, or manual AWS Console import):
-
-```bash
-npm run deploy
-
-```
-
-### 5. Launch the React Frontend
-
-Navigate to the frontend directory, install dependencies, and start the development server:
-
-```bash
-cd ../frontend
-npm install
+npm ci
+npm test
 npm start
+```
 
+```bash
+cd frontend
+npm ci
+npm run dev
 ```
 
 ---

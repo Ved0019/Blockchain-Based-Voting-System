@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-export function VoterBooth({ token, onLogout }) {
+export function VoterBooth({ token, onLogout, onBackToManifesto }) {
   const [selected, setSelected] = useState("");
   const [status, setStatus] = useState("");
   const [votedTxId, setVotedTxId] = useState("");
@@ -107,12 +107,16 @@ export function VoterBooth({ token, onLogout }) {
         </div>
         <div className="topbar-actions">
           <span className="role-chip">Verified voter</span>
+          {onBackToManifesto && (
+            <button className="text-button" onClick={onBackToManifesto}>← Back to Manifesto</button>
+          )}
           <button className="text-button" onClick={handleLogout}>Exit booth <span aria-hidden="true">↗</span></button>
         </div>
       </header>
       {!isActive && (
         <div className="election-closed-banner">
           <p>⚠️ Voting is currently closed. Please check back later.</p>
+
         </div>
       )}
       <section className="ballot-layout">
