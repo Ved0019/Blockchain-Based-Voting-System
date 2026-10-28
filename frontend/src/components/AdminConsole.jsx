@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import "./AdminConsole.css";
 
 export function AdminConsole({ token, onLogout }) {
   const [tallies, setTallies] = useState({});
   const [newCandidate, setNewCandidate] = useState({ name: "", party: "", avatarIpfs: "" });
   const [newVoter, setNewVoter] = useState({ voterId: "", name: "", password: "" });
-  const [adminMessage, setAdminMessage] = useState("");
+  const [adminMessage, setAdminMessage] = useState({ type: "", text: "" });
   const [electionData, setElectionData] = useState(null);
   const [config, setConfig] = useState(null);
   const [stats, setStats] = useState({ totalVoters: 0, votedVoters: 0, turnoutPercentage: 0 });
@@ -108,10 +109,12 @@ export function AdminConsole({ token, onLogout }) {
     }
   }, [loadingConfig, config]);
 
-const handleRegisterCandidate = async (e) => {
+  const showMessage = (type, text) => setAdminMessage({ type, text });
+
+  const handleRegisterCandidate = async (e) => {
     e.preventDefault();
     if (!newCandidate.name || !newCandidate.party) {
-      setAdminMessage("Name and Party are required.");
+      showMessage("error", "Name and Party are required.");
       return;
     }
     try {
@@ -119,20 +122,19 @@ const handleRegisterCandidate = async (e) => {
         { name: newCandidate.name, party: newCandidate.party, avatarIpfs: newCandidate.avatarIpfs },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setAdminMessage("Candidate registered: " + res.data.candidate.name);
+      showMessage("success", `Candidate registered: ${res.data.candidate.name}`);
       setNewCandidate({ name: "", party: "", avatarIpfs: "" });
-      // Refetch election data
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      setAdminMessage("Failed to register candidate: " + (err.response?.data?.error || "Unknown error"));
+      showMessage("error", "Failed to register candidate: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
   const handleEnrollVoter = async (e) => {
     e.preventDefault();
     if (!newVoter.voterId || !newVoter.name || !newVoter.password) {
-      setAdminMessage("Voter ID, name, and password are required.");
+      showMessage("error", "Voter ID, name, and password are required.");
       return;
     }
     try {
@@ -140,13 +142,12 @@ const handleRegisterCandidate = async (e) => {
         { voterId: newVoter.voterId, name: newVoter.name, password: newVoter.password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setAdminMessage("Voter enrolled: " + newVoter.voterId);
+      showMessage("success", `Voter enrolled: ${newVoter.voterId}`);
       setNewVoter({ voterId: "", name: "", password: "" });
-      // Refetch election data
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      setAdminMessage("Failed to enroll voter: " + (err.response?.data?.error || "Unknown error"));
+      showMessage("error", "Failed to enroll voter: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -155,12 +156,11 @@ const handleRegisterCandidate = async (e) => {
       const res = await axios.post(`${config.backendUrl}/api/admin/toggle-status`, {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setAdminMessage("Election status updated to: " + (res.data.isActive ? "Active" : "Closed"));
-      // Refetch election data
+      showMessage("success", `Election status updated to: ${res.data.isActive ? "Active" : "Closed"}`);
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      setAdminMessage("Failed to toggle status: " + (err.response?.data?.error || "Unknown error"));
+      showMessage("error", "Failed to toggle status: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -168,12 +168,11 @@ const handleRegisterCandidate = async (e) => {
     try {
       await axios.post(`${config.backendUrl}/api/admin/reset`, {},
         { headers: { Authorization: `Bearer ${token}` } });
-      setAdminMessage("Backend registry cleared. Voters can now vote again.");
-      // Refetch election data
+      showMessage("success", "Backend registry cleared. Voters can now vote again.");
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      setAdminMessage("Admin action failed: " + (err.response?.data?.error || "Unknown error"));
+      showMessage("error", "Admin action failed: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -182,11 +181,11 @@ const handleRegisterCandidate = async (e) => {
     try {
       const res = await axios.post(`${config.backendUrl}/api/admin/seed-manifesto`, {},
         { headers: { Authorization: `Bearer ${token}` } });
-      setAdminMessage("✅ " + res.data.message);
+      showMessage("success", res.data.message);
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      setAdminMessage("Failed to seed manifesto: " + (err.response?.data?.error || "Unknown error"));
+      showMessage("error", "Failed to seed manifesto: " + (err.response?.data?.error || "Unknown error"));
     } finally {
       setManifestoLoading(false);
     }
@@ -200,12 +199,12 @@ const handleRegisterCandidate = async (e) => {
         editingCandidate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setAdminMessage("✅ " + res.data.message);
+      showMessage("success", res.data.message);
       setEditingCandidate(null);
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      setAdminMessage("Failed to update candidate: " + (err.response?.data?.error || "Unknown error"));
+      showMessage("error", "Failed to update candidate: " + (err.response?.data?.error || "Unknown error"));
     } finally {
       setManifestoLoading(false);
     }
@@ -218,14 +217,14 @@ const handleRegisterCandidate = async (e) => {
     onLogout();
   };
 
-  if (loadingConfig) return <p>Loading configuration...</p>;
-  if (!electionData) return <p>Loading election data...</p>;
+  if (loadingConfig) return <div className="loading">Loading configuration...</div>;
+  if (!electionData) return <div className="loading">Loading election data...</div>;
 
   return (
     <main className="app-shell">
       <header className="topbar">
         <div className="brand-lockup">
-          <div className="brand-mark small">V</div>
+          <div className="brand-mark brand-mark--sm">V</div>
           <span>VOTE<span className="brand-accent">/</span>LEDGER</span>
         </div>
         <div className="topbar-actions">
@@ -233,6 +232,7 @@ const handleRegisterCandidate = async (e) => {
           <button className="text-button" onClick={handleLogout}>Log out <span aria-hidden="true">↗</span></button>
         </div>
       </header>
+
       <section className="dashboard-heading">
         <div>
           <p className="eyebrow">Operations / Live audit</p>
@@ -248,7 +248,11 @@ const handleRegisterCandidate = async (e) => {
       </section>
 
       {/* Admin Message */}
-      {adminMessage && <div className="admin-message">{adminMessage}</div>}
+      {adminMessage.text && (
+        <div className={`alert alert--${adminMessage.type}`} role="alert">
+          {adminMessage.text}
+        </div>
+      )}
 
       {/* Election Status */}
       <section className="admin-status">
@@ -274,91 +278,95 @@ const handleRegisterCandidate = async (e) => {
           )}
         </div>
         {electionData && electionData.election ? (
-          <button className="outline-button" onClick={handleToggleStatus}>
+          <button className="btn btn--outline" onClick={handleToggleStatus}>
             {electionData.election.isActive ? "Close Election" : "Open Election"}
           </button>
         ) : (
-          <button className="outline-button" disabled>
-            Loading...
-          </button>
+          <button className="btn btn--outline" disabled>Loading...</button>
         )}
       </section>
 
       {/* Candidate Registration */}
-      <section className="admin-action">
+      <section className="admin-action card card--interactive">
         <div>
           <p className="eyebrow">Register Candidate</p>
           <h2>Add a new candidate</h2>
           <p className="section-copy">Enter candidate details to add to the ballot.</p>
         </div>
-        <form onSubmit={handleRegisterCandidate}>
+        <form onSubmit={handleRegisterCandidate} className="candidate-form">
           <div className="form-group">
-            <label>Candidate Name</label>
+            <label className="form-label">Candidate Name</label>
             <input
               type="text"
+              className="form-input"
               value={newCandidate.name}
               onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
               required
             />
           </div>
           <div className="form-group">
-            <label>Party/Affiliation</label>
+            <label className="form-label">Party/Affiliation</label>
             <input
               type="text"
+              className="form-input"
               value={newCandidate.party}
               onChange={(e) => setNewCandidate({ ...newCandidate, party: e.target.value })}
               required
             />
           </div>
           <div className="form-group">
-            <label>Avatar CID (IPFS)</label>
+            <label className="form-label">Avatar CID (IPFS)</label>
             <input
               type="text"
+              className="form-input"
               value={newCandidate.avatarIpfs}
               onChange={(e) => setNewCandidate({ ...newCandidate, avatarIpfs: e.target.value })}
               placeholder="Enter IPFS CID for candidate avatar (optional)"
             />
           </div>
-          <button className="primary-button" type="submit">Register Candidate <span aria-hidden="true">↗</span></button>
+          <button className="btn btn--primary" type="submit">Register Candidate <span aria-hidden="true">↗</span></button>
         </form>
       </section>
 
       {/* Voter Enrollment */}
-      <section className="admin-action">
+      <section className="admin-action card card--interactive">
         <div>
           <p className="eyebrow">Enroll Voter</p>
           <h2>Add voter to electoral roll</h2>
           <p className="section-copy">Enter voter ID, name, and password to enroll a new voter.</p>
         </div>
-        <form onSubmit={handleEnrollVoter}>
+        <form onSubmit={handleEnrollVoter} className="voter-form">
           <div className="form-group">
-            <label>Voter ID</label>
+            <label className="form-label">Voter ID</label>
             <input
               type="text"
+              className="form-input"
               value={newVoter.voterId}
               onChange={(e) => setNewVoter({ ...newVoter, voterId: e.target.value.toUpperCase() })}
               required
             />
           </div>
           <div className="form-group">
-            <label>Voter Name</label>
+            <label className="form-label">Voter Name</label>
             <input
               type="text"
+              className="form-input"
               value={newVoter.name}
               onChange={(e) => setNewVoter({ ...newVoter, name: e.target.value })}
               required
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
+            <label className="form-label">Password</label>
             <input
               type="password"
+              className="form-input"
               value={newVoter.password}
               onChange={(e) => setNewVoter({ ...newVoter, password: e.target.value })}
               required
             />
           </div>
-          <button className="primary-button" type="submit">Enroll Voter <span aria-hidden="true">↗</span></button>
+          <button className="btn btn--primary" type="submit">Enroll Voter <span aria-hidden="true">↗</span></button>
         </form>
       </section>
 
@@ -367,13 +375,13 @@ const handleRegisterCandidate = async (e) => {
         <div className="section-title-row">
           <div>
             <h2>Election snapshot</h2>
-            <p>Read-only tallies from the Hedera mirror node.</p>
+            <p className="section-copy">Read-only tallies from the Hedera mirror node.</p>
           </div>
           <span className="refresh-label">Updates every 4 seconds</span>
         </div>
         <div className="tally-grid">
           {(electionData.candidates || []).map(c => (
-            <article className="tally-card" key={c.candidateId}>
+            <article className="tally-card card card--interactive" key={c.candidateId}>
               <div className="candidate-index">0{c.candidateId}</div>
               <p className="eyebrow">Candidate</p>
               <h3>{c.name}</h3>
@@ -386,7 +394,7 @@ const handleRegisterCandidate = async (e) => {
       </section>
 
       {/* Manifesto & Candidate Profiles Management */}
-      <section className="audit-section" style={{ marginTop: 40 }}>
+      <section className="audit-section">
         <div className="section-title-row">
           <div>
             <p className="eyebrow">Manifesto Management</p>
@@ -394,7 +402,7 @@ const handleRegisterCandidate = async (e) => {
             <p className="section-copy">Manage candidate profiles, manifesto commitments, and seed demonstration records.</p>
           </div>
           <button
-            className="outline-button"
+            className="btn btn--outline"
             onClick={handleSeedManifesto}
             disabled={manifestoLoading}
           >
@@ -402,43 +410,26 @@ const handleRegisterCandidate = async (e) => {
           </button>
         </div>
 
-        <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="candidate-profiles">
           {(electionData.candidates || []).map(c => {
             const isEditing = editingCandidate && editingCandidate.candidateId === c.candidateId;
             return (
-              <div
-                key={c.candidateId}
-                style={{
-                  background: "var(--white)",
-                  border: "1px solid var(--line)",
-                  borderRadius: "var(--radius)",
-                  padding: 20
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <div key={c.candidateId} className="candidate-profile card">
+                <div className="candidate-profile__header">
                   <div>
-                    <strong style={{ fontSize: 16, color: "var(--ink)" }}>{c.name}</strong>
-                    <span style={{ marginLeft: 8, fontSize: 13, color: "var(--muted)" }}>({c.party})</span>
+                    <strong>{c.name}</strong>
+                    <span className="candidate-profile__party">({c.party})</span>
                     {c.isIncumbent && (
-                      <span style={{
-                        marginLeft: 8,
-                        fontSize: 10,
-                        fontFamily: "'DM Mono', monospace",
-                        background: "#fef3c7",
-                        color: "#92400e",
-                        padding: "2px 8px",
-                        borderRadius: 12
-                      }}>Incumbent</span>
+                      <span className="badge badge--gold">Incumbent</span>
                     )}
                   </div>
-                  <div>
-                    <span style={{ fontSize: 12, fontFamily: "'DM Mono', monospace", color: "var(--muted)", marginRight: 12 }}>
+                  <div className="candidate-profile__actions">
+                    <span className="candidate-profile__stats">
                       📋 {(c.manifesto || []).length} promises · 📊 {(c.performanceRecords || []).length} perf records
                     </span>
                     {!isEditing ? (
                       <button
-                        className="text-button"
-                        style={{ color: "var(--primary)", fontWeight: 700 }}
+                        className="btn btn--ghost"
                         onClick={() => setEditingCandidate({
                           candidateId: c.candidateId,
                           name: c.name,
@@ -455,8 +446,7 @@ const handleRegisterCandidate = async (e) => {
                       </button>
                     ) : (
                       <button
-                        className="text-button"
-                        style={{ color: "var(--muted)" }}
+                        className="btn btn--ghost"
                         onClick={() => setEditingCandidate(null)}
                       >
                         Cancel
@@ -466,56 +456,50 @@ const handleRegisterCandidate = async (e) => {
                 </div>
 
                 {isEditing ? (
-                  <div style={{ marginTop: 16, borderTop: "1px solid var(--line)", paddingTop: 16 }}>
-                    <div className="form-group" style={{ marginBottom: 12 }}>
-                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Tagline / Slogan</label>
+                  <div className="candidate-profile__edit">
+                    <div className="form-group">
+                      <label className="form-label">Tagline / Slogan</label>
                       <input
                         type="text"
+                        className="form-input"
                         value={editingCandidate.tagline}
                         onChange={e => setEditingCandidate({ ...editingCandidate, tagline: e.target.value })}
                         placeholder="Candidate campaign slogan"
                       />
                     </div>
-                    <div className="form-group" style={{ marginBottom: 12 }}>
-                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Department & Year</label>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                    <div className="form-group">
+                      <label className="form-label">Department & Year</label>
+                      <div className="flex gap-3">
                         <input
                           type="text"
+                          className="form-input"
                           value={editingCandidate.department}
                           onChange={e => setEditingCandidate({ ...editingCandidate, department: e.target.value })}
                           placeholder="Department"
                         />
                         <input
                           type="text"
+                          className="form-input"
                           value={editingCandidate.year}
                           onChange={e => setEditingCandidate({ ...editingCandidate, year: e.target.value })}
                           placeholder="Year / Level"
                         />
                       </div>
                     </div>
-                    <div className="form-group" style={{ marginBottom: 12 }}>
-                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Biography / Intro</label>
+                    <div className="form-group">
+                      <label className="form-label">Biography / Intro</label>
                       <textarea
-                        style={{
-                          width: "100%",
-                          border: "1px solid var(--line)",
-                          borderRadius: "var(--radius)",
-                          padding: "10px 14px",
-                          fontFamily: "inherit",
-                          fontSize: 13,
-                          lineHeight: 1.5,
-                          minHeight: 80,
-                          resize: "vertical"
-                        }}
+                        className="form-textarea"
                         value={editingCandidate.bio}
                         onChange={e => setEditingCandidate({ ...editingCandidate, bio: e.target.value })}
                         placeholder="Brief candidate biography..."
                       />
                     </div>
-                    <div className="form-group" style={{ marginBottom: 16 }}>
-                      <label style={{ margin: "0 0 4px", fontSize: 12 }}>Top Priorities (comma-separated)</label>
+                    <div className="form-group">
+                      <label className="form-label">Top Priorities (comma-separated)</label>
                       <input
                         type="text"
+                        className="form-input"
                         value={Array.isArray(editingCandidate.priorities) ? editingCandidate.priorities.join(", ") : ""}
                         onChange={e => setEditingCandidate({
                           ...editingCandidate,
@@ -524,18 +508,16 @@ const handleRegisterCandidate = async (e) => {
                         placeholder="Priority 1, Priority 2, Priority 3"
                       />
                     </div>
-                    <div style={{ display: "flex", gap: 10 }}>
+                    <div className="flex gap-3">
                       <button
-                        className="primary-button"
-                        style={{ width: "auto", margin: 0, padding: "10px 20px" }}
+                        className="btn btn--primary"
                         onClick={() => handleSaveCandidateProfile(c.candidateId)}
                         disabled={manifestoLoading}
                       >
                         {manifestoLoading ? "Saving..." : "Save Changes"}
                       </button>
                       <button
-                        className="outline-button"
-                        style={{ padding: "10px 16px" }}
+                        className="btn btn--outline"
                         onClick={() => setEditingCandidate(null)}
                       >
                         Cancel
@@ -543,27 +525,14 @@ const handleRegisterCandidate = async (e) => {
                     </div>
                   </div>
                 ) : (
-                  <div>
+                  <div className="candidate-profile__preview">
                     {c.tagline && (
-                      <p style={{ margin: "4px 0 8px", fontStyle: "italic", fontSize: 13, color: "var(--muted)" }}>
-                        "{c.tagline}"
-                      </p>
+                      <p className="candidate-profile__tagline">"{c.tagline}"</p>
                     )}
                     {c.priorities && c.priorities.length > 0 && (
-                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                      <div className="candidate-profile__priorities">
                         {c.priorities.slice(0, 3).map((p, i) => (
-                          <span
-                            key={i}
-                            style={{
-                              fontSize: 11,
-                              background: "var(--muted-bg)",
-                              color: "var(--ink)",
-                              padding: "2px 8px",
-                              borderRadius: 4
-                            }}
-                          >
-                            → {p}
-                          </span>
+                          <span key={i} className="badge badge--neutral">→ {p}</span>
                         ))}
                       </div>
                     )}
@@ -575,14 +544,15 @@ const handleRegisterCandidate = async (e) => {
         </div>
       </section>
 
-      <section className="admin-action">
+      <section className="admin-action card card--interactive">
         <div>
           <p className="eyebrow">Local demo utility</p>
           <h2>Reset voter registry</h2>
-          <p>Clear the local participation registry so another test round can begin.</p>
+          <p className="section-copy">Clear the local participation registry so another test round can begin.</p>
         </div>
-        <button className="outline-button" onClick={handleReset}>Reset registry <span aria-hidden="true">↗</span></button>
+        <button className="btn btn--outline" onClick={handleReset}>Reset registry <span aria-hidden="true">↗</span></button>
       </section>
+
       <footer className="app-footer">
         <span>VoteLedger / Admin workspace</span>
         <span>Secured by Hedera Consensus Service</span>

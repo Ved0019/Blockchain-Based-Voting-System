@@ -13,10 +13,6 @@
     "coder": "general-purpose",
     "debugger": "ecc:build-error-resolver"
   },
-  "hooks": {
-    "pre-commit": ["ecc:code-review"],
-    "post-edit": ["ecc:build-fix"]
-  },
   "memory": {
     "enabled": true,
     "directory": ".claude/memory"

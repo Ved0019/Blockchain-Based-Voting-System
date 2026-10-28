@@ -1,5 +1,24 @@
 @import './App.css';
 
-:root { font-family: 'Manrope', 'Trebuchet MS', sans-serif; color: #17231d; background: #f5f7f2; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
-body { margin: 0; min-width: 320px; }
-#root { min-height: 100svh; }
+/* Root styles - let the design system handle these */
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+/* Global selection styles */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
