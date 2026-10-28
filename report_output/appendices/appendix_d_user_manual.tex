@@ -1,0 +1,132 @@
+%===============================================================================
+% APPENDIX D: USER MANUAL
+%===============================================================================
+\chapter{User Manual}
+\label{app:user-manual}
+
+\section{Voter Guide}
+\label{sec:voter-guide}
+
+\subsection{Getting Started}
+\begin{enumerate}
+    \item Open the application URL in your browser
+    \item Click \textbf{Login} on the landing page
+    \item Enter your \textbf{Voter ID} and \textbf{Password} (provided by admin)
+    \item You will be redirected to the \textbf{Manifesto Dashboard}
+\end{enumerate}
+
+\subsection{Reviewing Candidates}
+\begin{enumerate}
+    \item On the \textbf{Candidates} tab, browse all candidates
+    \item Click any candidate card to expand their \textbf{Manifesto Promises}
+    \item Each promise shows: Category, Title, Current Problem, Proposed Solution, Expected Benefit, Timeline, Implementation Steps
+    \item Click \textbf{Evidence} links to view supporting documents
+    \item Use the \textbf{Compare} tab for side-by-side candidate comparison
+\end{enumerate}
+
+\subsection{Understanding Campus Issues}
+\begin{enumerate}
+    \item Navigate to the \textbf{Issues} tab
+    \item View priority issues with urgency badges (High/Medium/Low)
+    \item Each issue shows: Category, Description, Current Status, Proposed Solutions
+\end{enumerate}
+
+\subsection{Reviewing Evidence}
+\begin{enumerate}
+    \item Navigate to the \textbf{Evidence} tab
+    \item Browse verified documents (reports, letters, surveys)
+    \item Filter by candidate or category
+    \item Each document shows: Title, Type, Date, Issuing Authority, Verification Status, Key Findings
+\end{enumerate}
+
+\subsection{Casting Your Vote}
+\begin{enumerate}
+    \item After reviewing, click \textbf{Proceed to Vote} button
+    \item On the ballot page, select your preferred candidate
+    \item Click \textbf{Submit Vote}
+    \item Confirm in the dialog: \textit{Are you sure you want to vote for [Candidate]?}
+    \item Wait for blockchain confirmation (3-5 seconds)
+    \item Success screen shows: \textbf{Transaction ID} and \textbf{HashScan Link}
+    \item Click the HashScan link to verify your vote on the public ledger
+\end{enumerate}
+
+\subsection{Important Notes}
+\begin{itemize}
+    \item \textbf{One vote only:} Once submitted, you cannot vote again
+    \item \textbf{Verification:} Save your Transaction ID for future reference
+    \item \textbf{Logout:} Use the logout button when done
+\end{itemize}
+
+\section{Admin Guide}
+\label{sec:admin-guide}
+
+\subsection{Initial Setup}
+\begin{enumerate}
+    \item Login with Admin credentials (default: ADMIN001 / admin123)
+    \item You will land on the \textbf{Admin Dashboard}
+    \item Verify election status and candidate list
+\end{enumerate}
+
+\subsection{Managing Candidates}
+\begin{enumerate}
+    \item Go to \textbf{Candidates} tab
+    \item \textbf{Add Candidate:} Click \textit{Add Candidate}, fill Name, Party, optional Avatar URL
+    \item \textbf{Edit Profile:} Click \textit{Edit} on any candidate to update details
+    \item \textbf{Manifesto Editor:} Click \textit{Manifesto} to manage promises
+    \begin{itemize}
+        \item Add promises with: Category, Title, Problem, Solution, Benefit, Timeline, Steps
+        \item Link evidence documents via Evidence Ref field
+    \end{itemize}
+    \item \textbf{Performance Records:} For incumbents, track promise fulfillment
+\end{enumerate}
+
+\subsection{Managing Voters}
+\begin{enumerate}
+    \item Go to \textbf{Voters} tab
+    \item \textbf{Enroll Voter:} Click \textit{Enroll Voter}, enter Voter ID, Name
+    \item System generates secure password (displayed once - share securely)
+    \item \textbf{View Status:} See who has voted (hasVoted = true)
+\end{enumerate}
+
+\subsection{Managing Campus Issues}
+\begin{enumerate}
+    \item Go to \textbf{Issues} tab
+    \item \textbf{Create Issue:} Title, Category, Urgency, Description, Solutions
+    \item \textbf{Update/Delete:} Manage existing issues
+\end{enumerate}
+
+\subsection{Managing Evidence Documents}
+\begin{enumerate}
+    \item Go to \textbf{Evidence} tab
+    \item \textbf{Create Document:} Title, Type, Date, Authority, Summary, Verification Status
+    \item Link to candidate and category
+    \item Add key findings and file snippet for preview
+\end{enumerate}
+
+\subsection{Election Controls (Settings Tab)}
+\begin{enumerate}
+    \item \textbf{Toggle Election:} Open/close voting period
+    \item \textbf{Reset Participation:} Clear all hasVoted flags (use before new election)
+    \item \textbf{View Stats:} Real-time turnout percentage
+    \item \textbf{Reseed Data:} Restore demo manifesto data
+\end{enumerate}
+
+\section{Troubleshooting}
+\label{sec:troubleshooting}
+
+\begin{table}[H]
+\centering
+\caption{Common Issues}
+\label{tab:troubleshooting}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Issue} & \textbf{Solution} \\
+\midrule
+"Invalid token" & Login again, token expired \\
+"Already voted" & One vote per election, cannot revoke \\
+"Voting closed" & Admin must toggle election active \\
+"Candidate not found" & Refresh page, contact admin \\
+Hedera error & Wait and retry, check testnet status \\
+\bottomrule
+\end{tabular}
+\end{table}

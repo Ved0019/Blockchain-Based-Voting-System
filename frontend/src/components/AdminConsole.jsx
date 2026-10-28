@@ -1,17 +1,60 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "./Sidebar";
+import { useSuccessToast, useErrorToast, useInfoToast } from "./Toast";
 import "./AdminConsole.css";
 import "./Sidebar.css";
 
-export function AdminConsole({ token, onLogout }) {
+export function AdminConsole({ token, onLogout, initialSection }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+  // Scroll to section on mount based on initialSection prop
+  useEffect(() => {
+    if (initialSection) {
+      const element = document.getElementById(`section-${initialSection}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Add a brief highlight effect
+        element.classList.add("section-highlight");
+        setTimeout(() => element.classList.remove("section-highlight"), 2000);
+      }
+    }
+  }, [initialSection]);
+
+  // Stagger animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 12 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: "spring", stiffness: 80, damping: 15 }
+    }
+  };
   const [tallies, setTallies] = useState({});
   const [newCandidate, setNewCandidate] = useState({ name: "", party: "", avatarIpfs: "" });
   const [newVoter, setNewVoter] = useState({ voterId: "", name: "", password: "" });
-  const [adminMessage, setAdminMessage] = useState({ type: "", text: "" });
   const [electionData, setElectionData] = useState(null);
   const [config, setConfig] = useState(null);
   const [stats, setStats] = useState({ totalVoters: 0, votedVoters: 0, turnoutPercentage: 0 });
@@ -19,6 +62,9 @@ export function AdminConsole({ token, onLogout }) {
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [editingCandidate, setEditingCandidate] = useState(null);
   const [manifestoLoading, setManifestoLoading] = useState(false);
+  const showSuccess = useSuccessToast();
+  const showError = useErrorToast();
+  const showInfo = useInfoToast();
 
   // Fetch configuration on mount
   useEffect(() => {
@@ -114,12 +160,10 @@ export function AdminConsole({ token, onLogout }) {
     }
   }, [loadingConfig, config]);
 
-  const showMessage = (type, text) => setAdminMessage({ type, text });
-
   const handleRegisterCandidate = async (e) => {
     e.preventDefault();
     if (!newCandidate.name || !newCandidate.party) {
-      showMessage("error", "Name and Party are required.");
+      showError("Name and Party are required.");
       return;
     }
     try {
@@ -127,19 +171,19 @@ export function AdminConsole({ token, onLogout }) {
         { name: newCandidate.name, party: newCandidate.party, avatarIpfs: newCandidate.avatarIpfs },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      showMessage("success", `Candidate registered: ${res.data.candidate.name}`);
+      showSuccess(`Candidate registered: ${res.data.candidate.name}`);
       setNewCandidate({ name: "", party: "", avatarIpfs: "" });
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      showMessage("error", "Failed to register candidate: " + (err.response?.data?.error || "Unknown error"));
+      showError("Failed to register candidate: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
   const handleEnrollVoter = async (e) => {
     e.preventDefault();
     if (!newVoter.voterId || !newVoter.name || !newVoter.password) {
-      showMessage("error", "Voter ID, name, and password are required.");
+      showError("Voter ID, name, and password are required.");
       return;
     }
     try {
@@ -147,12 +191,12 @@ export function AdminConsole({ token, onLogout }) {
         { voterId: newVoter.voterId, name: newVoter.name, password: newVoter.password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      showMessage("success", `Voter enrolled: ${newVoter.voterId}`);
+      showSuccess(`Voter enrolled: ${newVoter.voterId}`);
       setNewVoter({ voterId: "", name: "", password: "" });
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      showMessage("error", "Failed to enroll voter: " + (err.response?.data?.error || "Unknown error"));
+      showError("Failed to enroll voter: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -161,11 +205,11 @@ export function AdminConsole({ token, onLogout }) {
       const res = await axios.post(`${config.backendUrl}/api/admin/toggle-status`, {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      showMessage("success", `Election status updated to: ${res.data.isActive ? "Active" : "Closed"}`);
+      showSuccess(`Election status updated to: ${res.data.isActive ? "Active" : "Closed"}`);
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      showMessage("error", "Failed to toggle status: " + (err.response?.data?.error || "Unknown error"));
+      showError("Failed to toggle status: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -173,11 +217,11 @@ export function AdminConsole({ token, onLogout }) {
     try {
       await axios.post(`${config.backendUrl}/api/admin/reset`, {},
         { headers: { Authorization: `Bearer ${token}` } });
-      showMessage("success", "Backend registry cleared. Voters can now vote again.");
+      showSuccess("Backend registry cleared. Voters can now vote again.");
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      showMessage("error", "Admin action failed: " + (err.response?.data?.error || "Unknown error"));
+      showError("Admin action failed: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -186,11 +230,11 @@ export function AdminConsole({ token, onLogout }) {
     try {
       const res = await axios.post(`${config.backendUrl}/api/admin/seed-manifesto`, {},
         { headers: { Authorization: `Bearer ${token}` } });
-      showMessage("success", res.data.message);
+      showSuccess(res.data.message);
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      showMessage("error", "Failed to seed manifesto: " + (err.response?.data?.error || "Unknown error"));
+      showError("Failed to seed manifesto: " + (err.response?.data?.error || "Unknown error"));
     } finally {
       setManifestoLoading(false);
     }
@@ -204,12 +248,12 @@ export function AdminConsole({ token, onLogout }) {
         editingCandidate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      showMessage("success", res.data.message);
+      showSuccess(res.data.message);
       setEditingCandidate(null);
       const res2 = await axios.get(`${config.backendUrl}/api/election`);
       setElectionData(res2.data);
     } catch (err) {
-      showMessage("error", "Failed to update candidate: " + (err.response?.data?.error || "Unknown error"));
+      showError("Failed to update candidate: " + (err.response?.data?.error || "Unknown error"));
     } finally {
       setManifestoLoading(false);
     }
@@ -235,185 +279,332 @@ export function AdminConsole({ token, onLogout }) {
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
         onNavigate={handleSidebarNavigate}
+        mobileOpen={mobileSidebarOpen}
+        onMobileToggle={() => setMobileSidebarOpen(!mobileSidebarOpen)}
       />
 
       <main className="admin-main" style={{ marginLeft: sidebarOpen ? '260px' : '72px' }}>
         <header className="topbar">
-          <div className="brand-lockup">
-            <div className="brand-mark brand-mark--sm">V</div>
-            <span>VOTE<span className="brand-accent">/</span>LEDGER</span>
-          </div>
-          <div className="topbar-actions">
+          <motion.div
+            className="brand-lockup"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 12 }}
+          >
+            <motion.div
+              className="brand-mark brand-mark--sm"
+              initial={{ scale: 0, rotate: -90 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            >
+              V
+            </motion.div>
+            <motion.span
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              VOTE<span className="brand-accent">/</span>LEDGER
+            </motion.span>
+          </motion.div>
+          <motion.div
+            className="topbar-actions"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.15 }}
+          >
             <span className="role-chip admin-chip">Administrator</span>
-            <button className="sidebar-toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)} aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}>
+            <motion.button
+              className="sidebar-toggle-btn"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               {sidebarOpen ? "◀" : "▶"}
-            </button>
-            <button className="text-button" onClick={handleLogout}>Log out <span aria-hidden="true">↗</span></button>
-          </div>
+            </motion.button>
+            <motion.button
+              className="text-button"
+              onClick={handleLogout}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Log out <span aria-hidden="true">↗</span>
+            </motion.button>
+          </motion.div>
         </header>
 
-        <section className="dashboard-heading">
-          <div>
-            <p className="eyebrow">Operations / Live audit</p>
-            <h1>Control center</h1>
-            <p className="section-copy">Monitor the election ledger and manage the local registry.</p>
-          </div>
-          <div className="live-indicator"><span className="status-dot" /> Live mirror node</div>
-          {tallies && (
-            <div className="total-votes-cast">
-              Total votes cast: {totalVotesCast}
-            </div>
-          )}
-        </section>
-
-        {/* Admin Message */}
-        {adminMessage.text && (
-          <div className={`alert alert--${adminMessage.type}`} role="alert">
-            {adminMessage.text}
-          </div>
-        )}
+        <motion.section
+            id="section-overview"
+            className="dashboard-heading"
+            variants={cardVariants}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <p className="eyebrow">Operations / Live audit</p>
+              <h1>Control center</h1>
+              <p className="section-copy">Monitor the election ledger and manage the local registry.</p>
+            </motion.div>
+            <motion.div
+              className="live-indicator"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <span className="status-dot" /> Live mirror node
+            </motion.div>
+            {tallies && (
+              <motion.div
+                className="total-votes-cast"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4, type: "spring", stiffness: 100, damping: 12 }}
+              >
+                Total votes cast: {totalVotesCast}
+              </motion.div>
+            )}
+          </motion.section>
 
         {/* Election Status */}
-        <section className="admin-status">
-          <div className="section-title-row">
-            <div>
-              <p className="eyebrow">Election Status</p>
-              {electionData && electionData.election ? (
-                <>
-                  <h2>{electionData.election.title}</h2>
-                  <p className="section-copy">Status: {electionData.election.isActive ? "Active" : "Closed"}</p>
-                </>
-              ) : (
-                <p>Loading election details...</p>
+          <motion.section
+            id="section-election"
+            className="admin-status card"
+            variants={cardVariants}
+          >
+            <motion.div
+              className="section-title-row"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <p className="eyebrow">Election Status</p>
+                {electionData && electionData.election ? (
+                  <>
+                    <h2>{electionData.election.title}</h2>
+                    <p className="section-copy">Status: {electionData.election.isActive ? "Active" : "Closed"}</p>
+                  </>
+                ) : (
+                  <p>Loading election details...</p>
+                )}
+              </motion.div>
+              {stats && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  <p className="eyebrow">Voter Turnout</p>
+                  <p className="section-copy">
+                    {stats.votedVoters} of {stats.totalVoters} voters ({stats.turnoutPercentage}%)
+                  </p>
+                </motion.div>
               )}
-            </div>
-            {stats && (
-              <div>
-                <p className="eyebrow">Voter Turnout</p>
-                <p className="section-copy">
-                  {stats.votedVoters} of {stats.totalVoters} voters ({stats.turnoutPercentage}%)
-                </p>
-              </div>
-            )}
-          </div>
-          {electionData && electionData.election ? (
-            <button className="btn btn--outline" onClick={handleToggleStatus}>
-              {electionData.election.isActive ? "Close Election" : "Open Election"}
-            </button>
-          ) : (
-            <button className="btn btn--outline" disabled>Loading...</button>
-          )}
-        </section>
+            </motion.div>
+            <motion.button
+              className="btn btn--outline"
+              onClick={handleToggleStatus}
+              disabled={!electionData || !electionData.election}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              {electionData && electionData.election ? (
+                electionData.election.isActive ? "Close Election" : "Open Election"
+              ) : (
+                "Loading..."
+              )}
+            </motion.button>
+          </motion.section>
 
         {/* Candidate Registration */}
-        <section className="admin-action card card--interactive">
-          <div>
-            <p className="eyebrow">Register Candidate</p>
-            <h2>Add a new candidate</h2>
-            <p className="section-copy">Enter candidate details to add to the ballot.</p>
-          </div>
-          <form onSubmit={handleRegisterCandidate} className="candidate-form">
-            <div className="form-group">
-              <label className="form-label">Candidate Name</label>
-              <input
-                type="text"
-                className="form-input"
-                value={newCandidate.name}
-                onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Party/Affiliation</label>
-              <input
-                type="text"
-                className="form-input"
-                value={newCandidate.party}
-                onChange={(e) => setNewCandidate({ ...newCandidate, party: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Avatar CID (IPFS)</label>
-              <input
-                type="text"
-                className="form-input"
-                value={newCandidate.avatarIpfs}
-                onChange={(e) => setNewCandidate({ ...newCandidate, avatarIpfs: e.target.value })}
-                placeholder="Enter IPFS CID for candidate avatar (optional)"
-              />
-            </div>
-            <button className="btn btn--primary" type="submit">Register Candidate <span aria-hidden="true">↗</span></button>
-          </form>
-        </section>
+          <motion.section
+            id="section-candidates"
+            className="admin-action card card--interactive"
+            variants={cardVariants}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <p className="eyebrow">Register Candidate</p>
+              <h2>Add a new candidate</h2>
+              <p className="section-copy">Enter candidate details to add to the ballot.</p>
+            </motion.div>
+            <motion.form
+              onSubmit={handleRegisterCandidate}
+              className="candidate-form"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div className="form-group" variants={itemVariants}>
+                <label className="form-label">Candidate Name</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newCandidate.name}
+                  onChange={(e) => setNewCandidate({ ...newCandidate, name: e.target.value })}
+                  required
+                />
+              </motion.div>
+              <motion.div className="form-group" variants={itemVariants}>
+                <label className="form-label">Party/Affiliation</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newCandidate.party}
+                  onChange={(e) => setNewCandidate({ ...newCandidate, party: e.target.value })}
+                  required
+                />
+              </motion.div>
+              <motion.div className="form-group" variants={itemVariants}>
+                <label className="form-label">Avatar CID (IPFS)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newCandidate.avatarIpfs}
+                  onChange={(e) => setNewCandidate({ ...newCandidate, avatarIpfs: e.target.value })}
+                  placeholder="Enter IPFS CID for candidate avatar (optional)"
+                />
+              </motion.div>
+              <motion.button
+                className="btn btn--primary"
+                type="submit"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                variants={itemVariants}
+              >
+                Register Candidate <span aria-hidden="true">↗</span>
+              </motion.button>
+            </motion.form>
+          </motion.section>
 
         {/* Voter Enrollment */}
-        <section className="admin-action card card--interactive">
-          <div>
-            <p className="eyebrow">Enroll Voter</p>
-            <h2>Add voter to electoral roll</h2>
-            <p className="section-copy">Enter voter ID, name, and password to enroll a new voter.</p>
-          </div>
-          <form onSubmit={handleEnrollVoter} className="voter-form">
-            <div className="form-group">
-              <label className="form-label">Voter ID</label>
-              <input
-                type="text"
-                className="form-input"
-                value={newVoter.voterId}
-                onChange={(e) => setNewVoter({ ...newVoter, voterId: e.target.value.toUpperCase() })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Voter Name</label>
-              <input
-                type="text"
-                className="form-input"
-                value={newVoter.name}
-                onChange={(e) => setNewVoter({ ...newVoter, name: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                className="form-input"
-                value={newVoter.password}
-                onChange={(e) => setNewVoter({ ...newVoter, password: e.target.value })}
-                required
-              />
-            </div>
-            <button className="btn btn--primary" type="submit">Enroll Voter <span aria-hidden="true">↗</span></button>
-          </form>
-        </section>
+          <motion.section
+            id="section-voters"
+            className="admin-action card card--interactive"
+            variants={cardVariants}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <p className="eyebrow">Enroll Voter</p>
+              <h2>Add voter to electoral roll</h2>
+              <p className="section-copy">Enter voter ID, name, and password to enroll a new voter.</p>
+            </motion.div>
+            <motion.form
+              onSubmit={handleEnrollVoter}
+              className="voter-form"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.div className="form-group" variants={itemVariants}>
+                <label className="form-label">Voter ID</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newVoter.voterId}
+                  onChange={(e) => setNewVoter({ ...newVoter, voterId: e.target.value.toUpperCase() })}
+                  required
+                />
+              </motion.div>
+              <motion.div className="form-group" variants={itemVariants}>
+                <label className="form-label">Voter Name</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={newVoter.name}
+                  onChange={(e) => setNewVoter({ ...newVoter, name: e.target.value })}
+                  required
+                />
+              </motion.div>
+              <motion.div className="form-group" variants={itemVariants}>
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  value={newVoter.password}
+                  onChange={(e) => setNewVoter({ ...newVoter, password: e.target.value })}
+                  required
+                />
+              </motion.div>
+              <motion.button
+                className="btn btn--primary"
+                type="submit"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                variants={itemVariants}
+              >
+                Enroll Voter <span aria-hidden="true">↗</span>
+              </motion.button>
+            </motion.form>
+          </motion.section>
 
         {/* Audit Section */}
-        <section className="audit-section">
-          <div className="section-title-row">
-            <div>
-              <h2>Election snapshot</h2>
-              <p className="section-copy">Read-only tallies from the Hedera mirror node.</p>
-            </div>
-            <span className="refresh-label">Updates every 4 seconds</span>
-          </div>
-          <div className="tally-grid">
-            {(electionData.candidates || []).map(c => (
-              <article className="tally-card card card--interactive" key={c.candidateId}>
-                <div className="candidate-index">0{c.candidateId}</div>
-                <p className="eyebrow">Candidate</p>
-                <h3>{c.name}</h3>
-                <p className="party-name">{c.party}</p>
-                <div className="vote-count">{tallies[c.candidateId] || 0}</div>
-                <p className="vote-label">verified votes</p>
-              </article>
-            ))}
-          </div>
-        </section>
+          <motion.section
+            id="section-tallies"
+            className="audit-section"
+            variants={cardVariants}
+          >
+            <motion.div
+              className="section-title-row"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <h2>Election snapshot</h2>
+                <p className="section-copy">Read-only tallies from the Hedera mirror node.</p>
+              </motion.div>
+              <motion.span
+                className="refresh-label"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15 }}
+              >
+                Updates every 4 seconds
+              </motion.span>
+            </motion.div>
+            <motion.div
+              className="tally-grid"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {(electionData.candidates || []).map((c, index) => (
+                <motion.article
+                  key={c.candidateId}
+                  className="tally-card card card--interactive"
+                  variants={itemVariants}
+                  whileHover={{ y: -4, scale: 1.01 }}
+                >
+                  <div className="candidate-index">0{c.candidateId}</div>
+                  <p className="eyebrow">Candidate</p>
+                  <h3>{c.name}</h3>
+                  <p className="party-name">{c.party}</p>
+                  <div className="vote-count">{tallies[c.candidateId] || 0}</div>
+                  <p className="vote-label">verified votes</p>
+                </motion.article>
+              ))}
+            </motion.div>
+          </motion.section>
 
         {/* Manifesto & Candidate Profiles Management */}
-        <section className="audit-section">
+        <section id="section-manifesto" className="audit-section">
           <div className="section-title-row">
             <div>
               <p className="eyebrow">Manifesto Management</p>
@@ -563,7 +754,27 @@ export function AdminConsole({ token, onLogout }) {
           </div>
         </section>
 
-        <section className="admin-action card card--interactive">
+        {/* Evidence Archive */}
+        <section id="section-evidence" className="admin-action card card--interactive">
+          <div>
+            <p className="eyebrow">Evidence Archive</p>
+            <h2>Verified Documents</h2>
+            <p className="section-copy">Manage official notices, audit reports, and institutional records supporting candidate claims.</p>
+          </div>
+          <p className="section-copy" style={{color: "var(--color-text-muted)", fontSize: "0.875rem"}}>Evidence management is integrated with the Manifesto section above. Use the "Seed / Reset Demo Manifestos" button to populate demo evidence documents.</p>
+        </section>
+
+        {/* Campus Issues */}
+        <section id="section-issues" className="admin-action card card--interactive">
+          <div>
+            <p className="eyebrow">Campus Issues</p>
+            <h2>Student Priority Issues</h2>
+            <p className="section-copy">Track key campus challenges and candidate proposed solutions.</p>
+          </div>
+          <p className="section-copy" style={{color: "var(--color-text-muted)", fontSize: "0.875rem"}}>Issue management is integrated with the Manifesto section. Campus issues are displayed in the Manifesto Dashboard for voters.</p>
+        </section>
+
+        <section id="section-reset" className="admin-action card card--interactive">
           <div>
             <p className="eyebrow">Local demo utility</p>
             <h2>Reset voter registry</h2>

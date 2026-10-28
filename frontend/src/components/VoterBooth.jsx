@@ -1,15 +1,47 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { motion } from "framer-motion";
+import { useSuccessToast, useErrorToast, useInfoToast } from "./Toast";
 
 export function VoterBooth({ token, onLogout, onBackToManifesto }) {
   const [selected, setSelected] = useState("");
-  const [status, setStatus] = useState("");
   const [votedTxId, setVotedTxId] = useState("");
   const [electionData, setElectionData] = useState(null);
   const [config, setConfig] = useState(null);
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const showSuccess = useSuccessToast();
+  const showError = useErrorToast();
+  const showInfo = useInfoToast();
+
+  // Animation variants for center-first approach
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.06, delayChildren: 0.15 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 12 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: "spring", stiffness: 80, damping: 15 }
+    }
+  };
 
   // Fetch configuration on mount
   useEffect(() => {
@@ -65,10 +97,10 @@ export function VoterBooth({ token, onLogout, onBackToManifesto }) {
 
   const handleVote = async (e) => {
     e.preventDefault();
-    if (!selected) return setStatus("Please select a candidate.");
-    if (!isActive) return setStatus("Voting is currently closed.");
+    if (!selected) return showError("Please select a candidate.");
+    if (!isActive) return showError("Voting is currently closed.");
     setSubmitLoading(true);
-    setStatus("Submitting cryptographic vote...");
+    showInfo("Submitting cryptographic vote...");
 
     try {
       const res = await axios.post(`${config.backendUrl}/castVote`,
@@ -80,9 +112,9 @@ export function VoterBooth({ token, onLogout, onBackToManifesto }) {
       const [accountId, timestamp] = rawTxId.split('@');
       const formattedTxId = accountId + '-' + timestamp.replace('.', '-');
       setVotedTxId(formattedTxId);
-      setStatus(`✅ Success! Your vote has been recorded.`);
+      showSuccess("Your vote has been recorded!");
     } catch (err) {
-      setStatus(`❌ Error: ${err.response?.data?.error || "Failed to vote"}`);
+      showError(err.response?.data?.error || "Failed to vote");
     } finally {
       setSubmitLoading(false);
     }
@@ -178,8 +210,7 @@ export function VoterBooth({ token, onLogout, onBackToManifesto }) {
               </button>
             </form>
           )}
-          {status && <div className={`status-message ${status.startsWith("✅") ? "success" : "error"}`}>{status}</div>}
-          {votedTxId && (
+                    {votedTxId && (
             <div className="vote-confirmation">
               <p>Your vote has been successfully recorded on the ledger.</p>
               <p>

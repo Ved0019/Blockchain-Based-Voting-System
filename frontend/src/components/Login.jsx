@@ -1,16 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useErrorToast } from "./Toast";
 
 export function Login({ onLogin }) {
   const [voterId, setVoterId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const showError = useErrorToast();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
@@ -28,7 +28,7 @@ export function Login({ onLogin }) {
         role: decoded.role,
       });
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed");
+      showError(err.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -82,12 +82,6 @@ export function Login({ onLogin }) {
               required
             />
           </div>
-
-          {error && (
-            <div className="alert alert-danger">
-              {error}
-            </div>
-          )}
 
           <button
             className="primary-button"

@@ -1,0 +1,120 @@
+%===============================================================================
+% APPENDIX C: DEPLOYMENT GUIDE
+%===============================================================================
+\chapter{Deployment Guide}
+\label{app:deployment}
+
+\section{Prerequisites}
+\label{sec:prereqs}
+\begin{itemize}
+    \item Docker 24+ and Docker Compose 2+
+    \item Node.js 22+ (for local development)
+    \item MongoDB 8+ (or Docker)
+    \item Hedera Testnet account with HBAR for fees
+    \item HCS Topic ID (create via \texttt{createTopic.js})
+\end{itemize}
+
+\section{Environment Configuration}
+\label{sec:env-config}
+
+Create \texttt{backend/.env} from template:
+
+\begin{lstlisting}[style=codeStyle, caption=Backend .env template]
+PORT=5000
+MONGO_URI=mongodb://mongodb:27017/evoting_db
+JWT_SECRET=your-256-bit-secret-key-here
+HEDERA_NETWORK=testnet
+HEDERA_ACCOUNT_ID=0.0.XXXXXX
+HEDERA_PRIVATE_KEY=302e020100300506032b657004220420...
+HCS_TOPIC_ID=0.0.YYYYYY
+BACKEND_URL=http://localhost:5000
+\end{lstlisting}
+
+Frontend config (\texttt{frontend/.env}):
+\begin{lstlisting}[style=codeStyle, caption=Frontend .env]
+VITE_BACKEND_URL=http://localhost:5000
+\end{lstlisting}
+
+\section{Local Development with Docker Compose}
+\label{sec:docker-dev}
+
+\begin{lstlisting}[style=terminalStyle, caption=Start development stack]
+cd Blockchain-Based-Voting-System
+docker compose up --build
+\end{lstlisting}
+
+Services:
+\begin{itemize}
+    \item Frontend: \texttt{http://localhost:5173} (Vite dev server)
+    \item Backend API: \texttt{http://localhost:5000}
+    \item MongoDB: \texttt{localhost:27017}
+\end{itemize}
+
+\section{Local Development Without Docker}
+\label{sec:local-dev}
+
+\begin{lstlisting}[style=terminalStyle, caption=Manual startup]
+# Terminal 1: MongoDB
+mongod --dbpath ./data/db
+
+# Terminal 2: Backend
+cd backend
+npm ci
+npm run dev  # or npm start
+
+# Terminal 3: Frontend
+cd frontend
+npm ci
+npm run dev
+\end{lstlisting}
+
+\section{Production Deployment (AWS)}
+\label{sec:prod-aws}
+
+\subsection{Architecture}
+\begin{itemize}
+    \item \textbf{ECS Fargate:} Backend + Frontend containers
+    \item \textbf{Application Load Balancer:} TLS termination, routing
+    \item \textbf{CloudFront:} Global CDN for frontend static assets
+    \item \textbf{MongoDB Atlas:} Managed replica set
+    \item \textbf{Route 53:} DNS, custom domain
+    \item \textbf{Secrets Manager:} JWT secret, Hedera keys
+    \item \textbf{CloudWatch:} Logs, metrics, alarms
+\end{itemize}
+
+\subsection{Key Production Changes}
+\begin{enumerate}
+    \item Set \texttt{NODE_ENV=production}
+    \item Use strong \texttt{JWT_SECRET} (256-bit, from Secrets Manager)
+    \item Enable \texttt{helmet.js}, \texttt{rate-limiter} in Express
+    \item Configure CORS for production domain only
+    \item Use MongoDB Atlas connection string with TLS
+    \item Switch Hedera to \texttt{mainnet} (after governance review)
+    \item Enable CloudFront caching for frontend build
+    \item Set up health checks: \texttt{GET /api/info}
+    \item Configure auto-scaling for ECS services
+\end{enumerate}
+
+\section{Hedera Mainnet Considerations}
+\label{sec:hedera-mainnet}
+
+\begin{itemize}
+    \item \textbf{Governance Review:} Required for Mainnet deployment
+    \item \textbf{Account Funding:} Mainnet HBAR for transaction fees
+    \item \textbf{Topic Creation:} Use \texttt{Client.forMainnet()}, create topic
+    \item \textbf{Mirror Nodes:} \texttt{https://mainnet.mirrornode.hedera.com}
+    \item \textbf{HashScan:} \texttt{https://hashscan.io/mainnet}
+    \item \textbf{Compliance:} KYC/AML for voter onboarding if required
+\end{itemize}
+
+\section{Monitoring \& Maintenance}
+\label{sec:monitoring}
+
+\begin{itemize}
+    \item \textbf{Health Checks:} \texttt{/api/info} (200 OK), MongoDB ping
+    \item \textbf{Logs:} Structured JSON to CloudWatch/ELK
+    \item \textbf{Metrics:} Vote latency, error rates, turnout
+    \item \textbf{Alerts:} HCS submission failures, DB connection drops
+    \item \textbf{Backups:} MongoDB Atlas automated snapshots
+    \item \textbf{Updates:} Monthly npm audit, dependency updates
+\end{itemize}

@@ -1,0 +1,116 @@
+%===============================================================================
+% APPENDIX B: API DOCUMENTATION
+%===============================================================================
+\chapter{API Documentation}
+\label{app:api}
+
+\section{Base URL}
+\label{sec:base-url}
+Development: \texttt{http://localhost:5000/api} \\
+Production: \texttt{https://api.yourdomain.com/api}
+
+\section{Authentication}
+\label{sec:api-auth}
+All protected endpoints require \texttt{Authorization: Bearer <JWT>} header.
+JWT obtained via \texttt{POST /api/auth/login} with \texttt{\{voterId, password\}}.
+
+\section{Public Endpoints}
+\label{sec:public-endpoints}
+
+\begin{table}[H]
+\centering
+\caption{Public API Endpoints}
+\label{tab:public-api}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Method} & \textbf{Endpoint} & \textbf{Description} \\
+\midrule
+GET & /api/info & API metadata and endpoint list \\
+GET & /api/config & Frontend config (topicId, mirrorNodeUrl) \\
+GET & /api/election & Current election + candidate list \\
+GET & /api/manifesto/overview & Full manifesto data (candidates, issues, evidence) \\
+GET & /api/candidates/\{id\}/manifesto & Single candidate detail \\
+GET & /api/issues & Campus priority issues \\
+GET & /api/evidence & Verified evidence documents \\
+\midrule
+\end{tabular}
+\end{table}
+
+\section{Authenticated Endpoints (Voter)}
+\label{sec:voter-endpoints}
+
+\begin{table}[H]
+\centering
+\caption{Voter API Endpoints}
+\label{tab:voter-api}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Method} & \textbf{Endpoint} & \textbf{Description} \\
+\midrule
+GET & /api/voter/status & Current voter eligibility, hasVoted \\
+POST & /castVote & Submit ballot to HCS (requires candidateId) \\
+\midrule
+\end{tabular}
+\end{table}
+
+\section{Admin Endpoints}
+\label{sec:admin-endpoints}
+
+\begin{table}[H]
+\centering
+\caption{Admin API Endpoints}
+\label{tab:admin-api}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Method} & \textbf{Endpoint} & \textbf{Description} \\
+\midrule
+POST & /api/admin/candidates & Create candidate \\
+PUT & /api/admin/candidates/\{id\} & Update candidate profile \\
+PUT & /api/admin/candidates/\{id\}/manifesto & Replace manifesto array \\
+PUT & /api/admin/candidates/\{id\}/performance & Replace performance records \\
+POST & /api/admin/voters & Enroll new voter \\
+POST & /api/admin/toggle-status & Toggle election active \\
+POST & /api/admin/reset & Reset all voter participation \\
+GET & /api/admin/stats & Turnout statistics \\
+POST & /api/admin/evidence & Create evidence document \\
+DELETE & /api/admin/evidence/\{docId\} & Delete evidence document \\
+POST & /api/admin/issues & Create campus issue \\
+DELETE & /api/admin/issues/\{issueId\} & Delete campus issue \\
+POST & /api/admin/seed-manifesto & Reseed demo data \\
+\midrule
+\end{tabular}
+\end{table}
+
+\section{Request/Response Examples}
+\label{sec:api-examples}
+
+\subsection{Login}
+\begin{lstlisting}[style=codeStyle, caption=Login request/response]
+POST /api/auth/login
+{ "voterId": "VOTER001", "password": "voter123" }
+
+Response 200:
+{ "token": "eyJhbGciOiJIUzI1NiIs...", "voterId": "VOTER001", "role": "Voters" }
+\end{lstlisting}
+
+\subsection{Vote Submission}
+\begin{lstlisting}[style=codeStyle, caption=Vote submission request/response]
+POST /castVote
+Authorization: Bearer <token>
+{ "candidateId": "1" }
+
+Response 200:
+{ "message": "Vote recorded on Hedera!",
+  "transactionId": "0.0.12345@1234567890.123456789",
+  "status": "SUCCESS" }
+\end{lstlisting}
+
+\subsection{Error Responses}
+\begin{lstlisting}[style=codeStyle, caption=Common error responses]
+401: { "error": "Access token required" }
+403: { "error": "Invalid or expired token" }
+403: { "error": "This voter has already voted." }
+400: { "error": "Invalid candidate selected." }
+502: { "error": "Ledger submission failed, vote not recorded" }
+500: { "error": "Failed to broadcast vote to ledger." }
+\end{lstlisting}

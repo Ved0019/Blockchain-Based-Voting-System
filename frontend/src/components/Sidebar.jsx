@@ -16,7 +16,7 @@ const NAV_ITEMS = [
 const COLLAPSED_WIDTH = 72;
 const EXPANDED_WIDTH = 260;
 
-export function Sidebar({ onNavigate, isOpen = true, onToggle }) {
+export function Sidebar({ onNavigate, isOpen = true, onToggle, mobileOpen = false, onMobileToggle }) {
   const location = useLocation();
   const [hoveredItem, setHoveredItem] = useState(null);
 
@@ -39,10 +39,20 @@ export function Sidebar({ onNavigate, isOpen = true, onToggle }) {
 
   return (
     <AnimatePresence mode="wait">
+      {mobileOpen && (
+        <motion.div
+          className="sidebar-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
       <motion.aside
-        className="admin-sidebar"
+        className={`admin-sidebar ${mobileOpen ? "mobile-open" : ""}`}
         role="navigation"
         aria-label="Admin navigation"
+        data-collapsed={isOpen ? "false" : "true"}
         initial={{ width: 0, opacity: 0 }}
         animate={{ width: isOpen ? EXPANDED_WIDTH : COLLAPSED_WIDTH, opacity: 1 }}
         exit={{ width: 0, opacity: 0 }}
@@ -68,6 +78,15 @@ export function Sidebar({ onNavigate, isOpen = true, onToggle }) {
               VOTE<span className="brand-accent">/</span>LEDGER
             </motion.span>
           )}
+          {/* Mobile menu toggle - only shown when collapsed on mobile */}
+          <button
+            className="sidebar-mobile-toggle"
+            onClick={onMobileToggle}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+          >
+            {mobileOpen ? "✕" : "☰"}
+          </button>
         </div>
 
         {/* Navigation */}

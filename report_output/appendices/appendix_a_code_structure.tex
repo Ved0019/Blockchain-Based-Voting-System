@@ -1,0 +1,176 @@
+%===============================================================================
+% APPENDIX A: SOURCE CODE STRUCTURE
+%===============================================================================
+\chapter{Source Code Structure}
+\label{app:code-structure}
+
+\section{Complete Directory Tree}
+\label{sec:dir-tree}
+
+\begin{lstlisting}[style=terminalStyle, caption=Project directory structure]
+Blockchain-Based-Voting-System/
+├── .claude/
+│   ├── settings.json
+│   └── memory/
+│       ├── project-context.md
+│       ├── progress.md
+│       └── decisions.md
+├── backend/
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── electionController.js
+│   │   └── voteController.js
+│   ├── lib/
+│   │   ├── hederaClient.js
+│   │   ├── cryptoUtils.js
+│   │   └── jwtUtils.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Election.js
+│   │   ├── Vote.js
+│   │   ├── Candidate.js
+│   │   ├── CampusIssue.js
+│   │   └── EvidenceDoc.js
+│   ├── tests/
+│   │   ├── auth.test.js
+│   │   ├── election.test.js
+│   │   └── vote.test.js
+│   ├── server.js
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── .gitignore
+│   ├── .env
+│   ├── init.js
+│   ├── seedData.js
+│   ├── seedUsers.js
+│   ├── createTopic.js
+│   ├── generatekey.js
+│   ├── compareKeys.js
+│   ├── test-hedera.js
+│   ├── testKey.js
+│   ├── testPrivate.js
+│   ├── verifyKey.js
+│   ├── testdb.js
+│   └── testdb2.js
+├── frontend/
+│   ├── public/
+│   │   └── vite.svg
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Header.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── ElectionList.jsx
+│   │   │   ├── ElectionDetail.jsx
+│   │   │   ├── VoteForm.jsx
+│   │   │   ├── Results.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   ├── AdminConsole.jsx
+│   │   │   ├── AdminConsole.css
+│   │   │   ├── LandingPage.jsx
+│   │   │   ├── ManifestoDashboard.jsx
+│   │   │   ├── ManifestoDashboard.css
+│   │   │   └── VoterBooth.jsx
+│   │   ├── assets/
+│   │   │   └── react.svg
+│   │   ├── App.jsx
+│   │   ├── App.css
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.mjs
+│   ├── nginx.conf
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   ├── .gitignore
+│   ├── .oxlintrc.json
+│   └── README.md
+├── docker-compose.yml
+├── LICENSE
+├── README.md
+├── PROJECT_STRUCTURE.md
+└── report_output/
+    ├── main.tex
+    ├── frontmatter/
+    ├── chapters/
+    ├── appendices/
+    └── figures/
+\end{lstlisting}
+
+\section{Key File Descriptions}
+\label{sec:key-files}
+
+\subsection{Backend}
+\begin{table}[H]
+\centering
+\caption{Key Backend Files}
+\label{tab:backend-files}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{File} & \textbf{Purpose} \\
+\midrule
+server.js & Express app entry, middleware, routes, Hedera init \\
+controllers/authController.js & Login, JWT issuance \\
+controllers/electionController.js & Election/candidate CRUD \\
+controllers/voteController.js & Vote casting, verification \\
+models/User.js & Voter schema (voterId, name, passwordHash, role, hasVoted) \\
+models/Election.js & Election schema (title, dates, status, topicId) \\
+models/Candidate.js & Candidate schema (manifesto[], performance[]) \\
+models/CampusIssue.js & Issue schema (title, category, urgency, solutions[]) \\
+models/EvidenceDoc.js & Evidence schema (docId, title, type, status) \\
+lib/hederaClient.js & Hedera SDK client, HCS submission \\
+seedData.js & Demo data: 4 candidates, 6 issues, 8 evidence docs \\
+createTopic.js & HCS topic creation script \\
+\midrule
+\end{tabular}
+\end{table}
+
+\subsection{Frontend}
+\begin{table}[H]
+\centering
+\caption{Key Frontend Files}
+\label{tab:frontend-files}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{File} & \textbf{Purpose} \\
+\midrule
+src/main.jsx & React 18 entry, BrowserRouter \\
+src/App.jsx & Routing, auth state, role-based navigation \\
+src/components/LandingPage.jsx & Public landing page \\
+src/components/Login.jsx & Login form, JWT acquisition \\
+src/components/ManifestoDashboard.jsx & Candidate/issue/evidence dashboard (55KB) \\
+src/components/VoterBooth.jsx & Ballot casting, confirmation, receipt \\
+src/components/AdminConsole.jsx & Admin panels: dashboard, candidates, voters, issues, evidence \\
+src/components/ProtectedRoute.jsx & Role-based route guard \\
+vite.config.mjs & Vite config, proxy, build settings \\
+nginx.conf & Production reverse proxy config \\
+\midrule
+\end{tabular}
+\end{table}
+
+\section{Lines of Code Summary}
+\label{sec:loc}
+
+\begin{table}[H]
+\centering
+\caption{Approximate Lines of Code}
+\label{tab:loc}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Component} & \textbf{LOC} \\
+\midrule
+Backend (server.js + controllers + models + lib) & ~2,500 \\
+Frontend (components + styles) & ~3,200 \\
+Configuration (Docker, Vite, Nginx) & ~300 \\
+Tests & ~400 \\
+\midrule
+\textbf{Total} & \textbf{~6,400} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { useErrorToast, useWarningToast } from "./Toast";
 import "./ManifestoDashboard.css";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
@@ -1104,27 +1105,27 @@ function VoterChecklist({ onProceed, voterStatus, isActive }) {
 export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState("overview");
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [selectedCandidateDetail, setSelectedCandidateDetail] = useState(null);
   const [voterStatus, setVoterStatus] = useState(null);
+  const showError = useErrorToast();
+  const showWarning = useWarningToast();
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      setError(null);
       const [overviewRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/manifesto/overview`),
       ]);
       setData(overviewRes.data);
     } catch (err) {
-      setError("Failed to load manifesto data. Please check that the backend is running.");
+      showError("Failed to load manifesto data. Please check that the backend is running.");
       console.error("Manifesto load error:", err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [showError]);
 
   const fetchVoterStatus = useCallback(async () => {
     if (!token) return;
@@ -1134,9 +1135,9 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
       });
       setVoterStatus(res.data);
     } catch (err) {
-      console.warn("Could not fetch voter status:", err.response?.data?.error || err.message);
+      showWarning("Could not fetch voter status: " + (err.response?.data?.error || err.message));
     }
-  }, [token]);
+  }, [token, showWarning]);
 
   useEffect(() => {
     fetchData();
@@ -1233,15 +1234,7 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
           </div>
         )}
 
-        {error && (
-          <div className="md-error">
-            <h3>⚠ Unable to load manifesto data</h3>
-            <p>{error}</p>
-            <button className="md-btn-primary" onClick={fetchData}>Retry</button>
-          </div>
-        )}
-
-        {!loading && !error && data && (
+        {!loading && data && (
           <>
             {activeSection === "manifesto-detail" && selectedCandidateDetail ? (
               <div id="section-manifesto-detail">

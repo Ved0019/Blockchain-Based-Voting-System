@@ -6,6 +6,7 @@ import { Login } from "./components/Login";
 import { AdminConsole } from "./components/AdminConsole";
 import { VoterBooth } from "./components/VoterBooth";
 import { ManifestoDashboard } from "./components/ManifestoDashboard";
+import { ToastProvider } from "./components/Toast";
 
 // --- INNER ROUTES COMPONENT (needs Router context for useNavigate) ---
 function AppRoutes({ auth, onLogout }) {
@@ -26,15 +27,18 @@ function AppRoutes({ auth, onLogout }) {
 
   return (
     <Routes>
-      {/* Admin route */}
-      <Route
-        path="/admin"
-        element={
-          auth.role === "Admins"
-            ? <AdminConsole token={auth.token} onLogout={onLogout} />
-            : <Navigate to="/manifesto" />
-        }
-      />
+      {/* Admin routes with nested sections */}
+      <Route path="/admin" element={auth.role === "Admins" ? <AdminConsole token={auth.token} onLogout={onLogout} /> : <Navigate to="/manifesto" />}>
+        <Route index element={<Navigate to="overview" replace />} />
+        <Route path="overview" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="overview" />} />
+        <Route path="candidates" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="candidates" />} />
+        <Route path="voters" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="voters" />} />
+        <Route path="election" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="election" />} />
+        <Route path="tallies" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="tallies" />} />
+        <Route path="manifesto" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="manifesto" />} />
+        <Route path="evidence" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="evidence" />} />
+        <Route path="issues" element={<AdminConsole token={auth.token} onLogout={onLogout} initialSection="issues" />} />
+      </Route>
 
       {/* Manifesto Dashboard — voter reads this BEFORE voting */}
       <Route
@@ -139,7 +143,9 @@ export default function App() {
 
   return (
     <Router>
-      <AppRoutes auth={auth} onLogout={handleLogout} />
+      <ToastProvider>
+        <AppRoutes auth={auth} onLogout={handleLogout} />
+      </ToastProvider>
     </Router>
   );
 }
