@@ -17,24 +17,18 @@ Blockchain-Based-Voting-System/
 │       └── decisions.md
 ├── backend/
 │   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── electionController.js
-│   │   └── voteController.js
+│   │   └── auth.js
 │   ├── lib/
-│   │   ├── hederaClient.js
-│   │   ├── cryptoUtils.js
-│   │   └── jwtUtils.js
+│   │   └── voteErrors.js
 │   ├── models/
-│   │   ├── User.js
+│   │   ├── Voter.js
 │   │   ├── Election.js
-│   │   ├── Vote.js
 │   │   ├── Candidate.js
 │   │   ├── CampusIssue.js
 │   │   └── EvidenceDoc.js
 │   ├── tests/
 │   │   ├── auth.test.js
-│   │   ├── election.test.js
-│   │   └── vote.test.js
+│   │   └── hederaErrors.test.js
 │   ├── server.js
 │   ├── package.json
 │   ├── package-lock.json
@@ -59,21 +53,19 @@ Blockchain-Based-Voting-System/
 │   │   └── vite.svg
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Header.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   ├── ElectionList.jsx
-│   │   │   ├── ElectionDetail.jsx
-│   │   │   ├── VoteForm.jsx
-│   │   │   ├── Results.jsx
-│   │   │   ├── ProtectedRoute.jsx
 │   │   │   ├── AdminConsole.jsx
 │   │   │   ├── AdminConsole.css
+│   │   │   ├── InteractiveTreeCatalog.jsx
+│   │   │   ├── InteractiveTreeCatalog.css
 │   │   │   ├── LandingPage.jsx
+│   │   │   ├── Login.jsx
 │   │   │   ├── ManifestoDashboard.jsx
 │   │   │   ├── ManifestoDashboard.css
+│   │   │   ├── Sidebar.jsx
+│   │   │   ├── Sidebar.css
+│   │   │   ├── StudioHome.jsx
+│   │   │   ├── StudioAesthetic.css
+│   │   │   ├── Toast.jsx
 │   │   │   └── VoterBooth.jsx
 │   │   ├── assets/
 │   │   │   └── react.svg
@@ -116,16 +108,15 @@ Blockchain-Based-Voting-System/
 \textbf{File} & \textbf{Purpose} \\
 \midrule
 server.js & Express app entry, middleware, routes, Hedera init \\
-controllers/authController.js & Login, JWT issuance \\
-controllers/electionController.js & Election/candidate CRUD \\
-controllers/voteController.js & Vote casting, verification \\
-models/User.js & Voter schema (voterId, name, passwordHash, role, hasVoted) \\
+controllers/auth.js & Login and JWT issuance \\
+server.js & Election, vote, admin, evidence, and issue routes \\
+models/Voter.js & Voter schema (voterId, name, password, role, hasVoted) \\
 models/Election.js & Election schema (title, dates, status, topicId) \\
-models/Candidate.js & Candidate schema (manifesto[], performance[]) \\
+models/Candidate.js & Candidate schema (manifesto[], performanceRecords[]) \\
 models/CampusIssue.js & Issue schema (title, category, urgency, solutions[]) \\
 models/EvidenceDoc.js & Evidence schema (docId, title, type, status) \\
-lib/hederaClient.js & Hedera SDK client, HCS submission \\
-seedData.js & Demo data: 4 candidates, 6 issues, 8 evidence docs \\
+server.js & Hedera SDK client and HCS submission \\
+seedData.js & Demo data: 3 candidates, campus issues, and evidence documents \\
 createTopic.js & HCS topic creation script \\
 \midrule
 \end{tabular}
@@ -140,15 +131,15 @@ createTopic.js & HCS topic creation script \\
 \toprule
 \textbf{File} & \textbf{Purpose} \\
 \midrule
-src/main.jsx & React 18 entry, BrowserRouter \\
+src/main.jsx & React entry point and global stylesheet import \\
 src/App.jsx & Routing, auth state, role-based navigation \\
 src/components/LandingPage.jsx & Public landing page \\
 src/components/Login.jsx & Login form, JWT acquisition \\
 src/components/ManifestoDashboard.jsx & Candidate/issue/evidence dashboard (55KB) \\
 src/components/VoterBooth.jsx & Ballot casting, confirmation, receipt \\
 src/components/AdminConsole.jsx & Admin panels: dashboard, candidates, voters, issues, evidence \\
-src/components/ProtectedRoute.jsx & Role-based route guard \\
-vite.config.mjs & Vite config, proxy, build settings \\
+src/components/StudioHome.jsx & Studio-style login and candidate showcase \\
+vite.config.mjs & Vite configuration and React plugin \\
 nginx.conf & Production reverse proxy config \\
 \midrule
 \end{tabular}
@@ -165,12 +156,11 @@ nginx.conf & Production reverse proxy config \\
 \toprule
 \textbf{Component} & \textbf{LOC} \\
 \midrule
-Backend (server.js + controllers + models + lib) & ~2,500 \\
-Frontend (components + styles) & ~3,200 \\
-Configuration (Docker, Vite, Nginx) & ~300 \\
-Tests & ~400 \\
+Backend JavaScript (repository files) & 4,159 \\
+Frontend source and styles & 15,810 \\
+Automated test files & 108 \\
 \midrule
-\textbf{Total} & \textbf{~6,400} \\
+\textbf{Measured source total above} & \textbf{20,077} \\
 \bottomrule
 \end{tabular}
 \end{table}

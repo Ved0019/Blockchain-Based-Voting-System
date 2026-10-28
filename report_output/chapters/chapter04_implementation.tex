@@ -118,7 +118,7 @@ Admin-only routes for election management:
 
 \texttt{seedData.js} populates the database with demonstration data:
 \begin{itemize}
-    \item 4 candidates with detailed manifestos (12+ promises each)
+    \item 3 candidates with detailed manifestos and performance records
     \item 6 campus priority issues with proposed solutions
     \item 8 evidence documents (reports, letters, surveys) with verification status
     \item Performance records for incumbent candidates
@@ -194,6 +194,25 @@ The \texttt{AdminConsole} component (22KB) provides tabbed panels:
 
 \subsection{UI/UX Design System}
 \label{sec:design-system}
+
+The implemented interface uses a shared studio-style visual language across the
+login, manifesto, and ballot flows. Figure~\ref{fig:ui-login} shows the public
+authentication surface, while Figure~\ref{fig:ui-candidate-spec} shows the
+candidate specification view used for focused manifesto review.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/ui-login.png}
+\caption{VoteLedger studio-style login and cryptographic reticle interface}
+\label{fig:ui-login}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/ui-candidate-spec.png}
+\caption{Candidate specification view with detailed manifesto access}
+\label{fig:ui-candidate-spec}
+\end{figure}
 
 Custom CSS with CSS variables for theming:
 

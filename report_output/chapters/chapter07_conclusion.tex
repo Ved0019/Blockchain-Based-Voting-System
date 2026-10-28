@@ -20,7 +20,9 @@ The key contributions are:
     infrastructure (Node.js, MongoDB, JWT) while vote consensus occurs on a
     public DLT (Hedera HCS). This separation ensures that \textit{no single party---
     not cloud administrators, not application developers, not even the Hedera
-    Council---can alter recorded votes}.
+    Council---can alter recorded votes after successful consensus; the prototype
+    still depends on correct identity management, topic governance, and vote-payload
+    design}.
 
     \item \textbf{Complete Voting Platform:} Beyond bare vote recording, the system
     provides an \textit{informed-voting experience} through a manifesto dashboard
@@ -38,10 +40,10 @@ The key contributions are:
     database. HashScan links on every vote receipt empower voters to independently
     verify their vote on the public ledger.
 
-    \item \textbf{Cost-Effective Public DLT:} By using HCS topics instead of
-    smart contracts, the system achieves \textbf{\$0.0001 per vote} with 10,000+
-    TPS capacity and 3--5 second finality---making public DLT viable for
-    organizational elections at scale.
+    \item \textbf{Public DLT Integration:} By using HCS topics instead of smart
+    contracts, the prototype provides a simple public ordering and audit
+    integration. Transaction cost, throughput, and finality were not independently
+    measured in this repository and must be validated before scale claims are made.
 \end{enumerate}
 
 \section{Impact and Significance}

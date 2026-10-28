@@ -49,7 +49,7 @@ Login / Register & Authentication forms, JWT acquisition \\
 ManifestoDashboard & Candidate profiles, manifestos, issues, evidence \\
 VoterBooth & Ballot casting, transaction confirmation \\
 AdminConsole & Election management, candidate/voter CRUD, stats \\
-ProtectedRoute & Role-based route guarding \\
+App.jsx route guards & Role-based navigation checks \\
 \midrule
 \end{tabular}
 \end{table}
@@ -70,9 +70,9 @@ controllers/auth & Login, JWT issuance \\
 controllers/election & Election lifecycle, candidate listing \\
 controllers/vote & Vote casting, verification, results \\
 controllers/admin & Admin-only CRUD for all entities \\
-lib/hederaClient & Hedera SDK client, HCS submission \\
-lib/cryptoUtils & Encryption, hashing, key management \\
-lib/jwtUtils & Token generation, verification, refresh \\
+server.js Hedera client & Hedera SDK client and HCS submission \\
+lib/voteErrors & Hedera error-message mapping \\
+controllers/auth.js & Login and JWT issuance \\
 models/* & MongoDB schemas (User, Election, Candidate, Vote, etc.) \\
 \midrule
 \end{tabular}

@@ -8,8 +8,8 @@
 \label{sec:prereqs}
 \begin{itemize}
     \item Docker 24+ and Docker Compose 2+
-    \item Node.js 22+ (for local development)
-    \item MongoDB 8+ (or Docker)
+    \item Node.js compatible with the project's installed dependencies
+    \item MongoDB (or Docker)
     \item Hedera Testnet account with HBAR for fees
     \item HCS Topic ID (create via \texttt{createTopic.js})
 \end{itemize}
@@ -24,9 +24,9 @@ PORT=5000
 MONGO_URI=mongodb://mongodb:27017/evoting_db
 JWT_SECRET=your-256-bit-secret-key-here
 HEDERA_NETWORK=testnet
-HEDERA_ACCOUNT_ID=0.0.XXXXXX
+HEDERA_ACCOUNT_ID=0.0.<ACCOUNT_ID>
 HEDERA_PRIVATE_KEY=302e020100300506032b657004220420...
-HCS_TOPIC_ID=0.0.YYYYYY
+HCS_TOPIC_ID=0.0.<TOPIC_ID>
 BACKEND_URL=http://localhost:5000
 \end{lstlisting}
 
@@ -68,10 +68,12 @@ npm ci
 npm run dev
 \end{lstlisting}
 
-\section{Production Deployment (AWS)}
+\section{Illustrative Production Deployment (AWS)}
 \label{sec:prod-aws}
 
-\subsection{Architecture}
+\subsection{Proposed Architecture}
+The following architecture is illustrative and has not been deployed or measured
+as part of the current prototype.
 \begin{itemize}
     \item \textbf{ECS Fargate:} Backend + Frontend containers
     \item \textbf{Application Load Balancer:} TLS termination, routing

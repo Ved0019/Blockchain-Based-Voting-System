@@ -60,7 +60,7 @@ Mobile responsiveness & Complex dashboard & CSS Grid/Flex, mobile-first breakpoi
     \item \textbf{No Coercion Resistance:} Voters can prove how they voted via transaction ID.
     \item \textbf{Single Election:} One active election per deployment; multi-election needs dynamic topics.
     \item \textbf{Manual Key Management:} Operator keys in .env; production needs HSM/KMS.
-    \item \textbf{No Vote Privacy:} Mirror nodes reveal vote content; ZK-proofs needed for secrecy.
+    \item \textbf{No Vote Privacy:} The current HCS payload reveals the candidate identifier; ZK-proofs or an alternative privacy protocol would be needed for secrecy.
     \item \textbf{Client-Side Trust:} Malicious frontend could alter vote before submission.
 \end{enumerate}
 
@@ -77,8 +77,8 @@ Mobile responsiveness & Complex dashboard & CSS Grid/Flex, mobile-first breakpoi
 \midrule
 Immutability & \checkmark & \checkmark & \checkmark & \xmark & Physical \\
 Public Audit & \checkmark & \checkmark & Limited & \xmark & Observers \\
-Cost/Vote & \$0.0001 & \$5--50 & ~\$0 & \$0 & \$2--10 \\
-Throughput & 10k+ & 15--30 & 3k+ & 100k+ & Manual \\
+Cost/Vote & Not measured & \$5--50 & ~\$0 & \$0 & \$2--10 \\
+Throughput & Not measured & 15--30 & 3k+ & 100k+ & Manual \\
 Privacy & Pseudonym. & Pseudonym. & Config. & None & Anonymous \\
 Coercion Resist. & \xmark & \xmark & \xmark & \xmark & Partial \\
 Deployment & Medium & High & High & Low & High \\

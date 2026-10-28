@@ -7,7 +7,7 @@
 \section{Base URL}
 \label{sec:base-url}
 Development: \texttt{http://localhost:5000/api} \\
-Production: \texttt{https://api.yourdomain.com/api}
+Production: Not configured in the current repository
 
 \section{Authentication}
 \label{sec:api-auth}
@@ -90,7 +90,8 @@ POST /api/auth/login
 { "voterId": "VOTER001", "password": "voter123" }
 
 Response 200:
-{ "token": "eyJhbGciOiJIUzI1NiIs...", "voterId": "VOTER001", "role": "Voters" }
+{ "message": "Login successful", "token": "eyJhbGciOiJIUzI1NiIs...",
+  "user": { "voterId": "VOTER001", "role": "Voters" } }
 \end{lstlisting}
 
 \subsection{Vote Submission}

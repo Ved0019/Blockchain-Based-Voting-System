@@ -15,11 +15,10 @@
 \toprule
 \textbf{Test File} & \textbf{Tests} & \textbf{Coverage} \\
 \midrule
-auth.test.js & 8 & Login, JWT, password hash, role \\
-election.test.js & 6 & Election CRUD, candidate listing \\
-vote.test.js & 7 & Vote casting, duplicate prevention, tally \\
+auth.test.js & 5 & Credential validation and JWT role claims \\
+hederaErrors.test.js & 2 & Hedera error-message handling \\
 \midrule
-\textbf{Total} & \textbf{21} & \textbf{~75\%} \\
+\textbf{Total} & \textbf{7} & \textbf{7 passed in local run} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -54,26 +53,15 @@ Token expiry & Wait for JWT exp → API call → Refresh & 403 then new token \\
 \toprule
 \textbf{Test Case} & \textbf{Status} & \textbf{Notes} \\
 \midrule
-\checkmark Admin login with default credentials & Pass & ADMIN001/admin123 \\
-\checkmark Voter login with default credentials & Pass & VOTER001/voter123 \\
-\checkmark Invalid login rejected & Pass & 401 error \\
-\checkmark Expired token rejected & Pass & 403 error \\
-\checkmark Manifesto dashboard loads all data & Pass & Candidates, issues, evidence \\
-\checkmark Candidate detail modal works & Pass & All promises displayed \\
-\checkmark Compare tab side-by-side & Pass & 2-4 candidates \\
-\checkmark Vote submission creates HCS tx & Pass & Transaction ID returned \\
-\checkmark Duplicate vote rejected & Pass & 403 "Already voted" \\
-\checkmark Vote tally matches submissions & Pass & Mirror node query \\
-\checkmark HashScan link opens correctly & Pass & Testnet explorer \\
-\checkmark Admin candidate CRUD & Pass & Create, read, update, delete \\
-\checkmark Admin voter enrollment & Pass & Password generated \\
-\checkmark Admin toggle election status & Pass & Open/close \\
-\checkmark Admin reset participation & Pass & All hasVoted=false \\
-\checkmark Admin evidence CRUD & Pass & Create, read, delete \\
-\checkmark Admin issues CRUD & Pass & Create, read, delete \\
-\checkmark Admin reseed manifesto & Pass & Demo data restored \\
-\checkmark Mobile responsive layout & Pass & <640px, 640-1024px, >1024px \\
-\checkmark Logout clears session & Pass & localStorage cleared \\
+Admin login with default credentials & Not recorded & Requires environment-backed E2E run \\
+Voter login with default credentials & Not recorded & Requires environment-backed E2E run \\
+Invalid login rejected & Covered & \texttt{auth.test.js} \\
+Expired token rejected & Not recorded & Requires API integration test \\
+Manifesto dashboard loads all data & Not recorded & Requires MongoDB-backed run \\
+Vote submission creates HCS tx & Not recorded & Requires funded Hedera testnet run \\
+Duplicate vote rejected & Not recorded & Requires MongoDB-backed run \\
+Mobile responsive layout & Not recorded & Requires browser test or screenshots \\
+Logout clears session & Not recorded & Requires browser test \\
 \midrule
 \end{tabular}
 \end{table}
@@ -97,4 +85,6 @@ Token expiry & Wait for JWT exp → API call → Refresh & 403 then new token \\
 \end{tabular}
 \end{table}
 
-Note: Testnet rate limits (10 TPS) constrain higher concurrency. Mainnet supports 10,000+ TPS.
+Note: No load-test execution is included in the current repository. Any Hedera
+network throughput figure must be cited as provider capability rather than as a
+measurement of this application.
