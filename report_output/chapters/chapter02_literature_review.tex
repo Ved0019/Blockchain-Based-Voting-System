@@ -1,0 +1,109 @@
+%===============================================================================
+% CHAPTER 2: LITERATURE REVIEW
+%===============================================================================
+\chapter{Literature Review and State of the Art}
+\label{ch:literature}
+
+\section{Traditional E-Voting Systems}
+\label{sec:traditional-evoting}
+
+\subsection{Direct Recording Electronic (DRE) Machines}
+DRE machines replaced mechanical lever machines and punch cards in many jurisdictions
+starting in the 1990s. While they improved usability and accessibility, numerous
+studies \cite{kohno2004analysis, appel2009security} demonstrated critical vulnerabilities:
+unverified software, lack of paper trails, and susceptibility to insider attacks.
+The 2006 \textit{Princeton} study on the Diebold AccuVote-TS showed that malicious
+firmware could alter votes undetectably \cite{felten2006security}.
+
+\subsection{Internet Voting Systems}
+Estonia's i-Voting system (operational since 2005) remains the most widely cited
+internet voting deployment \cite{heiberg2011verifiability}. While it employs
+cryptographic protocols for vote encryption and verification, researchers have
+identified vulnerabilities in client-side malware resistance and procedural
+security \cite{springall2014security}. Switzerland's Swiss Post system similarly
+faced public scrutiny leading to a 2019 moratorium \cite{haenni2017swiss}.
+
+\subsection{End-to-End Verifiable Voting}
+Cryptographic protocols like \textit{Helios} \cite{adida2008helios}, \textit{Prêt à Voter}
+\cite{ryan2009pret}, and \textit{Scantegrity} \cite{chaum2008scantegrity} introduced
+mathematical verifiability: voters can confirm their vote was cast, recorded, and
+tallied correctly without trusting any single party. However, these systems require
+complex key ceremonies and have seen limited production adoption due to usability
+barriers.
+
+\section{Blockchain-Based Voting}
+\label{sec:blockchain-voting}
+
+\subsection{Smart Contract Platforms}
+Early proposals used Ethereum smart contracts for vote recording \cite{mcmurray2018blockchain}.
+The \textit{Follow My Vote} and \textit{VoteWatcher} projects demonstrated feasibility
+but encountered practical barriers: high gas costs (often \$5--50 per vote during
+congestion), 15--30 TPS throughput limiting election scale, and the requirement for
+voters to manage cryptocurrency wallets and private keys.
+
+Layer-2 solutions (Polygon, Arbitrum) reduce costs but introduce trust assumptions
+about sequencer centralization. The fundamental tension remains: \textit{public
+permissionless blockchains optimize for censorship resistance, not voting-specific
+properties like receipt-freeness or coercion resistance}.
+
+\subsection{Permissioned and Consortium Ledgers}
+Hyperledger Fabric \cite{androulaki2018hyperledger} and Corda have been proposed
+for organizational voting \cite{kumar2019blockchain}. These provide high throughput
+and privacy but require a known validator set, shifting trust from a single
+administrator to a consortium. For student elections or public organizations,
+establishing a diverse validator set is often impractical.
+
+\subsection{Hedera Hashgraph and HCS}
+Hedera's Hashgraph consensus \cite{baird2016hashgraph} achieves asynchronous
+Byzantine Fault Tolerance (aBFT) with fair ordering, providing mathematical
+guarantees of consensus fairness. The Hedera Consensus Service (HCS) \cite{hedera2020hcs}
+exposes this as a topic-based messaging layer: applications submit messages to
+topics, and the network assigns consensus timestamps and ordering.
+
+HCS advantages for voting:
+\begin{itemize}
+    \item \textbf{Fixed low fees:} \$0.0001 per message regardless of network load.
+    \item \textbf{High throughput:} 10,000+ messages/second.
+    \item \textbf{Fair ordering:} No front-running or transaction manipulation.
+    \item \textbf{Immediate finality:} 3--5 seconds with mathematical certainty.
+    \item \textbf{Public auditability:} Mirror nodes provide read-only access to history.
+\end{itemize}
+
+Recent work \cite{tran2023blockchain} has explored HCS for audit trails and voting,
+demonstrating the architectural pattern this project implements.
+
+\section{Hybrid Cloud-DLT Architectures}
+\label{sec:hybrid-arch}
+
+The \textit{Web2.5} paradigm \cite{chen2022web25} separates identity/access (Web2)
+from consensus/state (Web3). AWS Serverless + Blockchain patterns have been
+documented for supply chain \cite{aws2021blockchain} and identity \cite{aws2022identity},
+but voting-specific architectures remain sparse.
+
+This project's contribution is a complete, voting-optimized instantiation of the
+hybrid pattern: identity via JWT/MongoDB, consensus via HCS, with careful attention
+to the atomic coordination between the two layers (Section~\ref{sec:vote-flow}).
+
+\section{Gap Analysis}
+\label{sec:gap}
+
+\begin{table}[H]
+\centering
+\caption{Comparison of Voting Approaches}
+\label{tab:voting-comparison}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Approach} & \textbf{Immutability} & \textbf{Cost/Vote} & \textbf{Throughput} & \textbf{Privacy} & \textbf{Complexity} \\
+\midrule
+Paper Ballots       & Physical only & \$2--10    & Manual    & Anonymous  & Low    \\
+Centralized DB      & None          & Near zero  & 100k+ TPS & None       & Low    \\
+Ethereum Smart C.   & \checkmark    & \$5--50    & 15--30    & Pseudonym. & High   \\
+Hyperledger Fabric  & \checkmark    & Near zero  & 3,000+    & Config.    & High   \\
+\textbf{This System (HCS)} & \checkmark    & \textbf{\$0.0001} & \textbf{10,000+} & Pseudonym. & Medium \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The gap this project fills: \textbf{practical, low-cost, publicly verifiable voting
+for real organizations} without requiring cryptocurrency expertise or consortium
+governance.

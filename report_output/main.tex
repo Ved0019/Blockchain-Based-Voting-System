@@ -1,0 +1,286 @@
+%===============================================================================
+% Blockchain-Based Voting System - Project Report LaTeX Template
+%===============================================================================
+% Compile with: pdflatex -> biber -> pdflatex -> pdflatex (or use latexmk)
+% Recommended: Use Overleaf (https://overleaf.com) for online compilation
+%===============================================================================
+
+\documentclass[12pt,a4paper,oneside,openany]{report}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Core
+%-------------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+\usepackage{microtype}           % Improved typography
+\usepackage{setspace}            % Line spacing control
+\usepackage{geometry}            % Page margins
+
+%-------------------------------------------------------------------------------
+% FONTS - Professional defaults (Latin Modern = Computer Modern improved)
+%-------------------------------------------------------------------------------
+% Option 1: Latin Modern (default, looks great, no extra setup needed)
+\usepackage{lmodern}
+
+% Option 2: Times New Roman equivalent (uncomment if required by institution)
+% \usepackage{mathptmx}          % Times for text + math
+% \usepackage{helvet}            % Helvetica for sans-serif
+% \usepackage{courier}           % Courier for monospace
+
+% Option 3: Libertinus (modern, professional, open-source)
+% \usepackage{libertinus}
+
+% Option 4: Palatino (classic academic look)
+% \usepackage{mathpazo}
+
+% Option 5: XCharter (Charter-based, very readable)
+% \usepackage{XCharter}
+
+%-------------------------------------------------------------------------------
+% PAGE GEOMETRY - Standard thesis margins
+%-------------------------------------------------------------------------------
+\geometry{
+    left=30mm,
+    right=25mm,
+    top=25mm,
+    bottom=25mm,
+    headheight=14.5pt,
+    includeheadfoot
+}
+
+%-------------------------------------------------------------------------------
+% LINE SPACING - 1.5 for body, single for TOC/footnotes
+%-------------------------------------------------------------------------------
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.5em}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Figures, Tables, Graphics
+%-------------------------------------------------------------------------------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}            % Professional tables
+\usepackage{longtable}           % Multi-page tables
+\usepackage{multirow}            % Merged cells
+\usepackage{makecell}            % Cell formatting
+\usepackage{colortbl}            % Colored table rows
+\usepackage{adjustbox}           % Scale/rotate tables/figures
+\usepackage{wrapfig}             % Text wrapping around figures
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Code Listings
+%-------------------------------------------------------------------------------
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+\definecolor{codeblue}{rgb}{0.13,0.13,1}
+\definecolor{codegreen}{rgb}{0,0.5,0}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codered}{rgb}{0.75,0,0}
+
+\lstdefinestyle{codeStyle}{
+    backgroundcolor=\color{codegray},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    breakatwhitespace=false,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    numbers=left,
+    numbersep=5pt,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{black!30},
+    captionpos=b
+}
+
+\lstdefinestyle{terminalStyle}{
+    backgroundcolor=\color{black!5},
+    basicstyle=\ttfamily\footnotesize\color{white},
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{black!30}
+}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Math & Algorithms
+%-------------------------------------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Cross-references, Hyperlinks
+%-------------------------------------------------------------------------------
+\usepackage{hyperref}
+\usepackage{cleveref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    filecolor=black,
+    urlcolor=black,
+    pdfauthor={Your Name},
+    pdftitle={Hybrid Cloud and Distributed Ledger E-Voting System},
+    pdfsubject={Project Report},
+    pdfkeywords={Blockchain, Voting, Hedera, HCS, E-Voting, Distributed Ledger}
+}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Bibliography (BibLaTeX + Biber)
+%-------------------------------------------------------------------------------
+\usepackage[backend=biber,style=ieee,sorting=nty]{biblatex}
+\addbibresource{references.bib}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Glossary/Acronyms
+%-------------------------------------------------------------------------------
+\usepackage[acronym,toc,shortcuts]{glossaries}
+\makeglossaries
+\loadglsentries{glossary}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Appendix
+%-------------------------------------------------------------------------------
+\usepackage{appendix}
+
+%-------------------------------------------------------------------------------
+% PACKAGES - Todo notes (remove for final version)
+%-------------------------------------------------------------------------------
+\usepackage{todonotes}
+\newcommand{\todoitem}[1]{\todo[inline,color=yellow!30]{#1}}
+
+%-------------------------------------------------------------------------------
+% CUSTOM COMMANDS
+%-------------------------------------------------------------------------------
+\newcommand{\projecttitle}{Hybrid Cloud and Distributed Ledger E-Voting System}
+\newcommand{\projectsubtitle}{A Blockchain-Based Secure Electronic Voting Platform using Hedera Consensus Service}
+\newcommand{\authorname}{Your Name}
+\newcommand{\studentid}{Your Student ID}
+\newcommand{\supervisor}{Dr. Supervisor Name}
+\newcommand{\institution}{Your Institution / University}
+\newcommand{\department}{Department of Computer Science}
+\newcommand{\degree}{Bachelor of Technology / Master of Technology}
+\newcommand{\submissiondate}{October 2026}
+
+%-------------------------------------------------------------------------------
+% HEADER/FOOTER
+%-------------------------------------------------------------------------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+%===============================================================================
+% DOCUMENT START
+%===============================================================================
+\begin{document}
+
+%-------------------------------------------------------------------------------
+% FRONT MATTER
+%-------------------------------------------------------------------------------
+\pagenumbering{roman}
+\pagestyle{empty}
+
+%----- Title Page -----
+\input{frontmatter/titlepage}
+
+%----- Declaration (if required) -----
+\input{frontmatter/declaration}
+
+%----- Abstract -----
+\input{frontmatter/abstract}
+
+%----- Acknowledgments -----
+\input{frontmatter/acknowledgments}
+
+%----- Table of Contents -----
+\cleardoublepage
+\pagestyle{fancy}
+\tableofcontents
+
+%----- List of Figures -----
+\cleardoublepage
+\listoffigures
+
+%----- List of Tables -----
+\cleardoublepage
+\listoftables
+
+%----- List of Abbreviations -----
+\cleardoublepage
+\input{frontmatter/abbreviations}
+
+%-------------------------------------------------------------------------------
+% MAIN MATTER
+%-------------------------------------------------------------------------------
+\cleardoublepage
+\pagenumbering{arabic}
+\pagestyle{fancy}
+
+%----- Chapter 1: Introduction -----
+\input{chapters/chapter01_introduction}
+
+%----- Chapter 2: Literature Review -----
+\input{chapters/chapter02_literature_review}
+
+%----- Chapter 3: System Architecture & Design -----
+\input{chapters/chapter03_architecture}
+
+%----- Chapter 4: Implementation -----
+\input{chapters/chapter04_implementation}
+
+%----- Chapter 5: Results & Evaluation -----
+\input{chapters/chapter05_results}
+
+%----- Chapter 6: Discussion -----
+\input{chapters/chapter06_discussion}
+
+%----- Chapter 7: Conclusion -----
+\input{chapters/chapter07_conclusion}
+
+%-------------------------------------------------------------------------------
+% BACK MATTER
+%-------------------------------------------------------------------------------
+
+%----- Bibliography -----
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\printbibliography[heading=bibintoc]
+
+%----- Appendices -----
+\begin{appendices}
+    \input{appendices/appendix_a_code_structure}
+    \input{appendices/appendix_b_api_documentation}
+    \input{appendices/appendix_c_deployment_guide}
+    \input{appendices/appendix_d_user_manual}
+    \input{appendices/appendix_e_test_cases}
+    \input{appendices/appendix_f_config_files}
+    \input{appendices/appendix_g_glossary}
+\end{appendices}
+
+%===============================================================================
+% DOCUMENT END
+%===============================================================================
+\end{document}

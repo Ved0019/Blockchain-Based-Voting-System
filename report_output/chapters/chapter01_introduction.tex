@@ -1,0 +1,115 @@
+%===============================================================================
+% CHAPTER 1: INTRODUCTION
+%===============================================================================
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{Background and Motivation}
+\label{sec:background}
+
+Democratic processes rely fundamentally on the integrity of voting systems. Whether for
+national elections, student councils, or organizational governance, the ability to
+cast a vote and trust that it will be counted correctly is paramount. Traditional
+paper-based voting, while providing tangible audit trails, suffers from high costs,
+logistical complexity, slow tallying, and accessibility barriers for remote voters.
+
+Electronic voting (e-voting) emerged to address these limitations, offering speed,
+convenience, and potential cost savings. However, early e-voting systems—particularly
+Direct Recording Electronic (DRE) machines and centralized internet voting
+platforms—introduced new vulnerabilities:
+\begin{itemize}
+    \item \textbf{Centralized Trust:} A single database administrator can alter results.
+    \item \textbf{Opacity:} Voters cannot independently verify their vote was recorded.
+    \item \textbf{Single Points of Failure:} Server compromise endangers the entire election.
+    \item \textbf{Lack of Transparency:} Closed-source code prevents public audit.
+    \item \textbf{Coercion Vulnerability:} No receipt-freeness guarantees.
+\end{itemize}
+
+High-profile incidents—from the 2000 US presidential election controversies to
+vulnerabilities discovered in Estonia's internet voting system—have eroded public
+confidence. The core problem remains: \textit{how to achieve the efficiency of digital
+systems without sacrificing the verifiability and trust of physical ballots}.
+
+\section{Problem Statement}
+\label{sec:problem}
+
+Existing blockchain-based voting proposals often fall into two extremes:
+\begin{enumerate}
+    \item \textbf{Smart-contract platforms (Ethereum, etc.):} High gas costs (\$5--50/vote),
+    low throughput (15--30 TPS), and complex user experience (wallet management).
+    \item \textbf{Permissioned ledgers (Hyperledger Fabric):} Require consortium governance,
+    defeating the purpose of public verifiability.
+\end{enumerate}
+
+A practical e-voting system for real-world organizations (universities, associations,
+cooperatives) needs:
+\begin{itemize}
+    \item \textbf{Cryptographic immutability:} Votes cannot be altered post-submission.
+    \item \textbf{Public auditability:} Anyone can verify the tally independently.
+    \item \textbf{Low cost:} Sub-cent per vote to enable large-scale elections.
+    \item \textbf{High throughput:} Support thousands of concurrent voters.
+    \item \textbf{Familiar UX:} Web-based, no cryptocurrency wallet required.
+    \item \textbf{Regulatory alignment:} Identity verification compatible with KYC/AML.
+\end{itemize}
+
+\section{Objectives}
+\label{sec:objectives}
+
+\subsection{Primary Objective}
+Design and implement a \textbf{hybrid cloud and distributed ledger e-voting system}
+that achieves tamper-proof vote recording, transparent tallying, and practical
+usability for organizational elections.
+
+\subsection{Secondary Objectives}
+\begin{enumerate}
+    \item Implement vote immutability via Hedera Consensus Service (HCS) topics.
+    \item Enforce one-person-one-vote through atomic database-ledger coordination.
+    \item Provide real-time transparent results via Hedera mirror nodes.
+    \item Achieve sub-5-second finality with predictable \$0.0001 per-vote cost.
+    \item Build an informed-voting interface with candidate manifestos and evidence.
+    \item Develop administrative tooling for election lifecycle management.
+\end{enumerate}
+
+\section{Scope and Limitations}
+\label{sec:scope}
+
+\subsection{In Scope}
+\begin{itemize}
+    \item Student council / organizational elections (not national elections)
+    \item Web-based React single-page application
+    \item Hedera Testnet integration (production-ready architecture, testnet deployment)
+    \item Role-based access: Administrators and Voters
+    \item Manifesto dashboard with campus issues and evidence documents
+    \item Docker-based deployment for reproducibility
+\end{itemize}
+
+\subsection{Out of Scope}
+\begin{itemize}
+    \item National-level election regulatory compliance
+    \item Biometric or hardware-based authentication
+    \item Zero-knowledge proofs for vote privacy (pseudonymous only)
+    \item Hedera Mainnet deployment (requires governance review)
+    \item Native mobile applications (responsive web only)
+    \item Vote delegation / liquid democracy
+    \item Post-quantum cryptographic migration
+\end{itemize}
+
+\section{Report Organization}
+\label{sec:organization}
+
+This report is structured as follows:
+\begin{itemize}
+    \item \textbf{Chapter 2} reviews related work in e-voting, blockchain voting,
+    and hybrid architectures.
+    \item \textbf{Chapter 3} presents the system architecture, component design,
+    data models, and security model.
+    \item \textbf{Chapter 4} details the implementation of backend services,
+    frontend components, and blockchain integration.
+    \item \textbf{Chapter 5} reports functional testing, performance metrics,
+    security evaluation, and usability results.
+    \item \textbf{Chapter 6} discusses achievements, challenges, limitations,
+    and future work.
+    \item \textbf{Chapter 7} concludes with contributions and impact.
+    \item \textbf{Appendices} provide source code structure, API documentation,
+    deployment guide, user manuals, and test cases.
+\end{itemize}

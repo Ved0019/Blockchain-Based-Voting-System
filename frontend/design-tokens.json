@@ -1,0 +1,178 @@
+{
+  "$schema": "https://design-tokens.github.io/format",
+  "version": "1.0.0",
+  "name": "VoteLedger Design System",
+  "description": "Design tokens for the VoteLedger blockchain voting platform. Deep Navy + Emerald Green + Warm Gold accent with Manrope, DM Mono, and Playfair Display typography.",
+  "author": "VoteLedger Team",
+  "color": {
+    "brand": {
+      "navy": {
+        "value": "#0f1e3d",
+        "type": "color",
+        "description": "Primary brand navy - deep, authoritative"
+      },
+      "navyMid": {
+        "value": "#1a365e",
+        "type": "color",
+        "description": "Mid-tone navy for secondary elements"
+      },
+      "navyLight": {
+        "value": "#2a4a7a",
+        "type": "color",
+        "description": "Lighter navy for subtle backgrounds"
+      },
+      "emerald": {
+        "value": "#0d9488",
+        "type": "color",
+        "description": "Primary action color - trust, verification, blockchain"
+      },
+      "emeraldDark": {
+        "value": "#0f766e",
+        "type": "color",
+        "description": "Hover state for primary actions"
+      },
+      "emeraldLight": {
+        "value": "#14b8a6",
+        "type": "color",
+        "description": "Light accent for highlights"
+      },
+      "gold": {
+        "value": "#d4a843",
+        "type": "color",
+        "description": "Warm gold accent - editorial highlights, badges, premium feel"
+      },
+      "goldLight": {
+        "value": "#e8c56d",
+        "type": "color",
+        "description": "Lighter gold for hover states"
+      },
+      "goldBg": {
+        "value": "#fef9e7",
+        "type": "color",
+        "description": "Gold background for badges and callouts"
+      }
+    },
+    "semantic": {
+      "primary": { "value": "{color.brand.emerald}", "type": "color" },
+      "primaryDark": { "value": "{color.brand.emeraldDark}", "type": "color" },
+      "primaryLight": { "value": "{color.brand.emeraldLight}", "type": "color" },
+      "secondary": { "value": "{color.brand.navy}", "type": "color" },
+      "accent": { "value": "{color.brand.gold}", "type": "color" },
+      "success": { "value": "#059669", "type": "color" },
+      "successBg": { "value": "#d1fae5", "type": "color" },
+      "warning": { "value": "#d97706", "type": "color" },
+      "warningBg": { "value": "#fef3c7", "type": "color" },
+      "error": { "value": "#dc2626", "type": "color" },
+      "errorBg": { "value": "#fee2e2", "type": "color" },
+      "info": { "value": "#2563eb", "type": "color" },
+      "infoBg": { "value": "#dbeafe", "type": "color" }
+    },
+    "neutral": {
+      "white": { "value": "#ffffff", "type": "color" },
+      "bg": { "value": "#f8fafc", "type": "color", "description": "Page background" },
+      "bgCard": { "value": "#ffffff", "type": "color", "description": "Card/panel background" },
+      "bgElevated": { "value": "#ffffff", "type": "color", "description": "Elevated surface background" },
+      "border": { "value": "#e2e8f0", "type": "color" },
+      "borderStrong": { "value": "#cbd5e1", "type": "color" },
+      "text": { "value": "#1e293b", "type": "color", "description": "Primary text" },
+      "textMuted": { "value": "#64748b", "type": "color", "description": "Secondary text" },
+      "textLight": { "value": "#94a3b8", "type": "color", "description": "Placeholder/disabled text" }
+    }
+  },
+  "typography": {
+    "fontFamilies": {
+      "ui": {
+        "value": "'Manrope', 'Inter', system-ui, sans-serif",
+        "type": "fontFamily",
+        "description": "Primary UI font - clean, modern, highly readable"
+      },
+      "mono": {
+        "value": "'DM Mono', 'JetBrains Mono', 'Courier New', monospace",
+        "type": "fontFamily",
+        "description": "Monospace font for data, codes, transaction IDs"
+      },
+      "editorial": {
+        "value": "'Playfair Display', Georgia, serif",
+        "type": "fontFamily",
+        "description": "Editorial font for headlines, emphasis, trust signals"
+      }
+    },
+    "fontSizes": {
+      "xs": { "value": "0.6875rem", "type": "dimension" },
+      "sm": { "value": "0.8125rem", "type": "dimension" },
+      "base": { "value": "1rem", "type": "dimension" },
+      "lg": { "value": "1.125rem", "type": "dimension" },
+      "xl": { "value": "1.375rem", "type": "dimension" },
+      "2xl": { "value": "1.75rem", "type": "dimension" },
+      "3xl": { "value": "2.5rem", "type": "dimension" },
+      "4xl": { "value": "4rem", "type": "dimension" }
+    },
+    "fontWeights": {
+      "normal": { "value": "400", "type": "fontWeight" },
+      "medium": { "value": "500", "type": "fontWeight" },
+      "semibold": { "value": "600", "type": "fontWeight" },
+      "bold": { "value": "700", "type": "fontWeight" },
+      "extrabold": { "value": "800", "type": "fontWeight" },
+      "black": { "value": "900", "type": "fontWeight" }
+    },
+    "lineHeights": {
+      "tight": { "value": "1.15", "type": "number" },
+      "base": { "value": "1.6", "type": "number" },
+      "relaxed": { "value": "1.7", "type": "number" }
+    },
+    "letterSpacings": {
+      "tight": { "value": "-0.03em", "type": "dimension" },
+      "normal": { "value": "0", "type": "dimension" },
+      "wide": { "value": "0.02em", "type": "dimension" },
+      "wider": { "value": "0.04em", "type": "dimension" },
+      "widest": { "value": "0.12em", "type": "dimension" }
+    }
+  },
+  "spacing": {
+    "1": { "value": "4px", "type": "dimension" },
+    "2": { "value": "8px", "type": "dimension" },
+    "3": { "value": "12px", "type": "dimension" },
+    "4": { "value": "16px", "type": "dimension" },
+    "5": { "value": "24px", "type": "dimension" },
+    "6": { "value": "32px", "type": "dimension" },
+    "7": { "value": "48px", "type": "dimension" },
+    "8": { "value": "64px", "type": "dimension" },
+    "9": { "value": "96px", "type": "dimension" }
+  },
+  "borderRadius": {
+    "sm": { "value": "6px", "type": "dimension" },
+    "md": { "value": "10px", "type": "dimension" },
+    "lg": { "value": "16px", "type": "dimension" },
+    "xl": { "value": "24px", "type": "dimension" },
+    "full": { "value": "9999px", "type": "dimension" }
+  },
+  "shadows": {
+    "sm": { "value": "0 1px 2px rgba(15, 30, 61, 0.05)", "type": "boxShadow" },
+    "md": { "value": "0 4px 12px rgba(15, 30, 61, 0.08), 0 2px 4px rgba(15, 30, 61, 0.06)", "type": "boxShadow" },
+    "lg": { "value": "0 12px 28px rgba(15, 30, 61, 0.12), 0 4px 12px rgba(15, 30, 61, 0.08)", "type": "boxShadow" },
+    "xl": { "value": "0 20px 40px rgba(15, 30, 61, 0.15), 0 8px 16px rgba(15, 30, 61, 0.1)", "type": "boxShadow" }
+  },
+  "transitions": {
+    "fast": { "value": "120ms ease", "type": "transition" },
+    "base": { "value": "200ms ease", "type": "transition" },
+    "slow": { "value": "300ms ease", "type": "transition" }
+  },
+  "zIndex": {
+    "dropdown": { "value": "100", "type": "number" },
+    "sticky": { "value": "200", "type": "number" },
+    "modal": { "value": "300", "type": "number" },
+    "toast": { "value": "400", "type": "number" },
+    "tooltip": { "value": "500", "type": "number" }
+  },
+  "breakpoints": {
+    "sm": { "value": "640px", "type": "dimension" },
+    "md": { "value": "768px", "type": "dimension" },
+    "lg": { "value": "1024px", "type": "dimension" },
+    "xl": { "value": "1280px", "type": "dimension" }
+  },
+  "container": {
+    "maxWidth": { "value": "1280px", "type": "dimension" },
+    "padding": { "value": "16px", "type": "dimension" },
+    "paddingLg": { "value": "48px", "type": "dimension" }
+  }
+}
