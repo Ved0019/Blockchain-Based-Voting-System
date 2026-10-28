@@ -7,7 +7,9 @@
 \section{Achievement of Objectives}
 \label{sec:achievement}
 
-All primary and secondary objectives from Section~\ref{sec:objectives} were met:
+The repository demonstrates the core prototype objectives below. Deployment-scale,
+privacy, and usability objectives remain open because they were not measured in a
+reproducible evaluation run:
 
 \begin{table}[H]
 \centering
@@ -20,7 +22,7 @@ All primary and secondary objectives from Section~\ref{sec:objectives} were met:
 Vote immutability via HCS & \checkmark Achieved & Ch.~3, 4, 5 \\
 One-person-one-vote enforcement & \checkmark Achieved & Atomic DB+HCS (Sec.~\ref{sec:vote-flow}) \\
 Transparent tallying via mirror nodes & \checkmark Achieved & Sec.~\ref{sec:mirror-query}, Ch.~5 \\
-Sub-5s finality, \$0.0001/vote & \checkmark Achieved & Table~\ref{tab:performance} \\
+Sub-5s finality, \$0.0001/vote & Not measured & Testnet benchmark and billing evidence pending \\
 Informed-voting manifesto dashboard & \checkmark Achieved & ManifestoDashboard component \\
 Admin election lifecycle tooling & \checkmark Achieved & AdminConsole component \\
 \midrule
@@ -39,10 +41,10 @@ Admin election lifecycle tooling & \checkmark Achieved & AdminConsole component 
 \textbf{Challenge} & \textbf{Root Cause} & \textbf{Solution} \\
 \midrule
 Atomic vote + ledger write & Race condition risk & Optimistic lock + rollback (Lst.~\ref{lst:vote-atomic}) \\
-JWT expiry handling & Token expiration UX & Client-side expiry check + refresh prompt \\
+JWT expiry handling & Token expiration UX & Client-side expiry check; no refresh flow \\
 Manifesto data complexity & Nested arrays, evidence refs & Structured Mongoose schemas + validation \\
-HCS testnet rate limits & 10 TPS throttle & Batch testing, exponential backoff \\
-Role-based UI routing & Auth state sync & ProtectedRoute + sessionStorage \\
+HCS testnet rate limits & Unknown in repository & No load-test harness included \\
+Role-based UI routing & Auth state sync & React Router role checks + sessionStorage \\
 Mobile responsiveness & Complex dashboard & CSS Grid/Flex, mobile-first breakpoints \\
 \midrule
 \end{tabular}

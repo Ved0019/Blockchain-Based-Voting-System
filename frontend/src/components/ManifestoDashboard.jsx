@@ -850,11 +850,14 @@ function PreviousTermDashboardSection({ candidates, evidence, onSelectManifesto 
 }
 
 // ─── SECTION E: CANDIDATE COMPARISON CENTER ──────────────────────────────────
-function ComparisonCenter({ candidates }) {
+function ComparisonCenter({ candidates, onProceedToVote }) {
   const [selected, setSelected] = useState(() => (candidates || []).slice(0, 2).map(c => c.candidateId));
   const [filterCat, setFilterCat] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedMap, setExpandedMap] = useState({});
 
   const toggleSelect = (id) => {
+    soundFx.playClick(900, 0.02);
     setSelected(prev =>
       prev.includes(id)
         ? prev.filter(x => x !== id)
@@ -862,15 +865,32 @@ function ComparisonCenter({ candidates }) {
     );
   };
 
+  const toggleExpand = (key) => {
+    soundFx.playClick(950, 0.015);
+    setExpandedMap(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const compareCandidates = candidates.filter(c => selected.includes(c.candidateId));
   const allCategories = ["All", ...new Set(candidates.flatMap(c => (c.manifesto || []).map(p => p.category)))];
 
+  const matchesSearch = (item) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    return (
+      (item.title && item.title.toLowerCase().includes(q)) ||
+      (item.proposedSolution && item.proposedSolution.toLowerCase().includes(q)) ||
+      (item.problemStatement && item.problemStatement.toLowerCase().includes(q)) ||
+      (item.measurableMetrics && item.measurableMetrics.toLowerCase().includes(q)) ||
+      (item.targetTimeline && item.targetTimeline.toLowerCase().includes(q))
+    );
+  };
+
   return (
-    <section className="md-section">
+    <section className="md-section" id="section-compare">
       <div className="md-section-header">
-        <span className="md-section-eyebrow">Compare</span>
+        <span className="md-section-eyebrow">Compare Manifestos</span>
         <h2 className="md-section-title">Candidate Comparison Center</h2>
-        <p className="md-section-sub">Select 2 or 3 candidates to compare their manifestos side-by-side. Filter by issue category to focus on what matters most to you.</p>
+        <p className="md-section-sub">Select 2 or 3 candidates to compare their policy commitments side-by-side. Use live search or category filters to inspect specific priorities.</p>
       </div>
 
       <div className="md-compare-selector">
@@ -897,13 +917,47 @@ function ComparisonCenter({ candidates }) {
 
       {compareCandidates.length >= 2 && (
         <>
-          <div className="md-filter-bar" style={{ marginTop: 20 }}>
+          {/* Live Search and Keyword Filter */}
+          <div className="md-compare-search-wrap" style={{ marginTop: 24 }}>
+            <span className="md-compare-search-icon">🔍</span>
+            <input
+              type="text"
+              className="md-compare-search-input"
+              placeholder="Search promises and policy keywords (e.g. Wi-Fi, Food, Gym, Placement, Library, Solar, Healthcare)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                style={{
+                  position: "absolute",
+                  right: 14,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none",
+                  border: "none",
+                  fontSize: 14,
+                  color: "var(--md-muted)",
+                  cursor: "pointer",
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <div className="md-filter-bar" style={{ marginTop: 12, marginBottom: 20 }}>
             <span className="md-filter-label">Filter by:</span>
             {allCategories.map(cat => (
               <button
                 key={cat}
                 className={`md-filter-btn ${filterCat === cat ? "md-filter-active" : ""}`}
-                onClick={() => setFilterCat(cat)}
+                onClick={() => {
+                  soundFx.playClick(900, 0.02);
+                  setFilterCat(cat);
+                }}
               >
                 {CATEGORY_ICONS[cat] || ""} {cat}
               </button>
@@ -914,12 +968,29 @@ function ComparisonCenter({ candidates }) {
             <table className="md-comparison-table">
               <thead>
                 <tr>
-                  <th className="md-cmp-aspect-col">Aspect</th>
+                  <th className="md-cmp-aspect-col">
+                    <span style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.08em", opacity: 0.85 }}>
+                      Comparison Matrix
+                    </span>
+                  </th>
                   {compareCandidates.map(c => (
                     <th key={c.candidateId} className="md-cmp-cand-col">
                       <div className="md-cmp-cand-name">{c.name}</div>
                       <div className="md-cmp-cand-party">{c.party.split("(")[0].trim()}</div>
                       {c.isIncumbent && <div className="md-cmp-incumbent-tag">Incumbent</div>}
+                      <button
+                        type="button"
+                        className="md-cmp-vote-btn"
+                        style={{ marginTop: 10, background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)" }}
+                        onClick={() => {
+                          soundFx.playCardScan();
+                          sessionStorage.setItem("preferredCandidate", c.candidateId);
+                          onProceedToVote && onProceedToVote(c.candidateId);
+                        }}
+                      >
+                        <span>Cast Ballot</span>
+                        <span>#0{c.candidateId} ↗</span>
+                      </button>
                     </th>
                   ))}
                 </tr>
@@ -991,40 +1062,124 @@ function ComparisonCenter({ candidates }) {
                 )}
 
                 <tr className="md-cmp-row-section">
-                  <td colSpan={compareCandidates.length + 1}>📋 Manifesto Proposals{filterCat !== "All" ? ` — ${filterCat}` : ""}</td>
+                  <td colSpan={compareCandidates.length + 1}>
+                    📋 Manifesto Proposals{filterCat !== "All" ? ` — ${filterCat}` : ""}{searchQuery ? ` (Filter: "${searchQuery}")` : ""}
+                  </td>
                 </tr>
                 {/* Dynamically show filtered promises by category */}
                 {(filterCat === "All" ? Object.keys(CATEGORY_ICONS) : [filterCat]).map(cat => {
                   const rows = compareCandidates.map(c =>
-                    (c.manifesto || []).filter(p => p.category === cat)
+                    (c.manifesto || []).filter(p => p.category === cat && matchesSearch(p))
                   );
                   if (rows.every(r => r.length === 0)) return null;
                   return (
                     <tr key={cat}>
-                      <td className="md-cmp-aspect">{CATEGORY_ICONS[cat]} {cat}</td>
+                      <td className="md-cmp-aspect">
+                        <span style={{ fontSize: 18, marginRight: 6 }}>{CATEGORY_ICONS[cat] || "📌"}</span>
+                        <span>{cat}</span>
+                      </td>
                       {compareCandidates.map((c, ci) => (
                         <td key={c.candidateId} className="md-cmp-cell">
                           {rows[ci].length > 0 ? (
-                            <div>
-                              <strong style={{ color: "var(--md-navy)", display: "block", marginBottom: 4 }}>
-                                {rows[ci][0].title}
-                              </strong>
-                              <p style={{ margin: "0 0 6px", fontSize: 12, color: "var(--md-muted)", lineHeight: 1.45 }}>
-                                {rows[ci][0].proposedSolution?.slice(0, 140)}{rows[ci][0].proposedSolution?.length > 140 ? "…" : ""}
-                              </p>
-                              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, fontSize: 11, marginTop: 4 }}>
-                                <span style={{ fontFamily: "var(--md-font-mono)", color: "var(--md-navy-mid)" }}>
-                                  🗓 {rows[ci][0].targetTimeline}
-                                </span>
-                                {rows[ci][0].measurableMetrics && (
-                                  <span style={{ color: "#065f46", background: "#d1fae5", padding: "1px 6px", borderRadius: 4 }}>
-                                    KPI: {rows[ci][0].measurableMetrics.slice(0, 55)}{rows[ci][0].measurableMetrics.length > 55 ? "…" : ""}
-                                  </span>
-                                )}
-                              </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                              {rows[ci].map((proposal, pi) => {
+                                const itemKey = `${c.candidateId}-${cat}-${pi}`;
+                                const isExpanded = !!expandedMap[itemKey];
+                                return (
+                                  <div key={itemKey} className="md-cmp-proposal-card">
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 8 }}>
+                                      <StatusBadge status={proposal.status || "Proposed"} />
+                                      {proposal.targetTimeline && (
+                                        <span className="md-timeline-pill">🗓 {proposal.targetTimeline}</span>
+                                      )}
+                                    </div>
+                                    <div className="md-cmp-proposal-title">
+                                      {proposal.title}
+                                    </div>
+                                    <p className="md-cmp-proposal-desc">
+                                      {proposal.proposedSolution?.slice(0, 160)}
+                                      {proposal.proposedSolution?.length > 160 && !isExpanded ? "…" : ""}
+                                    </p>
+                                    {proposal.measurableMetrics && (
+                                      <div className="md-cmp-badge-row">
+                                        <span className="md-kpi-pill" title={proposal.measurableMetrics}>
+                                          🎯 KPI: {proposal.measurableMetrics.slice(0, 52)}{proposal.measurableMetrics.length > 52 ? "…" : ""}
+                                        </span>
+                                      </div>
+                                    )}
+
+                                    <button
+                                      type="button"
+                                      className="md-cmp-expand-btn"
+                                      onClick={() => toggleExpand(itemKey)}
+                                      aria-expanded={isExpanded}
+                                    >
+                                      {isExpanded ? "▲ Hide implementation details" : "▼ View details & evidence"}
+                                    </button>
+
+                                    <AnimatePresence>
+                                      {isExpanded && (
+                                        <motion.div
+                                          className="md-cmp-expanded-body"
+                                          initial={{ opacity: 0, height: 0 }}
+                                          animate={{ opacity: 1, height: "auto" }}
+                                          exit={{ opacity: 0, height: 0 }}
+                                          transition={{ duration: 0.2 }}
+                                        >
+                                          {proposal.problemStatement && (
+                                            <div style={{ marginBottom: 8 }}>
+                                              <strong style={{ color: "var(--md-navy)", fontSize: 11.5, display: "block" }}>🚨 Problem Identified:</strong>
+                                              <p style={{ margin: "2px 0 0", color: "#64748b" }}>{proposal.problemStatement}</p>
+                                            </div>
+                                          )}
+                                          {proposal.proposedSolution?.length > 160 && (
+                                            <div style={{ marginBottom: 8 }}>
+                                              <strong style={{ color: "var(--md-navy)", fontSize: 11.5, display: "block" }}>💡 Complete Solution:</strong>
+                                              <p style={{ margin: "2px 0 0", color: "#475569" }}>{proposal.proposedSolution}</p>
+                                            </div>
+                                          )}
+                                          {proposal.implementationSteps && proposal.implementationSteps.length > 0 && (
+                                            <div style={{ marginBottom: 8 }}>
+                                              <strong style={{ color: "var(--md-navy)", fontSize: 11.5, display: "block" }}>🛠 Implementation Milestones:</strong>
+                                              <ul style={{ margin: "4px 0 0", paddingLeft: 16, color: "#475569" }}>
+                                                {proposal.implementationSteps.map((s, si) => <li key={si}>{s}</li>)}
+                                              </ul>
+                                            </div>
+                                          )}
+                                          {proposal.evidenceCitations && proposal.evidenceCitations.length > 0 && (
+                                            <div>
+                                              <strong style={{ color: "var(--md-navy)", fontSize: 11.5, display: "block" }}>🔗 Verifiable Evidence:</strong>
+                                              <ul style={{ margin: "4px 0 0", paddingLeft: 16, color: "var(--md-blue)" }}>
+                                                {proposal.evidenceCitations.map((ev, evi) => (
+                                                  <li key={evi}>{typeof ev === "string" ? ev : (ev.title || "Document")}</li>
+                                                ))}
+                                              </ul>
+                                            </div>
+                                          )}
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
+
+                                    <button
+                                      type="button"
+                                      className="md-cmp-vote-btn"
+                                      onClick={() => {
+                                        soundFx.playCardScan();
+                                        sessionStorage.setItem("preferredCandidate", c.candidateId);
+                                        onProceedToVote && onProceedToVote(c.candidateId);
+                                      }}
+                                    >
+                                      <span>Vote for {c.name.split(" ")[0]}</span>
+                                      <span>#0{c.candidateId} ↗</span>
+                                    </button>
+                                  </div>
+                                );
+                              })}
                             </div>
                           ) : (
-                            <span style={{ color: "#d1d5db" }}>No proposal</span>
+                            <span style={{ color: "#94a3b8", fontSize: 12.5, fontStyle: "italic" }}>
+                              {searchQuery ? "No matching proposals" : "No proposal filed"}
+                            </span>
                           )}
                         </td>
                       ))}
@@ -1542,7 +1697,8 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
                   className="spec-cta-pill"
                   onClick={() => {
                     soundFx.playCardScan();
-                    onProceedToVote && onProceedToVote();
+                    sessionStorage.setItem("preferredCandidate", currentSpecCandidate.candidateId);
+                    onProceedToVote && onProceedToVote(currentSpecCandidate.candidateId);
                   }}
                 >
                   <span>Proceed to Cast Ballot</span>
@@ -1578,6 +1734,7 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
                     candidate={selectedCandidateDetail.candidate}
                     evidence={selectedCandidateDetail.relatedEvidence}
                     onBack={handleBackToOverview}
+                    onProceedToVote={onProceedToVote}
                   />
                 </div>
               ) : (
@@ -1587,6 +1744,7 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
                       election={data.election}
                       candidates={data.candidates}
                       voterStatus={voterStatus}
+                      onProceedToVote={onProceedToVote}
                     />
                   </div>
 
@@ -1594,6 +1752,7 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
                     <CandidateCards
                       candidates={data.candidates}
                       onSelectManifesto={handleSelectManifesto}
+                      onProceedToVote={onProceedToVote}
                     />
                   </div>
 
@@ -1606,7 +1765,10 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
                   </div>
 
                   <div id="section-compare">
-                    <ComparisonCenter candidates={data.candidates} />
+                    <ComparisonCenter
+                      candidates={data.candidates}
+                      onProceedToVote={onProceedToVote}
+                    />
                   </div>
 
                   <div id="section-issues">
