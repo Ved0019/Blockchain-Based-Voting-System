@@ -4,8 +4,11 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "./Sidebar";
 import { useSuccessToast, useErrorToast, useInfoToast } from "./Toast";
+import { soundFx } from "../utils/soundEffects";
+import { InteractiveTreeCatalog } from "./InteractiveTreeCatalog";
 import "./AdminConsole.css";
 import "./Sidebar.css";
+import "./StudioAesthetic.css";
 
 export function AdminConsole({ token, onLogout, initialSection }) {
   const navigate = useNavigate();
@@ -62,6 +65,8 @@ export function AdminConsole({ token, onLogout, initialSection }) {
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [editingCandidate, setEditingCandidate] = useState(null);
   const [manifestoLoading, setManifestoLoading] = useState(false);
+  const [adminViewMode, setAdminViewMode] = useState("console"); // "console" | "reticle" | "tree"
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const showSuccess = useSuccessToast();
   const showError = useErrorToast();
   const showInfo = useInfoToast();
@@ -214,6 +219,9 @@ export function AdminConsole({ token, onLogout, initialSection }) {
   };
 
   const handleReset = async () => {
+    if (!window.confirm("Are you sure you want to reset the local voter registry? This will allow voters to cast their ballot again in this round.")) {
+      return;
+    }
     try {
       await axios.post(`${config.backendUrl}/api/admin/reset`, {},
         { headers: { Authorization: `Bearer ${token}` } });
@@ -270,8 +278,25 @@ export function AdminConsole({ token, onLogout, initialSection }) {
     navigate(path);
   };
 
-  if (loadingConfig) return <div className="loading">Loading configuration...</div>;
-  if (!electionData) return <div className="loading">Loading election data...</div>;
+  if (loadingConfig || !electionData) {
+    return (
+      <div className="voter-loading-shell">
+        <div className="md-loading-spinner" />
+        <h2>Loading admin control center…</h2>
+        <p>Syncing with Hedera network, candidate registry, and live mirror node tallies</p>
+      </div>
+    );
+  }
+
+  // Full-screen interactive DAG tree if in "tree" mode
+  if (adminViewMode === "tree") {
+    return (
+      <InteractiveTreeCatalog
+        onBackToHome={() => setAdminViewMode("console")}
+        onOpenBallot={() => setAdminViewMode("console")}
+      />
+    );
+  }
 
   return (
     <div className="admin-shell">
@@ -283,62 +308,198 @@ export function AdminConsole({ token, onLogout, initialSection }) {
         onMobileToggle={() => setMobileSidebarOpen(!mobileSidebarOpen)}
       />
 
-      <main className="admin-main" style={{ marginLeft: sidebarOpen ? '260px' : '72px' }}>
-        <header className="topbar">
-          <motion.div
-            className="brand-lockup"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 12 }}
-          >
-            <motion.div
-              className="brand-mark brand-mark--sm"
-              initial={{ scale: 0, rotate: -90 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            >
-              V
-            </motion.div>
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-            >
-              VOTE<span className="brand-accent">/</span>LEDGER
-            </motion.span>
-          </motion.div>
+      <main className={`admin-main ${sidebarOpen ? "sidebar-expanded" : "sidebar-collapsed"}`}>
+        <header className="topbar" style={{ height: "76px", flexWrap: "wrap", gap: "10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div className="chip-id-pill" style={{ margin: 0, padding: "3px 10px", fontSize: "11px" }}>
+              <span className="chip-square" />
+              <span className="chip-label">ADMIN</span>
+            </div>
+            <div className="studio-brand-center" style={{ position: "static", transform: "none", textAlign: "left" }}>
+              <span className="line-1">The</span>
+              <span className="line-2">Consensus Office</span>
+              <span className="line-3">of VoteLedger</span>
+            </div>
+          </div>
+
           <motion.div
             className="topbar-actions"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
+            style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}
           >
-            <span className="role-chip admin-chip">Administrator</span>
+            <button
+              type="button"
+              className={`studio-pill-btn ${adminViewMode === "console" ? "active" : ""}`}
+              onClick={() => {
+                soundFx.playClick(850, 0.02);
+                setAdminViewMode("console");
+              }}
+            >
+              Console
+            </button>
+            <button
+              type="button"
+              className={`studio-pill-btn ${adminViewMode === "reticle" ? "active" : ""}`}
+              onClick={() => {
+                soundFx.playCardScan();
+                setAdminViewMode("reticle");
+              }}
+            >
+              Reticle Monitor
+            </button>
+            <button
+              type="button"
+              className={`studio-pill-btn ${adminViewMode === "tree" ? "active" : ""}`}
+              onClick={() => {
+                soundFx.playClick(950, 0.02);
+                setAdminViewMode("tree");
+              }}
+            >
+              Consensus Web
+            </button>
+            <button
+              type="button"
+              className={`studio-sound-btn ${soundEnabled ? "active" : ""}`}
+              onClick={() => {
+                const en = soundFx.toggle();
+                setSoundEnabled(en);
+              }}
+              title={soundEnabled ? "Mute interactive audio" : "Enable tactile haptic audio"}
+            >
+              {soundEnabled ? "🔊" : "🔈"}
+            </button>
+
             <motion.button
               className="sidebar-toggle-btn"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
+              onClick={() => {
+                if (typeof window !== "undefined" && window.innerWidth <= 768) {
+                  setMobileSidebarOpen(!mobileSidebarOpen);
+                } else {
+                  setSidebarOpen(!sidebarOpen);
+                }
+              }}
+              aria-label="Toggle navigation menu"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {sidebarOpen ? "◀" : "▶"}
+              <span className="desktop-toggle-icon">{sidebarOpen ? "◀" : "▶"}</span>
+              <span className="mobile-toggle-icon">{mobileSidebarOpen ? "✕" : "☰"}</span>
             </motion.button>
             <motion.button
-              className="text-button"
+              className="studio-pill-btn"
+              style={{ background: "#111111", color: "#ffffff" }}
               onClick={handleLogout}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Log out <span aria-hidden="true">↗</span>
+              Log out ↗
             </motion.button>
           </motion.div>
         </header>
 
-        <motion.section
-            id="section-overview"
-            className="dashboard-heading"
-            variants={cardVariants}
-          >
+        {/* ── RETICLE LIVE NODE MONITOR (When Reticle Mode is Active) ── */}
+        {adminViewMode === "reticle" && (
+          <div style={{ padding: "40px 20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="reticle-wrapper" style={{ marginBottom: "20px" }}>
+              <div className="reticle-bracket reticle-tl" />
+              <div className="reticle-bracket reticle-tr" />
+              <div className="reticle-bracket reticle-bl" />
+              <div className="reticle-bracket reticle-br" />
+
+              <div className="nfc-card" style={{ cursor: "default" }}>
+                <svg className="nfc-rings" viewBox="0 0 320 320">
+                  <circle cx="160" cy="160" r="140" fill="none" stroke="white" strokeWidth="1" strokeDasharray="3 3" />
+                  <circle cx="160" cy="160" r="110" fill="none" stroke="white" strokeWidth="1" />
+                  <circle cx="160" cy="160" r="80" fill="none" stroke="white" strokeWidth="1" />
+                  <circle cx="160" cy="160" r="50" fill="none" stroke="white" strokeWidth="1" />
+                </svg>
+
+                <div className="nfc-card-header">
+                  <span className="nfc-signal" style={{ color: "#00ff66" }}>
+                    ● HCS NODE OPERATIONAL
+                  </span>
+                </div>
+
+                <div className="nfc-dots-orbit">
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                  <span className="nfc-dot" />
+                </div>
+
+                <div className="nfc-card-body">
+                  <div className="nfc-card-title">
+                    Topic 0.0.10697996<br />
+                    <em>{totalVotesCast} Verified Votes</em><br />
+                    <span style={{ fontSize: "12px", fontFamily: "var(--studio-mono)", opacity: 0.8 }}>
+                      Turnout: {stats.turnoutPercentage}% ({stats.votedVoters}/{stats.totalVoters})
+                    </span>
+                  </div>
+                </div>
+
+                <div className="nfc-card-footer">
+                  <div className="nfc-badge-pill">
+                    HCS MIRROR <span>LIVE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="chip-id-pill" style={{ marginBottom: "24px" }}>
+              <span className="chip-square" />
+              <span className="chip-label">STATUS</span>
+              <span className="chip-code">
+                {electionData?.election?.isActive ? "ELECTION ACTIVE · ACCEPTING BALLOTS" : "ELECTION INACTIVE · CLOSED"}
+              </span>
+            </div>
+
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
+              <button
+                type="button"
+                className="studio-pill-btn active"
+                onClick={handleToggleStatus}
+              >
+                {electionData?.election?.isActive ? "Pause Election" : "Activate Election"}
+              </button>
+              <button
+                type="button"
+                className="studio-pill-btn"
+                onClick={handleSeedManifesto}
+                disabled={manifestoLoading}
+              >
+                {manifestoLoading ? "Seeding..." : "⚡ Seed Demo Manifestos"}
+              </button>
+              <button
+                type="button"
+                className="studio-pill-btn"
+                onClick={handleReset}
+              >
+                Reset Voter Registry
+              </button>
+              <button
+                type="button"
+                className="studio-pill-btn"
+                onClick={() => setAdminViewMode("console")}
+              >
+                Open Full Console Grid →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {adminViewMode === "console" && (
+          <>
+            <motion.section
+              id="section-overview"
+              className="dashboard-heading"
+              variants={cardVariants}
+            >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -592,7 +753,7 @@ export function AdminConsole({ token, onLogout, initialSection }) {
                   variants={itemVariants}
                   whileHover={{ y: -4, scale: 1.01 }}
                 >
-                  <div className="candidate-index">0{c.candidateId}</div>
+                  <div className="candidate-index">{index + 1 < 10 ? `0${index + 1}` : index + 1}</div>
                   <p className="eyebrow">Candidate</p>
                   <h3>{c.name}</h3>
                   <p className="party-name">{c.party}</p>
@@ -787,6 +948,8 @@ export function AdminConsole({ token, onLogout, initialSection }) {
           <span>VoteLedger / Admin workspace</span>
           <span>Secured by Hedera Consensus Service</span>
         </footer>
+        </>
+        )}
       </main>
     </div>
   );

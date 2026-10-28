@@ -1,5 +1,5 @@
-import { useState, useCallback, createContext, useContext } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { createContext, useCallback, useContext, useState } from "react";
 
 const ToastContext = createContext(null);
 
@@ -21,32 +21,40 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={{ showToast, hideToast }}>
       {children}
-      <AnimatePresence>
-        {toasts.map(toast => (
-          <motion.div
-            key={toast.id}
-            className={`toast toast--${toast.type}`}
-            initial={{ opacity: 0, x: 300, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 300, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            onClick={() => hideToast(toast.id)}
-            role="alert"
-            aria-live="polite"
-          >
-            <span className="toast-icon" aria-hidden="true">
-              {toast.type === "success" && "✓"}
-              {toast.type === "error" && "✕"}
-              {toast.type === "warning" && "⚠"}
-              {toast.type === "info" && "ℹ"}
-            </span>
-            <span className="toast-message">{toast.message}</span>
-            <button className="toast-close" onClick={(e) => { e.stopPropagation(); hideToast(toast.id); }} aria-label="Dismiss">
-              ×
-            </button>
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      <div className="toast-container" aria-live="polite" aria-atomic="true">
+        <AnimatePresence>
+          {toasts.map(toast => (
+            <motion.div
+              key={toast.id}
+              className={`toast toast--${toast.type}`}
+              initial={{ opacity: 0, x: 80, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 80, scale: 0.95, transition: { duration: 0.2 } }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              onClick={() => hideToast(toast.id)}
+              role="alert"
+            >
+              <span className="toast-icon" aria-hidden="true">
+                {toast.type === "success" && "✓"}
+                {toast.type === "error" && "✕"}
+                {toast.type === "warning" && "⚠"}
+                {toast.type === "info" && "ℹ"}
+              </span>
+              <span className="toast-message">{toast.message}</span>
+              <button
+                className="toast-close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  hideToast(toast.id);
+                }}
+                aria-label="Dismiss"
+              >
+                ×
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </ToastContext.Provider>
   );
 }
@@ -62,20 +70,20 @@ export function useToast() {
 // Convenience hooks
 export function useSuccessToast() {
   const { showToast } = useToast();
-  return (message) => showToast("success", message);
+  return useCallback((message) => showToast("success", message), [showToast]);
 }
 
 export function useErrorToast() {
   const { showToast } = useToast();
-  return (message) => showToast("error", message);
+  return useCallback((message) => showToast("error", message), [showToast]);
 }
 
 export function useWarningToast() {
   const { showToast } = useToast();
-  return (message) => showToast("warning", message);
+  return useCallback((message) => showToast("warning", message), [showToast]);
 }
 
 export function useInfoToast() {
   const { showToast } = useToast();
-  return (message) => showToast("info", message);
+  return useCallback((message) => showToast("info", message), [showToast]);
 }

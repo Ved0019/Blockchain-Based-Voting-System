@@ -156,14 +156,14 @@ try {
 \toprule
 \textbf{Layer} & \textbf{Control} & \textbf{Implementation} \\
 \midrule
-Transport & TLS 1.2+ & HTTPS in production (CloudFront/ALB) \\
-AuthN & JWT (RS256) & \texttt{jsonwebtoken}, bcrypt password hash \\
+Transport & TLS in production & Deployment requirement; local development uses HTTP \\
+AuthN & JWT (shared secret) & \texttt{jsonwebtoken}, bcrypt password hash \\
 AuthZ & Role-based & Middleware \texttt{requireRole("Voters"/"Admins")} \\
 Vote Integrity & Atomic DB+HCS & Optimistic lock + rollback on HCS failure \\
-Replay Protection & Nonce/Timestamp & JWT \texttt{exp}, HCS consensus timestamp \\
+Replay Protection & JWT expiry & JWT \texttt{exp}; HCS timestamp is an audit field \\
 Audit Trail & Immutable & HCS topic + Mirror node history \\
-Input Validation & Server-side & Express validator on all endpoints \\
-Rate Limiting & API Gateway & AWS API Gateway / Express rate-limiter \\
+Input Validation & Route-level checks & Required fields and Mongoose lookups in current prototype \\
+Rate Limiting & Not implemented & Production deployment requirement \\
 \midrule
 \end{tabular}
 \end{table}

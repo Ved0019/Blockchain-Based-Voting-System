@@ -14,6 +14,24 @@
   flex: 1;
   min-width: 0;
   transition: margin-left var(--transition-base);
+  margin-left: 0;
+}
+
+.admin-main .topbar {
+  min-height: 84px;
+  padding: 0 42px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+@media (min-width: 769px) {
+  .admin-main.sidebar-expanded {
+    margin-left: 260px;
+  }
+
+  .admin-main.sidebar-collapsed {
+    margin-left: 72px;
+  }
 }
 
 /* Sidebar toggle button in topbar */
@@ -30,6 +48,26 @@
   font-size: 1rem;
   cursor: pointer;
   transition: all var(--transition-fast);
+}
+
+.desktop-toggle-icon {
+  display: inline-block;
+  line-height: 1;
+}
+
+.mobile-toggle-icon {
+  display: none;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .desktop-toggle-icon {
+    display: none;
+  }
+
+  .mobile-toggle-icon {
+    display: inline-block;
+  }
 }
 
 .sidebar-toggle-btn:hover {
@@ -151,10 +189,12 @@
     box-shadow: 0 0 0 4px var(--color-primary);
     background: var(--color-info-bg);
   }
+
   50% {
     box-shadow: 0 0 0 4px var(--color-primary);
     background: var(--color-info-bg);
   }
+
   100% {
     box-shadow: none;
     background: transparent;
@@ -175,5 +215,86 @@
 
   .sidebar-toggle-btn {
     display: flex;
+  }
+}
+
+/* Keep the admin workspace readable beside the fixed sidebar. */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .admin-main {
+    padding: 0 24px 40px;
+  }
+
+  .admin-main .topbar {
+    margin: 0 -24px;
+    padding: 0 24px;
+  }
+
+  .dashboard-heading {
+    padding: 34px 0 24px;
+  }
+
+  .dashboard-heading h1 {
+    font-size: 2.75rem;
+  }
+
+  .section-title-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .admin-action {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .candidate-form,
+  .voter-form {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .candidate-form .btn,
+  .voter-form .btn {
+    grid-column: 1 / -1;
+  }
+
+  .tally-card {
+    min-height: 190px;
+    padding: 18px;
+  }
+
+  .vote-count {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .admin-main {
+    padding: 0 42px 56px;
+  }
+
+  .admin-main .topbar {
+    margin: 0 -42px;
+    padding: 0 42px;
+  }
+
+  .admin-status,
+  .admin-action {
+    padding: 26px 28px;
+  }
+
+  .admin-action h2,
+  .section-title-row h2 {
+    font-size: 1.35rem;
+    letter-spacing: -.025em;
+  }
+
+  .candidate-form,
+  .voter-form {
+    gap: 16px;
+  }
+
+  .candidate-profile__header strong {
+    font-size: 1rem;
   }
 }

@@ -1,7 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { useErrorToast, useWarningToast } from "./Toast";
+import { useCallback, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { soundFx } from "../utils/soundEffects";
+import { InteractiveTreeCatalog } from "./InteractiveTreeCatalog";
 import "./ManifestoDashboard.css";
+import "./StudioAesthetic.css";
+import { useErrorToast, useWarningToast } from "./Toast";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -23,12 +27,12 @@ const CATEGORY_ICONS = {
 };
 
 const STATUS_CONFIG = {
-  "Completed":           { color: "#059669", bg: "#d1fae5", label: "✓ Completed" },
+  "Completed": { color: "#059669", bg: "#d1fae5", label: "✓ Completed" },
   "Partially Completed": { color: "#b45309", bg: "#fef3c7", label: "◑ Partial" },
-  "In Progress":         { color: "#1d4ed8", bg: "#dbeafe", label: "⟳ In Progress" },
-  "Not Started":         { color: "#6b7280", bg: "#f3f4f6", label: "○ Not Started" },
-  "Unable to Verify":    { color: "#7c3aed", bg: "#ede9fe", label: "? Unverified" },
-  "Proposed":            { color: "#0369a1", bg: "#e0f2fe", label: "→ Proposed" },
+  "In Progress": { color: "#3d6b5d", bg: "#e6f0ec", label: "⟳ In Progress" },
+  "Not Started": { color: "#6b7280", bg: "#f3f4f6", label: "○ Not Started" },
+  "Unable to Verify": { color: "#7c3aed", bg: "#ede9fe", label: "? Unverified" },
+  "Proposed": { color: "#0369a1", bg: "#e0f2fe", label: "→ Proposed" },
 };
 
 function StatusBadge({ status }) {
@@ -67,57 +71,113 @@ function Countdown({ deadline }) {
   return <span className="md-countdown-value">{timeLeft}</span>;
 }
 
-// ─── SECTION A: ELECTION OVERVIEW ────────────────────────────────────────────
-function ElectionOverview({ election, candidates, voterStatus }) {
+// ─── SECTION A: ELECTION OVERVIEW (HERO BANNER) ──────────────────────────────
+function ElectionOverview({ election, candidates, voterStatus, onProceedToVote }) {
   const isActive = election?.isActive;
   const totalCandidates = candidates?.length || 0;
   const incumbents = candidates?.filter(c => c.isIncumbent).length || 0;
 
   return (
-    <section className="md-section md-overview-section">
-      <div className="md-demo-ribbon">⚠ DEMONSTRATION DATA — Fictional scenario for illustrative purposes only</div>
-      <div className="md-overview-header">
+    <motion.section
+      className="md-hero-banner"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+    >
+      <div className="md-hero-ambient-circle" />
+
+      <div className="md-hero-topline">
+        <div className="md-hero-brand-mark">V</div>
+        <div className="md-hero-eyebrow">
+          Hedera Consensus Service · Official Manifesto & Integrity Portal · {election?.academicYear || "2025–2026"}
+        </div>
+      </div>
+
+      <div className="md-hero-grid">
         <div>
-          <div className="md-institution-name">{election?.institutionName || "Apex Institute of Technology & Engineering"}</div>
-          <h1 className="md-election-title">{election?.title || "Student Council General Election 2026"}</h1>
-          <div className="md-meta-row">
-            <span className="md-meta-pill">📅 {election?.academicYear || "2025–2026"}</span>
-            <span className="md-meta-pill">🗳️ {election?.electionPhase || "Official Voting Phase"}</span>
-            <span className={`md-meta-pill ${isActive ? "md-pill-active" : "md-pill-closed"}`}>
-              {isActive ? "● Voting Open" : "● Voting Closed"}
+          <h1 className="md-hero-title">
+            {election?.institutionName || "Apex Institute of Technology"}<br />
+            <em>Student Council Election</em>
+          </h1>
+          <p className="md-hero-desc">
+            Explore cryptographic candidate manifestos, compare verified past track records against 2026 commitments, and verify tamper-proof consensus records before casting your vote.
+          </p>
+
+          <div className="md-hero-meta-row" style={{ marginBottom: 24 }}>
+            <span className="md-hero-pill">📅 Academic Year {election?.academicYear || "2025–2026"}</span>
+            <span className="md-hero-pill">🗳️ {election?.electionPhase || "Official Voting Phase"}</span>
+            <span className={`md-hero-pill ${isActive ? "md-pill-open" : ""}`}>
+              <span className="md-live-dot" style={{ marginRight: 6 }} />
+              {isActive ? "Hedera Consensus Live · Voting Open" : "Voting Closed"}
             </span>
           </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+            <button
+              type="button"
+              className="md-hero-cta"
+              onClick={() => {
+                soundFx.playCardScan();
+                onProceedToVote && onProceedToVote();
+              }}
+            >
+              <span>Proceed to Cast Ballot</span>
+              <span className="md-hero-cta-arrow">↗</span>
+            </button>
+            <a
+              href="#section-compare"
+              className="md-hero-secondary-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                soundFx.playClick(900, 0.02);
+                document.getElementById("section-compare")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Compare Manifestos ↓
+            </a>
+          </div>
         </div>
-        <div className="md-overview-stats">
-          <div className="md-stat-card">
-            <div className="md-stat-number">{totalCandidates}</div>
-            <div className="md-stat-label">Candidates</div>
+
+        <div className="md-hero-stats-col">
+          <div className="md-hero-stat-card">
+            <div className="md-hero-stat-val">{totalCandidates}</div>
+            <div className="md-hero-stat-lbl">Certified Candidates</div>
           </div>
-          <div className="md-stat-card">
-            <div className="md-stat-number">{incumbents}</div>
-            <div className="md-stat-label">Incumbent{incumbents !== 1 ? "s" : ""}</div>
+          <div className="md-hero-stat-card">
+            <div className="md-hero-stat-val">{incumbents}</div>
+            <div className="md-hero-stat-lbl">Incumbent Record</div>
           </div>
+          <div className="md-hero-stat-card">
+            <div className="md-hero-stat-val" style={{ fontSize: 20 }}>0.0.10697996</div>
+            <div className="md-hero-stat-lbl">HCS Mirror Topic</div>
+          </div>
+          <div className="md-hero-stat-card">
+            <div className="md-hero-stat-val" style={{ fontSize: 20 }}>100%</div>
+            <div className="md-hero-stat-lbl">Ledger Immutability</div>
+          </div>
+
           {election?.votingDeadline && (
-            <div className="md-stat-card md-countdown-card">
-              <div className="md-stat-label" style={{ marginBottom: 6 }}>Voting Closes In</div>
+            <div className="md-hero-stat-card md-hero-timer-card">
+              <div className="md-hero-stat-lbl" style={{ marginBottom: 6 }}>Voting Closes In</div>
               <Countdown deadline={election.votingDeadline} />
             </div>
           )}
         </div>
       </div>
+
       {voterStatus && (
-        <div className={`md-voter-status-bar ${voterStatus.hasVoted ? "md-vsbar-voted" : "md-vsbar-eligible"}`}>
+        <div className={`md-hero-voter-bar ${voterStatus.hasVoted ? "voted" : "eligible"}`}>
           {voterStatus.hasVoted
-            ? `✅ You have already voted. Thank you for participating.`
-            : `🗳️ Welcome, ${voterStatus.name}. You are eligible to vote. Review the manifestos below before casting your ballot.`}
+            ? `✅ Cryptographic receipt confirmed for ${voterStatus.name}. Your vote has been permanently recorded on Hedera Consensus Service.`
+            : `🗳️ Welcome, ${voterStatus.name}. You are verified and eligible to cast your ballot. Review candidate commitments below.`}
         </div>
       )}
-    </section>
+    </motion.section>
   );
 }
 
 // ─── SECTION B: CANDIDATE PROFILE CARDS ──────────────────────────────────────
-function CandidateCards({ candidates, onSelectManifesto }) {
+function CandidateCards({ candidates, onSelectManifesto, onProceedToVote }) {
   return (
     <section className="md-section">
       <div className="md-section-header">
@@ -127,62 +187,137 @@ function CandidateCards({ candidates, onSelectManifesto }) {
       </div>
       <div className="md-candidate-grid">
         {candidates.map((c, i) => (
-          <CandidateCard key={c.candidateId} candidate={c} index={i} onSelectManifesto={onSelectManifesto} />
+          <CandidateCard
+            key={c.candidateId}
+            candidate={c}
+            index={i}
+            onSelectManifesto={onSelectManifesto}
+            onProceedToVote={onProceedToVote}
+          />
         ))}
       </div>
     </section>
   );
 }
 
-function CandidateCard({ candidate: c, index, onSelectManifesto }) {
-  const avatarUrl = c.avatarUrl || c.avatarIpfs
-    ? (c.avatarUrl || `https://gateway.pinata.cloud/ipfs/${c.avatarIpfs}`)
-    : null;
+function CandidateCard({ candidate: c, index, onSelectManifesto, onProceedToVote }) {
+  const [imgError, setImgError] = useState(false);
+  const avatarUrl = !imgError && (c.avatarUrl || (c.avatarIpfs ? `https://gateway.pinata.cloud/ipfs/${c.avatarIpfs}` : null));
   const initials = c.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
-  const colors = ["#1e3a5f", "#0f4c3a", "#4a1942"];
+  const colors = ["#173b78", "#0f4c3a", "#2563eb"];
 
   return (
-    <div className="md-candidate-card">
-      {c.isIncumbent && <div className="md-incumbent-ribbon">Re-election Bid · Incumbent</div>}
-      <div className="md-candidate-card-top">
-        <div className="md-avatar" style={{ background: colors[index % colors.length] }}>
-          {avatarUrl
-            ? <img src={avatarUrl} alt={c.name} onError={e => { e.target.style.display = "none"; }} />
-            : <span>{initials}</span>}
+    <motion.div
+      className="md-candidate-card"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.08 }}
+    >
+      <div>
+        {c.isIncumbent && <div className="md-incumbent-ribbon" style={{ marginBottom: 12 }}>Re-election Bid · Incumbent</div>}
+        <div className="md-candidate-card-top">
+          <div className="md-avatar" style={{ background: colors[index % colors.length] }}>
+            {avatarUrl
+              ? <img src={avatarUrl} alt={c.name} onError={() => setImgError(true)} />
+              : <span>{initials}</span>}
+          </div>
+          <div className="md-candidate-identity">
+            <h3 className="md-candidate-name">{c.name}</h3>
+            <div className="md-candidate-party">{c.party}</div>
+            <div className="md-candidate-dept">{c.department} · {c.year}</div>
+            <div className="md-candidate-position">{c.position}</div>
+          </div>
         </div>
-        <div className="md-candidate-identity">
-          <h3 className="md-candidate-name">{c.name}</h3>
-          <div className="md-candidate-party">{c.party}</div>
-          <div className="md-candidate-dept">{c.department} · {c.year}</div>
-          <div className="md-candidate-position">{c.position}</div>
-        </div>
-      </div>
-      {c.tagline && <blockquote className="md-tagline">"{c.tagline}"</blockquote>}
-      {c.bio && <p className="md-bio-snippet">{c.bio.slice(0, 220)}{c.bio.length > 220 ? "…" : ""}</p>}
-      {c.priorities && c.priorities.length > 0 && (
-        <div className="md-priorities">
-          <div className="md-priorities-label">Top Priorities</div>
-          <ul className="md-priorities-list">
-            {c.priorities.slice(0, 3).map((p, i) => (
-              <li key={i}>{p}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      <div className="md-card-actions">
-        <button className="md-btn-primary" onClick={() => onSelectManifesto(c)}>
-          View Full Manifesto →
-        </button>
-        {c.isIncumbent && (
-          <span className="md-perf-badge">📊 Track Record Available</span>
+        {c.tagline && <blockquote className="md-tagline">"{c.tagline}"</blockquote>}
+        {c.bio && <p className="md-bio-snippet">{c.bio.slice(0, 220)}{c.bio.length > 220 ? "…" : ""}</p>}
+        {c.priorities && c.priorities.length > 0 && (
+          <div className="md-priorities">
+            <div className="md-priorities-label">Top Priorities</div>
+            <ul className="md-priorities-list">
+              {c.priorities.slice(0, 3).map((p, i) => (
+                <li key={i}>{p}</li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
-    </div>
+
+      <div className="md-card-actions" style={{ marginTop: 20, display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", justifyContent: "space-between" }}>
+        <button
+          className="md-btn-primary"
+          onClick={() => {
+            soundFx.playClick(900, 0.02);
+            onSelectManifesto(c);
+          }}
+        >
+          View Full Manifesto →
+        </button>
+        <button
+          className="md-btn-primary"
+          style={{
+            background: "#0f1d3a",
+            boxShadow: "0 4px 12px rgba(15, 29, 58, 0.2)"
+          }}
+          onClick={() => {
+            soundFx.playCardScan();
+            sessionStorage.setItem("preferredCandidate", c.candidateId);
+            onProceedToVote && onProceedToVote(c.candidateId);
+          }}
+        >
+          Vote #0{c.candidateId} ↗
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+function CandidateJourney({ candidate }) {
+  const milestones = candidate.timelineMilestones || [];
+  const completed = milestones.filter(m => m.status === "Completed").length;
+  const progress = milestones.length ? Math.round((completed / milestones.length) * 100) : 0;
+
+  if (!milestones.length) return null;
+
+  return (
+    <section className="md-candidate-journey" aria-labelledby="candidate-journey-title">
+      <div className="md-journey-header">
+        <div>
+          <span className="md-section-eyebrow">Delivery record</span>
+          <h3 id="candidate-journey-title">What happened, and when</h3>
+          <p>Milestones are ordered from the first commitment to the latest documented outcome.</p>
+        </div>
+        <div className="md-journey-score">
+          <strong>{progress}%</strong>
+          <span>milestones complete</span>
+        </div>
+      </div>
+
+      <div className="md-journey-progress" aria-label={`${progress}% of milestones completed`}>
+        <span style={{ width: `${progress}%` }} />
+      </div>
+
+      <ol className="md-journey-track">
+        {milestones.map((milestone, index) => (
+          <li
+            key={`${milestone.title}-${index}`}
+            className={`md-journey-node ${milestone.status === "Completed" ? "is-complete" : "is-current"}`}
+          >
+            <span className="md-journey-marker" aria-hidden="true">{milestone.status === "Completed" ? "✓" : String(index + 1).padStart(2, "0")}</span>
+            <div className="md-journey-card">
+              <span className="md-journey-date">{milestone.dateOrPeriod}</span>
+              <strong>{milestone.title}</strong>
+              <p>{milestone.description}</p>
+              <StatusBadge status={milestone.status} />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
   );
 }
 
 // ─── SECTION C+D: FULL CANDIDATE MANIFESTO & PERFORMANCE REPORT ──────────────
-function CandidateManifestoView({ candidate, evidence, onBack }) {
+function CandidateManifestoView({ candidate, evidence, onBack, onProceedToVote }) {
   const [activeTab, setActiveTab] = useState("manifesto");
   const [expandedPromise, setExpandedPromise] = useState(null);
   const [filterCategory, setFilterCategory] = useState("All");
@@ -205,16 +340,39 @@ function CandidateManifestoView({ candidate, evidence, onBack }) {
       <button className="md-back-btn" onClick={onBack}>← Back to All Candidates</button>
 
       {/* Candidate hero */}
-      <div className="md-manifesto-hero">
-        <div className="md-manifesto-avatar">{initials}</div>
-        <div>
-          <h2 className="md-manifesto-cname">{candidate.name}</h2>
-          <div className="md-manifesto-party">{candidate.party}</div>
-          <div className="md-manifesto-meta">{candidate.position} · {candidate.department} · {candidate.year}</div>
-          {candidate.isIncumbent && (
-            <span className="md-incumbent-tag">📋 Incumbent — Previous Term Performance Available</span>
-          )}
+      <div className="md-manifesto-hero" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div className="md-manifesto-avatar">{initials}</div>
+          <div>
+            <h2 className="md-manifesto-cname">{candidate.name}</h2>
+            <div className="md-manifesto-party">{candidate.party}</div>
+            <div className="md-manifesto-meta">{candidate.position} · {candidate.department} · {candidate.year}</div>
+            {candidate.isIncumbent && (
+              <span className="md-incumbent-tag">📋 Incumbent — Previous Term Performance Available</span>
+            )}
+          </div>
         </div>
+        {onProceedToVote && (
+          <button
+            type="button"
+            className="md-btn-primary"
+            style={{
+              padding: "12px 24px",
+              fontSize: "14px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px"
+            }}
+            onClick={() => {
+              soundFx.playCardScan();
+              sessionStorage.setItem("preferredCandidate", candidate.candidateId);
+              onProceedToVote(candidate.candidateId);
+            }}
+          >
+            <span>Proceed to Vote for {candidate.name.split(" ")[0]}</span>
+            <span>#0{candidate.candidateId} ↗</span>
+          </button>
+        )}
       </div>
 
       {/* Bio & Experience */}
@@ -232,6 +390,8 @@ function CandidateManifestoView({ candidate, evidence, onBack }) {
           )}
         </div>
       )}
+
+      <CandidateJourney candidate={candidate} />
 
       {/* Tabs */}
       <div className="md-tab-bar">
@@ -324,7 +484,7 @@ function CandidateManifestoView({ candidate, evidence, onBack }) {
                       <div style={{ width: `${(partialCount / perfRecords.length) * 100}%`, background: "#d97706" }} title="Partial" />
                     )}
                     {inProgressCount > 0 && (
-                      <div style={{ width: `${(inProgressCount / perfRecords.length) * 100}%`, background: "#2563eb" }} title="In Progress" />
+                      <div style={{ width: `${(inProgressCount / perfRecords.length) * 100}%`, background: "#3d6b5d" }} title="In Progress" />
                     )}
                     {notStartedCount > 0 && (
                       <div style={{ width: `${(notStartedCount / perfRecords.length) * 100}%`, background: "#9ca3af" }} title="Not Started" />
@@ -333,7 +493,7 @@ function CandidateManifestoView({ candidate, evidence, onBack }) {
                   <div className="md-perf-bar-legend">
                     <span style={{ color: "#059669" }}>■ Completed</span>
                     <span style={{ color: "#d97706" }}>■ Partial</span>
-                    <span style={{ color: "#2563eb" }}>■ In Progress</span>
+                    <span style={{ color: "#3d6b5d" }}>■ In Progress</span>
                     <span style={{ color: "#9ca3af" }}>■ Not Started</span>
                   </div>
                 </>
@@ -650,7 +810,7 @@ function PreviousTermDashboardSection({ candidates, evidence, onSelectManifesto 
                 <div style={{ width: `${(partialCount / perfRecords.length) * 100}%`, background: "#d97706" }} title={`Partial: ${partialCount}`} />
               )}
               {inProgressCount > 0 && (
-                <div style={{ width: `${(inProgressCount / perfRecords.length) * 100}%`, background: "#2563eb" }} title={`In Progress: ${inProgressCount}`} />
+                <div style={{ width: `${(inProgressCount / perfRecords.length) * 100}%`, background: "#3d6b5d" }} title={`In Progress: ${inProgressCount}`} />
               )}
               {notStartedCount > 0 && (
                 <div style={{ width: `${(notStartedCount / perfRecords.length) * 100}%`, background: "#9ca3af" }} title={`Not Started: ${notStartedCount}`} />
@@ -659,7 +819,7 @@ function PreviousTermDashboardSection({ candidates, evidence, onSelectManifesto 
             <div className="md-perf-bar-legend">
               <span style={{ color: "#059669" }}>■ {completedCount} Completed</span>
               <span style={{ color: "#d97706" }}>■ {partialCount} Partial</span>
-              <span style={{ color: "#2563eb" }}>■ {inProgressCount} In Progress</span>
+              <span style={{ color: "#3d6b5d" }}>■ {inProgressCount} In Progress</span>
               <span style={{ color: "#9ca3af" }}>■ {notStartedCount} Not Started</span>
               {filterStatus !== "All" && (
                 <button
@@ -888,7 +1048,7 @@ function ComparisonCenter({ candidates }) {
 // ─── SECTION F: CAMPUS ISSUES ─────────────────────────────────────────────────
 function CampusIssues({ issues }) {
   const [expanded, setExpanded] = useState(null);
-  const urgencyColor = { Critical: "#dc2626", High: "#d97706", Medium: "#2563eb" };
+  const urgencyColor = { Critical: "#dc2626", High: "#d97706", Medium: "#3d6b5d" };
 
   if (!issues || issues.length === 0) return null;
 
@@ -962,7 +1122,7 @@ function EvidenceArchive({ documents }) {
   const [expanded, setExpanded] = useState(null);
   const verificationColors = {
     "Officially Verified": { color: "#059669", bg: "#d1fae5" },
-    "Council Record": { color: "#2563eb", bg: "#dbeafe" },
+    "Council Record": { color: "#3d6b5d", bg: "#e6f0ec" },
     "Under Review": { color: "#d97706", bg: "#fef3c7" },
     "Self-Reported": { color: "#7c3aed", bg: "#ede9fe" },
   };
@@ -1109,6 +1269,9 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [selectedCandidateDetail, setSelectedCandidateDetail] = useState(null);
   const [voterStatus, setVoterStatus] = useState(null);
+  const [manifestoViewMode, setManifestoViewMode] = useState("portal"); // "portal" | "spec" | "tree"
+  const [specCandidateIdx, setSpecCandidateIdx] = useState(0);
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const showError = useErrorToast();
   const showWarning = useWarningToast();
 
@@ -1193,27 +1356,95 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
     }
   };
 
+  if (manifestoViewMode === "tree") {
+    return (
+      <InteractiveTreeCatalog
+        onBackToHome={() => setManifestoViewMode("portal")}
+        onOpenBallot={() => onProceedToVote && onProceedToVote()}
+      />
+    );
+  }
+
+  const activeCandidates = data?.candidates || [];
+  const currentSpecCandidate = activeCandidates[specCandidateIdx] || activeCandidates[0];
+
   return (
     <div className="md-shell">
       {/* TOP NAV */}
-      <header className="md-topnav">
-        <div className="md-topnav-brand">
-          <div className="md-brand-mark">V</div>
-          <span className="md-brand-text">VOTE<span className="md-brand-accent">/</span>LEDGER</span>
-          <span className="md-brand-sub">Election Manifesto Portal</span>
+      <header className="md-topnav" style={{ flexWrap: "wrap", height: "auto", minHeight: "68px", padding: "10px clamp(16px, 4vw, 40px)" }}>
+        <div className="md-topnav-brand" style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <div className="chip-id-pill" style={{ margin: 0, padding: "3px 10px", fontSize: "11px" }}>
+            <span className="chip-square" />
+            <span className="chip-label">MANIFESTO</span>
+          </div>
+          <div className="studio-brand-center" style={{ position: "static", transform: "none", textAlign: "left" }}>
+            <span className="line-1">The</span>
+            <span className="line-2">Consensus Office</span>
+            <span className="line-3">of VoteLedger</span>
+          </div>
         </div>
-        <nav className="md-topnav-links" aria-label="Dashboard sections">
-          {navSections.map(s => (
-            <button
-              key={s.id}
-              className="md-nav-link"
-              onClick={() => scrollToSection(s.id)}
-            >
-              {s.label}
-            </button>
-          ))}
-        </nav>
-        <div className="md-topnav-actions">
+
+        {manifestoViewMode === "portal" && (
+          <nav className="md-topnav-links" aria-label="Dashboard sections">
+            {navSections.map(s => (
+              <button
+                key={s.id}
+                className={`md-nav-link ${activeSection === s.id ? "md-nav-link-active" : ""}`}
+                onClick={() => {
+                  soundFx.playClick(900, 0.02);
+                  setActiveSection(s.id);
+                  scrollToSection(s.id);
+                }}
+              >
+                {s.label}
+              </button>
+            ))}
+          </nav>
+        )}
+
+        <div className="md-topnav-actions" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <button
+            type="button"
+            className={`studio-pill-btn ${manifestoViewMode === "portal" ? "active" : ""}`}
+            onClick={() => {
+              soundFx.playClick(850, 0.02);
+              setManifestoViewMode("portal");
+            }}
+          >
+            Portal
+          </button>
+          <button
+            type="button"
+            className={`studio-pill-btn ${manifestoViewMode === "spec" ? "active" : ""}`}
+            onClick={() => {
+              soundFx.playCardScan();
+              setManifestoViewMode("spec");
+            }}
+          >
+            3D Spec
+          </button>
+          <button
+            type="button"
+            className={`studio-pill-btn ${manifestoViewMode === "tree" ? "active" : ""}`}
+            onClick={() => {
+              soundFx.playClick(950, 0.02);
+              setManifestoViewMode("tree");
+            }}
+          >
+            Ledger Web
+          </button>
+          <button
+            type="button"
+            className={`studio-sound-btn ${soundEnabled ? "active" : ""}`}
+            onClick={() => {
+              const en = soundFx.toggle();
+              setSoundEnabled(en);
+            }}
+            title={soundEnabled ? "Mute interactive audio" : "Enable tactile haptic audio"}
+          >
+            {soundEnabled ? "🔊" : "🔈"}
+          </button>
+
           {voterStatus && (
             <span className="md-voter-chip">
               {voterStatus.hasVoted ? "✅ Voted" : "🗳 Eligible"}
@@ -1225,74 +1456,180 @@ export function ManifestoDashboard({ token, onLogout, onProceedToVote }) {
         </div>
       </header>
 
-      {/* CONTENT */}
-      <main className="md-main">
-        {loading && (
-          <div className="md-loading">
-            <div className="md-loading-spinner" />
-            <p>Loading election manifesto data…</p>
-          </div>
-        )}
+      {/* ── 3D SPEC SHOWCASE MODE (Screenshot 2 Inspired) ── */}
+      {manifestoViewMode === "spec" && currentSpecCandidate && (
+        <div style={{ padding: "60px 20px", display: "flex", justifyContent: "center" }}>
+          <div className="spec-card-container">
+            <div className="spec-card-grid">
+              <div className="spec-left-col">
+                <div className="spec-mark">〰</div>
+                <div className="spec-feature">
+                  <span className="spec-feature-title">Candidate Department</span>
+                  <span className="spec-feature-copy">{currentSpecCandidate.department} · {currentSpecCandidate.year}</span>
+                </div>
+                <div className="spec-feature">
+                  <span className="spec-feature-title">Campaign Tagline</span>
+                  <span className="spec-feature-copy">"{currentSpecCandidate.tagline || 'Transparent, accountable leadership for all students.'}"</span>
+                </div>
+                <div className="spec-feature">
+                  <span className="spec-feature-title">Manifesto Commitments</span>
+                  <span className="spec-feature-copy">{(currentSpecCandidate.manifesto || []).length} verified policy commitments published.</span>
+                </div>
 
-        {!loading && data && (
-          <>
-            {activeSection === "manifesto-detail" && selectedCandidateDetail ? (
-              <div id="section-manifesto-detail">
-                <CandidateManifestoView
-                  candidate={selectedCandidateDetail.candidate}
-                  evidence={selectedCandidateDetail.relatedEvidence}
-                  onBack={handleBackToOverview}
-                />
+                <div className="spec-footer-note">
+                  Student Council General Election 2026. Certified on Hedera Consensus Service mirror node.
+                </div>
               </div>
-            ) : (
-              <>
-                <div id="section-overview">
-                  <ElectionOverview
-                    election={data.election}
-                    candidates={data.candidates}
-                    voterStatus={voterStatus}
+
+              <div className="spec-center-col">
+                <div className="spec-object-wrapper">
+                  <div className="spec-hardware-ring">
+                    <div className="spec-ring-sensor" />
+                    <div className="spec-hardware-inner">
+                      0{currentSpecCandidate.candidateId}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="spec-slider-controls">
+                  <button
+                    type="button"
+                    className="spec-slider-arrow"
+                    onClick={() => {
+                      soundFx.playClick(900, 0.02);
+                      setSpecCandidateIdx((prev) => (prev - 1 + activeCandidates.length) % activeCandidates.length);
+                    }}
+                  >
+                    ‹
+                  </button>
+                  <div className="spec-dots-row">
+                    {activeCandidates.map((_, i) => (
+                      <span
+                        key={i}
+                        className={`spec-dot-indicator ${i === specCandidateIdx ? "active" : ""}`}
+                        onClick={() => {
+                          soundFx.playClick(950, 0.02);
+                          setSpecCandidateIdx(i);
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="spec-slider-arrow"
+                    onClick={() => {
+                      soundFx.playClick(1100, 0.02);
+                      setSpecCandidateIdx((prev) => (prev + 1) % activeCandidates.length);
+                    }}
+                  >
+                    ›
+                  </button>
+                </div>
+              </div>
+
+              <div className="spec-right-col">
+                <div className="spec-right-title">{currentSpecCandidate.name}</div>
+                <div className="spec-right-copy">
+                  {currentSpecCandidate.bio || "Candidate running for student council leadership."}
+                </div>
+                <div className="spec-right-meta">
+                  Party: <strong>{currentSpecCandidate.party}</strong>
+                  {currentSpecCandidate.isIncumbent && " · (Incumbent Record Available)"}
+                </div>
+
+                <button
+                  type="button"
+                  className="spec-cta-pill"
+                  onClick={() => {
+                    soundFx.playCardScan();
+                    onProceedToVote && onProceedToVote();
+                  }}
+                >
+                  <span>Proceed to Cast Ballot</span>
+                  <span className="cta-price" style={{ color: "var(--studio-neon-green)" }}>
+                    #0{currentSpecCandidate.candidateId} ↗
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div className="spec-floating-tag">
+              VoteLedger V2.4
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CONTENT (When Portal mode is active) */}
+      {manifestoViewMode === "portal" && (
+        <main className="md-main">
+          {loading && (
+            <div className="md-loading">
+              <div className="md-loading-spinner" />
+              <p>Loading election manifesto data…</p>
+            </div>
+          )}
+
+          {!loading && data && (
+            <>
+              {activeSection === "manifesto-detail" && selectedCandidateDetail ? (
+                <div id="section-manifesto-detail">
+                  <CandidateManifestoView
+                    candidate={selectedCandidateDetail.candidate}
+                    evidence={selectedCandidateDetail.relatedEvidence}
+                    onBack={handleBackToOverview}
                   />
                 </div>
+              ) : (
+                <>
+                  <div id="section-overview">
+                    <ElectionOverview
+                      election={data.election}
+                      candidates={data.candidates}
+                      voterStatus={voterStatus}
+                    />
+                  </div>
 
-                <div id="section-candidates">
-                  <CandidateCards
-                    candidates={data.candidates}
-                    onSelectManifesto={handleSelectManifesto}
-                  />
-                </div>
+                  <div id="section-candidates">
+                    <CandidateCards
+                      candidates={data.candidates}
+                      onSelectManifesto={handleSelectManifesto}
+                    />
+                  </div>
 
-                <div id="section-performance">
-                  <PreviousTermDashboardSection
-                    candidates={data.candidates}
-                    evidence={data.evidenceDocs}
-                    onSelectManifesto={handleSelectManifesto}
-                  />
-                </div>
+                  <div id="section-performance">
+                    <PreviousTermDashboardSection
+                      candidates={data.candidates}
+                      evidence={data.evidenceDocs}
+                      onSelectManifesto={handleSelectManifesto}
+                    />
+                  </div>
 
-                <div id="section-compare">
-                  <ComparisonCenter candidates={data.candidates} />
-                </div>
+                  <div id="section-compare">
+                    <ComparisonCenter candidates={data.candidates} />
+                  </div>
 
-                <div id="section-issues">
-                  <CampusIssues issues={data.campusIssues} />
-                </div>
+                  <div id="section-issues">
+                    <CampusIssues issues={data.campusIssues} />
+                  </div>
 
-                <div id="section-evidence">
-                  <EvidenceArchive documents={data.evidenceDocs} />
-                </div>
+                  <div id="section-evidence">
+                    <EvidenceArchive documents={data.evidenceDocs} />
+                  </div>
 
-                <div id="section-vote">
-                  <VoterChecklist
-                    onProceed={onProceedToVote}
-                    voterStatus={voterStatus}
-                    isActive={data.election?.isActive}
-                  />
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </main>
+                  <div id="section-vote">
+                    <VoterChecklist
+                      onProceed={onProceedToVote}
+                      voterStatus={voterStatus}
+                      isActive={data.election?.isActive}
+                    />
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </main>
+      )}
 
       <footer className="md-footer">
         <span>VoteLedger · Election Manifesto Portal · Blockchain-Secured Voting</span>

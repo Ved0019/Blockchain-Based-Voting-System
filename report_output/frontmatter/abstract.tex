@@ -13,12 +13,13 @@ hybrid cloud and distributed ledger e-voting system that leverages the Hedera
 Consensus Service (HCS) for cryptographic immutability and transparent auditability.
 
 The system adopts a Web2.5 architecture that decouples identity management from
-vote consensus. User authentication and authorization are handled through a
-serverless AWS backend (or custom Node.js/Express with JWT), while vote recording
-occurs on the Hedera public network via HCS topics. This separation ensures that
-even cloud administrators cannot modify or delete votes once submitted to the
-ledger, as Hedera's asynchronous Byzantine Fault Tolerant (aBFT) consensus provides
-mathematical guarantees of ordering and finality within 3--5 seconds.
+vote consensus. In the implemented prototype, authentication and authorization are
+handled by a Node.js/Express backend with JWTs and MongoDB, while vote recording
+occurs on the Hedera testnet through an HCS topic. The backend prevents duplicate
+participation with an atomic voter-state update and rolls that update back when the
+HCS submission fails. The prototype does not claim ballot secrecy: the submitted
+HCS message contains a candidate identifier and timestamp, so privacy and coercion
+resistance remain limitations for future work.
 
 Key features include: (1) a manifesto dashboard enabling informed voting through
 candidate profiles, campus issues, and verifiable evidence documents; (2) a secure
@@ -26,11 +27,12 @@ voting booth with real-time transaction confirmation and HashScan audit links;
 (3) an administrative console for election lifecycle management; and (4) transparent
 tallying directly from Hedera mirror nodes, bypassing any centralized database.
 
-The implementation demonstrates sub-cent per-vote costs (\$0.0001 on Hedera testnet),
-10,000+ TPS throughput capacity, and predictable latency. Functional testing
-confirms end-to-end vote integrity, duplicate prevention, and role-based access
-control. The system is ready for pilot deployment in student organizations and
-serves as a reference architecture for verifiable digital voting.
+The repository includes seven automated backend tests covering credential validation,
+role-bearing JWT issuance, and Hedera error handling; all seven passed in the
+recorded local run. The frontend production build also completed successfully.
+End-to-end HCS latency, throughput, usability, and deployment-readiness claims are
+not treated as measured results in this report and require a separately documented
+test environment before any pilot deployment.
 
 \vspace{1cm}
 \noindent\textbf{Keywords:} Blockchain Voting, Hedera Hashgraph, Hedera Consensus Service,

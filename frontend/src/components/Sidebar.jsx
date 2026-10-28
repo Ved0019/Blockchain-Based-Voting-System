@@ -28,6 +28,7 @@ export function Sidebar({ onNavigate, isOpen = true, onToggle, mobileOpen = fals
 
   const handleItemClick = (item) => {
     if (onNavigate) onNavigate(item.path);
+    if (mobileOpen && onMobileToggle) onMobileToggle();
   };
 
   const handleKeyDown = (e, item) => {
@@ -38,26 +39,25 @@ export function Sidebar({ onNavigate, isOpen = true, onToggle, mobileOpen = fals
   };
 
   return (
-    <AnimatePresence mode="wait">
-      {mobileOpen && (
-        <motion.div
-          className="sidebar-overlay"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
+    <>
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="sidebar-overlay visible"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onMobileToggle}
+          />
+        )}
+      </AnimatePresence>
       <motion.aside
         className={`admin-sidebar ${mobileOpen ? "mobile-open" : ""}`}
         role="navigation"
         aria-label="Admin navigation"
         data-collapsed={isOpen ? "false" : "true"}
-        initial={{ width: 0, opacity: 0 }}
-        animate={{ width: isOpen ? EXPANDED_WIDTH : COLLAPSED_WIDTH, opacity: 1 }}
-        exit={{ width: 0, opacity: 0 }}
+        animate={{ width: isOpen || mobileOpen ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        style={{ width: isOpen ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       >
         {/* Brand / Logo */}
         <div className="sidebar-brand">
@@ -167,7 +167,7 @@ export function Sidebar({ onNavigate, isOpen = true, onToggle, mobileOpen = fals
           </button>
         </div>
       </motion.aside>
-    </AnimatePresence>
+    </>
   );
 }
 

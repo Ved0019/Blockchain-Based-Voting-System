@@ -1,0 +1,774 @@
+/* ===================================================================
+   INTERACTIVE TREE CATALOG — Exact dmcg.co Archive Experience
+   Branching SVG Bezier Curves + Floating Rich Visual Cards
+   Pan/Zoom Canvas + Grid/Tree Mode Switcher + Tactile Haptic Audio
+   =================================================================== */
+
+.tree-page-shell {
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  color: #111111;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Fixed Header ── */
+.tree-page-header {
+  height: 72px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(20px, 4vw, 56px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.tree-header-left {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.tree-header-link {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  cursor: pointer;
+  padding: 4px 0;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.tree-header-link:hover {
+  opacity: 0.55;
+}
+
+/* Stacked Center Brand Typography (Exact from screenshot) */
+.tree-brand-stacked {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  cursor: pointer;
+}
+
+.tree-brand-stacked .sub-line {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #666666;
+  line-height: 1.25;
+}
+
+.tree-brand-stacked .main-line {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111111;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.tree-brand-stacked .by-line {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #666666;
+  line-height: 1.25;
+}
+
+/* Right Navigation Controls */
+.tree-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tree-pill {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #111111;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tree-pill:hover {
+  background: #f7f7f7;
+  border-color: #cccccc;
+}
+
+.tree-pill.active {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+}
+
+.tree-audio-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #111111;
+  font-size: 12px;
+  transition: all 0.15s ease;
+}
+
+.tree-audio-btn:hover {
+  background: #f5f5f5;
+}
+
+.tree-audio-btn.enabled {
+  background: #111111;
+  color: #00ff66;
+  border-color: #111111;
+}
+
+/* ── Canvas Viewport (Infinite Pan / Zoomable) ── */
+.tree-canvas-viewport {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.tree-canvas-viewport:active {
+  cursor: grabbing;
+}
+
+.tree-canvas-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2600px;
+  height: 1600px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+/* SVG Connecting Lines Layer */
+.tree-svg-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tree-bezier-path {
+  fill: none;
+  stroke: #dfdfdf;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  transition: stroke 0.25s ease, stroke-width 0.25s ease, opacity 0.25s ease;
+  opacity: 0.85;
+}
+
+.tree-bezier-path.highlighted {
+  stroke: #111111;
+  stroke-width: 2;
+  opacity: 1;
+}
+
+.tree-bezier-path.dimmed {
+  opacity: 0.2;
+}
+
+/* ── Interactive Tree Nodes ── */
+.tree-node-item {
+  position: absolute;
+  z-index: 10;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.tree-node-item:hover {
+  transform: translateY(-2px);
+}
+
+/* Root & Category Pills */
+.category-node-pill {
+  background: #ffffff;
+  border: 1px solid #d5d5d5;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #111111;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.category-node-pill:hover,
+.category-node-pill.selected {
+  background: #111111;
+  color: #ffffff;
+  border-color: #111111;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.category-node-pill .node-count {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  color: #888888;
+  font-weight: 500;
+}
+
+.category-node-pill:hover .node-count,
+.category-node-pill.selected .node-count {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ── Rich Visual Cards (Matching exact cards from screenshot!) ── */
+.card-tile {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-tile:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.2);
+  z-index: 20;
+}
+
+.card-tile.highlighted {
+  border-color: #111111;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+}
+
+/* Card Visual Variants (Screenshot 3 exact styles) */
+
+/* 1. CashScore style - iridescent gradient */
+.card-tile.variant-gradient {
+  background: linear-gradient(135deg, #e4ebf5 0%, #d8e5ff 35%, #eed8f5 70%, #d4f0ee 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.card-tile.variant-gradient .gradient-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.card-tile.variant-gradient .gradient-arc {
+  width: 24px;
+  height: 12px;
+  border: 2px dashed #333333;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  margin-bottom: 4px;
+}
+
+/* 2. Universe style - deep black with glowing 3D crystal cubes */
+.card-tile.variant-universe {
+  background: #000000;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.card-tile.variant-universe .universe-gem {
+  width: 28px;
+  height: 28px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-bottom: 6px;
+}
+
+.card-tile.variant-universe .gem-cube {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.card-tile.variant-universe .cube-1 {
+  background: linear-gradient(135deg, #ff007a, #7928ca);
+  top: 2px;
+  left: 3px;
+}
+
+.card-tile.variant-universe .cube-2 {
+  background: linear-gradient(135deg, #0070f3, #00dfd8);
+  bottom: 2px;
+  right: 3px;
+}
+
+.card-tile.variant-universe .universe-text {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* 3. Feast style - bold condensed black lettering */
+.card-tile.variant-feast {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+}
+
+.card-tile.variant-feast .feast-text {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #000000;
+  line-height: 1;
+}
+
+.card-tile.variant-feast .feast-cutlery {
+  font-size: 16px;
+  margin-top: 4px;
+  opacity: 0.75;
+}
+
+/* 4. ICONS style - Architectural window banner */
+.card-tile.variant-icons {
+  background: #eef3fc;
+  border: 1px solid #d0ddf5;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-tile.variant-icons .icons-header {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  color: #3b82f6;
+  text-transform: uppercase;
+}
+
+.card-tile.variant-icons .icons-text {
+  font-size: 22px;
+  font-weight: 900;
+  color: #2563eb;
+  letter-spacing: -0.02em;
+}
+
+.card-tile.variant-icons .icons-building {
+  height: 22px;
+  background: #cbdcf7;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* 5. USUAL style - earthy warm textured stone */
+.card-tile.variant-usual {
+  background: linear-gradient(135deg, #8a6547 0%, #b8865d 50%, #684a32 100%);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.card-tile.variant-usual .usual-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* 6. Americana style - white with starburst in broken square */
+.card-tile.variant-americana {
+  background: #ffffff;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.card-tile.variant-americana .americana-symbol {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #000000;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  position: relative;
+}
+
+.card-tile.variant-americana .americana-symbol::after {
+  content: '✦';
+  font-size: 13px;
+  color: #000000;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+}
+
+.card-tile.variant-americana .americana-text {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* 7. Groth style - concrete photography texture */
+.card-tile.variant-groth {
+  background: linear-gradient(135deg, #59564f 0%, #3e3c36 100%);
+  color: #ffffff;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-tile.variant-groth .groth-text {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.card-tile.variant-groth .groth-sub {
+  font-size: 7.5px;
+  line-height: 1.25;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 8. Tolan style - pastel playful card */
+.card-tile.variant-tolan {
+  background: #e2f0d9;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-tile.variant-tolan .tolan-text {
+  font-size: 18px;
+  font-weight: 900;
+  color: #274e13;
+  letter-spacing: -0.02em;
+}
+
+.card-tile.variant-tolan .tolan-avatar {
+  font-size: 22px;
+}
+
+/* 9. Petal style - clean white with geometric petal */
+.card-tile.variant-petal {
+  background: #ffffff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.card-tile.variant-petal .petal-flower {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2px #facc15;
+}
+
+.card-tile.variant-petal .petal-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+}
+
+/* 10. Clever style - outlined colorful letters */
+.card-tile.variant-clever {
+  background: #fbfbfb;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-tile.variant-clever .clever-text {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #111111;
+}
+
+/* 11. Format style - dark gallery portfolio card */
+.card-tile.variant-format {
+  background: #181818;
+  color: #ffffff;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-tile.variant-format .format-text {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.card-tile.variant-format .format-dots {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.card-tile.variant-format .f-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+/* 12. Antioch style - white with rainbow spectrum ribbon */
+.card-tile.variant-antioch {
+  background: #ffffff;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-tile.variant-antioch .antioch-text {
+  font-size: 12px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.card-tile.variant-antioch .antioch-ribbon {
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #ff0000, #ff8800, #00ff66, #0088ff);
+}
+
+/* 13. Hedera Topic Consensus Card */
+.card-tile.variant-hedera {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(0, 255, 102, 0.25);
+}
+
+.card-tile.variant-hedera .hedera-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: #00ff66;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.card-tile.variant-hedera .hedera-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.card-tile.variant-hedera .hedera-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Fixed Bottom Footer (Exact from screenshot) ── */
+.tree-page-footer {
+  height: 56px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(20px, 4vw, 56px);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  font-size: 12px;
+  color: #666666;
+}
+
+.tree-footer-left {
+  letter-spacing: 0.01em;
+}
+
+/* Center View Switcher: Grid vs Tree (Exact icons from screenshot!) */
+.tree-footer-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f0f0;
+  padding: 3px;
+  border-radius: 9999px;
+}
+
+.tree-mode-toggle {
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: #777777;
+  font-size: 15px;
+  transition: all 0.15s ease;
+}
+
+.tree-mode-toggle:hover {
+  color: #111111;
+}
+
+.tree-mode-toggle.active {
+  background: #ffffff;
+  color: #111111;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.tree-footer-right {
+  letter-spacing: 0.01em;
+}
+
+/* ── Zoom Controls Overlay ── */
+.canvas-zoom-controls {
+  position: fixed;
+  bottom: 74px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 90;
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  color: #333333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zoom-btn:hover {
+  background: #f8f8f8;
+  color: #000000;
+}
+
+/* ── Grid View Mode (When toggle ⊞ is active) ── */
+.grid-view-container {
+  width: min(1200px, 94vw);
+  margin: 100px auto 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+/* ── Card Detail Modal ── */
+.card-detail-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.card-detail-modal {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px clamp(20px, 4vw, 40px);
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.card-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #777777;
+  cursor: pointer;
+}
+
+.card-modal-close:hover {
+  color: #000000;
+}

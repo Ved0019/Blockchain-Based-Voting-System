@@ -15,16 +15,16 @@
 \toprule
 \textbf{Category} & \textbf{Technology} \\
 \midrule
-Backend Runtime & Node.js 22+ (Express 4.x) \\
-Frontend Framework & React 18 (Vite 5) \\
-Database & MongoDB 8 (Mongoose ODM) \\
+Backend Runtime & Node.js (Express 5.2.1) \\
+Frontend Framework & React 18.2 (Vite 8.3.5) \\
+Database & MongoDB (Mongoose 9.10.1) \\
 Blockchain SDK & @hashgraph/sdk (Hedera Testnet) \\
-Authentication & JWT (jsonwebtoken), bcryptjs \\
+Authentication & JWT (jsonwebtoken), bcrypt \\
 Containerization & Docker, Docker Compose \\
 Reverse Proxy & Nginx (production frontend) \\
 Language & JavaScript (ES2022), JSX \\
-Styling & CSS3 (Custom properties, CSS Modules) \\
-Testing & Jest (backend), Vitest (frontend) \\
+Styling & CSS3 (custom properties, component stylesheets) \\
+Testing & Node.js built-in test runner \\
 \midrule
 \end{tabular}
 \end{table}
@@ -226,7 +226,7 @@ Responsive breakpoints: mobile (<640px), tablet (640--1024px), desktop (>1024px)
 \subsection{Hedera Client Configuration}
 \label{sec:hedera-client}
 
-\texttt{lib/hederaClient.js} (or inline in server.js) initializes the SDK:
+The Hedera client is initialized inline in \texttt{server.js}:
 
 \begin{lstlisting}[style=codeStyle, caption=Hedera client setup, label=lst:hedera-client]
 const { Client, PrivateKey, TopicMessageSubmitTransaction } = require("@hashgraph/sdk");
@@ -284,8 +284,8 @@ async function fetchVoteTally(topicId) {
 \label{sec:testing}
 
 \begin{itemize}
-    \item \textbf{Unit Tests:} \texttt{backend/tests/*.test.js} for controllers
-    \item \textbf{Integration Tests:} Hedera HCS submission (testnet)
-    \item \textbf{E2E Manual:} Full voter journey (login $\rightarrow$ manifesto $\rightarrow$ vote $\rightarrow$ verify)
-    \item \textbf{Load Testing:} Concurrent vote submissions (limited by testnet rate limits)
+    \item \textbf{Automated tests:} Seven Node.js tests covering authentication and Hedera error handling
+    \item \textbf{Integration testing:} Requires a configured MongoDB instance and funded Hedera testnet account
+    \item \textbf{E2E manual testing:} The voter journey is documented as a checklist; execution evidence must be attached for submission
+    \item \textbf{Load testing:} No reproducible load-test harness is currently included in the repository
 \end{itemize}

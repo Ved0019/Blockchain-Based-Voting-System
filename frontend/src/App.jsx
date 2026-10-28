@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
+import { Navigate, Route, BrowserRouter as Router, Routes, useNavigate } from "react-router-dom";
 
-import { Login } from "./components/Login";
 import { AdminConsole } from "./components/AdminConsole";
-import { VoterBooth } from "./components/VoterBooth";
+import { Login } from "./components/Login";
 import { ManifestoDashboard } from "./components/ManifestoDashboard";
 import { ToastProvider } from "./components/Toast";
+import { VoterBooth } from "./components/VoterBooth";
 
 // --- INNER ROUTES COMPONENT (needs Router context for useNavigate) ---
 function AppRoutes({ auth, onLogout }) {
@@ -62,9 +62,9 @@ function AppRoutes({ auth, onLogout }) {
         element={
           auth.role === "Voters"
             ? (voterView === "ballot"
-                ? <VoterBooth token={auth.token} onLogout={onLogout} onBackToManifesto={handleBackToManifesto} />
-                : <Navigate to="/manifesto" />
-              )
+              ? <VoterBooth token={auth.token} onLogout={onLogout} onBackToManifesto={handleBackToManifesto} />
+              : <Navigate to="/manifesto" />
+            )
             : <Navigate to="/admin" />
         }
       />
@@ -75,8 +75,8 @@ function AppRoutes({ auth, onLogout }) {
         element={
           <Navigate to={
             auth.role === "Admins" ? "/admin"
-            : voterView === "ballot" ? "/vote"
-            : "/manifesto"
+              : voterView === "ballot" ? "/vote"
+                : "/manifesto"
           } />
         }
       />
@@ -139,13 +139,15 @@ export default function App() {
     );
   }
 
-  if (!auth) return <Login onLogin={handleLogin} />;
-
   return (
-    <Router>
-      <ToastProvider>
-        <AppRoutes auth={auth} onLogout={handleLogout} />
-      </ToastProvider>
-    </Router>
+    <ToastProvider>
+      {!auth ? (
+        <Login onLogin={handleLogin} />
+      ) : (
+        <Router>
+          <AppRoutes auth={auth} onLogout={handleLogout} />
+        </Router>
+      )}
+    </ToastProvider>
   );
 }
