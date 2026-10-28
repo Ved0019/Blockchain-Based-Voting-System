@@ -1,0 +1,127 @@
+%===============================================================================
+% CHAPTER 6: DISCUSSION
+%===============================================================================
+\chapter{Discussion}
+\label{ch:discussion}
+
+\section{Achievement of Objectives}
+\label{sec:achievement}
+
+All primary and secondary objectives from Section~\ref{sec:objectives} were met:
+
+\begin{table}[H]
+\centering
+\caption{Objective Achievement Summary}
+\label{tab:objectives}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Objective} & \textbf{Status} & \textbf{Evidence} \\
+\midrule
+Vote immutability via HCS & \checkmark Achieved & Ch.~3, 4, 5 \\
+One-person-one-vote enforcement & \checkmark Achieved & Atomic DB+HCS (Sec.~\ref{sec:vote-flow}) \\
+Transparent tallying via mirror nodes & \checkmark Achieved & Sec.~\ref{sec:mirror-query}, Ch.~5 \\
+Sub-5s finality, \$0.0001/vote & \checkmark Achieved & Table~\ref{tab:performance} \\
+Informed-voting manifesto dashboard & \checkmark Achieved & ManifestoDashboard component \\
+Admin election lifecycle tooling & \checkmark Achieved & AdminConsole component \\
+\midrule
+\end{tabular}
+\end{table}
+
+\section{Technical Challenges and Solutions}
+\label{sec:challenges}
+
+\begin{table}[H]
+\centering
+\caption{Key Technical Challenges}
+\label{tab:challenges}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Challenge} & \textbf{Root Cause} & \textbf{Solution} \\
+\midrule
+Atomic vote + ledger write & Race condition risk & Optimistic lock + rollback (Lst.~\ref{lst:vote-atomic}) \\
+JWT expiry handling & Token expiration UX & Client-side expiry check + refresh prompt \\
+Manifesto data complexity & Nested arrays, evidence refs & Structured Mongoose schemas + validation \\
+HCS testnet rate limits & 10 TPS throttle & Batch testing, exponential backoff \\
+Role-based UI routing & Auth state sync & ProtectedRoute + sessionStorage \\
+Mobile responsiveness & Complex dashboard & CSS Grid/Flex, mobile-first breakpoints \\
+\midrule
+\end{tabular}
+\end{table}
+
+\section{Limitations}
+\label{sec:limitations}
+
+\subsection{Current Limitations}
+\begin{enumerate}
+    \item \textbf{Testnet Only:} Not production-hardened; Mainnet requires governance review.
+    \item \textbf{Pseudonymous, Not Anonymous:} Voter ID linked to vote in DB (though not on-chain).
+    \item \textbf{No Coercion Resistance:} Voters can prove how they voted via transaction ID.
+    \item \textbf{Single Election:} One active election per deployment; multi-election needs dynamic topics.
+    \item \textbf{Manual Key Management:} Operator keys in .env; production needs HSM/KMS.
+    \item \textbf{No Vote Privacy:} Mirror nodes reveal vote content; ZK-proofs needed for secrecy.
+    \item \textbf{Client-Side Trust:} Malicious frontend could alter vote before submission.
+\end{enumerate}
+
+\subsection{Comparison with Alternatives}
+\label{sec:comparison}
+
+\begin{table}[H]
+\centering
+\caption{Detailed Comparison with Alternative Approaches}
+\label{tab:detailed-comparison}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Criterion} & \textbf{This System} & \textbf{Ethereum} & \textbf{Fabric} & \textbf{Centralized} & \textbf{Paper} \\
+\midrule
+Immutability & \checkmark & \checkmark & \checkmark & \xmark & Physical \\
+Public Audit & \checkmark & \checkmark & Limited & \xmark & Observers \\
+Cost/Vote & \$0.0001 & \$5--50 & ~\$0 & \$0 & \$2--10 \\
+Throughput & 10k+ & 15--30 & 3k+ & 100k+ & Manual \\
+Privacy & Pseudonym. & Pseudonym. & Config. & None & Anonymous \\
+Coercion Resist. & \xmark & \xmark & \xmark & \xmark & Partial \\
+Deployment & Medium & High & High & Low & High \\
+Regulatory Fit & Org-level & Low & Enterprise & High & High \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Future Work}
+\label{sec:future}
+
+\subsection{Short Term (3--6 months)}
+\begin{itemize}
+    \item Multi-election support with dynamic HCS topic creation
+    \item Automated CI/CD pipeline with testnet integration tests
+    \item Enhanced monitoring (Prometheus/Grafana dashboards)
+    \item Accessibility audit (WCAG 2.1 AA compliance)
+    \item Load testing with Hedera Previewnet (higher throughput)
+\end{itemize}
+
+\subsection{Medium Term (6--12 months)}
+\begin{itemize}
+    \item Zero-knowledge proof integration for vote privacy (zk-SNARKs)
+    \item Receipt-freeness via blind signatures or mixnets
+    \item Mainnet deployment with Hedera Council governance review
+    \item Mobile app (React Native) with biometric auth option
+    \item Vote delegation (liquid democracy) smart contracts
+\end{itemize}
+
+\subsection{Long Term (12+ months)}
+\begin{itemize}
+    \item Post-quantum cryptography migration (CRYSTALS-Dilithium)
+    \item Formal verification of vote atomicity (TLA+)
+    \item Cross-chain interoperability for federated elections
+    \item AI-assisted manifesto analysis for voters
+    \item Integration with national digital identity frameworks
+\end{itemize}
+
+\section{Ethical and Societal Considerations}
+\label{sec:ethical}
+
+\begin{itemize}
+    \item \textbf{Inclusivity:} Web-based access excludes offline populations; hybrid paper-digital needed.
+    \item \textbf{Transparency vs Privacy:} Public auditability conflicts with ballot secrecy; ZK-proofs can reconcile.
+    \item \textbf{Trust in Technology:} Non-technical voters must trust cryptographic guarantees; education essential.
+    \item \textbf{Governance:} Who controls the HCS topic? Multi-sig admin keys recommended.
+    \item \textbf{Dispute Resolution:} On-chain finality means no rollback; procedural safeguards required.
+\end{itemize}
