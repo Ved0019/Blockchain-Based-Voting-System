@@ -1,0 +1,24 @@
+{
+  "project": "Blockchain-Based-Voting-System",
+  "stack": {
+    "backend": "Node.js/Express",
+    "database": "MongoDB",
+    "blockchain": "Hedera SDK",
+    "auth": "JWT",
+    "frontend": "React/Vite",
+    "router": "React Router"
+  },
+  "agents": {
+    "architect": "ecc:code-architect",
+    "coder": "general-purpose",
+    "debugger": "ecc:build-error-resolver"
+  },
+  "hooks": {
+    "pre-commit": ["ecc:code-review"],
+    "post-edit": ["ecc:build-fix"]
+  },
+  "memory": {
+    "enabled": true,
+    "directory": ".claude/memory"
+  }
+}

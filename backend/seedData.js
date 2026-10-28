@@ -56,6 +56,9 @@ const seedManifestoData = async () => {
         candidateId: "1",
         name: "Aarav Sharma",
         party: "Progressive Student Alliance (PSA)",
+        partyDescription: "Center-left student coalition focused on infrastructure modernization, digital governance, and evidence-based policy. Formed in 2022 by merger of Tech Students Forum and Campus Reform Group.",
+        partyFounded: "2022",
+        partyIdeology: "Progressive, Technocratic, Reformist",
         avatarIpfs: "",
         avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
         position: "Student Council President",
@@ -487,7 +490,357 @@ const seedManifestoData = async () => {
             dateOrPeriod: "Month 6–8",
             status: "Upcoming"
           }
-        ]
+        ],
+
+        // --- COMPREHENSIVE PROFILE FIELDS FOR CANDIDATE 1 (AARAV SHARMA) ---
+
+        criticisms: [
+          {
+            category: "Governance",
+            title: "Centralized Decision-Making Style",
+            description: "Multiple council members and student representatives have criticized Aarav for bypassing consultative processes and making unilateral decisions on budget allocations without full council debate. The ₹6.8 Lakhs sports court resurfacing contract was approved via executive order rather than competitive tender.",
+            severity: "Moderate",
+            source: "Council Minutes & RTI Response #RTI-2025-047",
+            evidenceRef: "Council Resolution #CR-2025-03 (Executive Order)",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Acknowledged time pressure due to tournament deadline. Committed to full tender process for all future contracts > ₹5 Lakhs. See Council Minutes #CM-2025-11 for detailed response."
+          },
+          {
+            category: "Transparency",
+            title: "Incomplete Disclosure of Alumni Fund Utilization",
+            description: "The ₹15 Lakhs alumni-backed venture fund announced in 2024 has only disbursed ₹3.2 Lakhs to date. No public ledger shows allocation criteria or recipient selection process. Student entrepreneurs allege favoritism toward CSE department peers.",
+            severity: "Major",
+            source: "RTI Response #RTI-2025-089 & Student Survey (n=1,240)",
+            evidenceRef: "Alumni Fund Ledger (Partial) #AFL-2024",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Disbursement delayed due to MOU negotiations with alumni chapter. Full ledger to be published by Q1 2026. Selection committee now includes cross-departmental representation."
+          },
+          {
+            category: "Inclusivity",
+            title: "Hostel A Priority Over Other Blocks",
+            description: "Wi-Fi 6 Phase 1 exclusively covered Hostel A (where Aarav resided), while Hostels B, C, D with 62% dead zones were deferred. Critics allege residential bias in infrastructure prioritization.",
+            severity: "Moderate",
+            source: "IT Audit Report #IT-2025-11 & Hostel Warden Council Minutes",
+            evidenceRef: "IT Audit Heatmaps showing Block A vs B/C disparity",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Phase 1 was pilot to validate technology before scale-up. Budget freeze by Central Accounts Office (uncontrollable) delayed Phase 2. Committed to completing B, C, D within 90 days of new term."
+          },
+          {
+            category: "Accountability",
+            title: "Grievance Portal Deployment Failure",
+            description: "Promised automated ERP grievance portal in 2024 manifesto. Software built but not deployed due to 'pending Controller of Examinations approval' - a dependency known since project inception. Seen as poor project management.",
+            severity: "Moderate",
+            source: "Software Audit #SAD-2024-19 & Student Grievance Cell Reports",
+            evidenceRef: "Deployment Request #SAD-2024-19 (Stalled)",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Technical build complete. Blocker is administrative (CoE cybersecurity sign-off). Have escalated to Dean Student Welfare for intervention. Will deploy within 30 days of clearance."
+          },
+          {
+            category: "Financial",
+            title: "Council Entertainment Budget Overspend",
+            description: "Cultural fest 'Spandan 2024' exceeded allocated budget by ₹2.3 Lakhs (18% overrun). Additional funds sourced from contingency reserve without council vote. No post-event audit published.",
+            severity: "Minor",
+            source: "Council Financial Audit #CFA-2024-Q4",
+            evidenceRef: "Spandan 2024 Expenditure Statement (Unaudited)",
+            acknowledgedByCandidate: false,
+            candidateResponse: "Overspend due to last-minute artist fee escalation. Contingency reserve exists for such emergencies. Post-event audit scheduled for January 2026."
+          }
+        ],
+
+        controversies: [
+          {
+            caseId: "CONT-2025-001",
+            title: "Alleged Favoritism in Hackathon Judging",
+            description: "As Core Convener of ApexHack 2023, Aarav's close friend's team (CSE 3rd year) won 1st prize. No conflict of interest declaration filed. Complaint filed by 2nd place team alleging biased evaluation criteria.",
+            status: "Resolved - Cleared",
+            filedBy: "ApexHack 2023 Runner-up Team",
+            filedDate: "March 15, 2023",
+            hearingDate: "April 20, 2023",
+            outcome: "Ethics Committee found no procedural violation. Judging was blind; friend's team scored highest on technical rubric. However, recommended mandatory COI declarations for future conveners.",
+            penalty: "None. Advisory notice issued.",
+            evidenceRef: "Ethics Committee Report #EC-2023-07",
+            isActive: false
+          },
+          {
+            caseId: "CONT-2025-002",
+            title: "RTI Activist Complaint: Council Meeting Minutes Delay",
+            description: "RTI activist alleged Council Meeting Minutes for Oct-Dec 2024 not published within mandated 30-day window. Information Commission notice issued. Minutes published 47 days late.",
+            status: "Resolved - Penalty",
+            filedBy: "Student RTI Forum",
+            filedDate: "January 10, 2025",
+            hearingDate: "February 15, 2025",
+            outcome: "Information Commission upheld complaint. Council fined ₹10,000 (paid from council fund). Directed to implement automated minutes publication pipeline.",
+            penalty: "₹10,000 fine + mandatory process fix",
+            evidenceRef: "Information Commission Order #ICO-2025-03",
+            isActive: false
+          },
+          {
+            caseId: "CONT-2025-003",
+            title: "Pending: Canteen Contractor Dispute - Exhaust Upgrade",
+            description: "Canteen contractor filed grievance against Council for withholding ₹1.8 Lakhs for kitchen exhaust upgrade, claiming Council changed specifications mid-contract. Council claims contractor used substandard materials. Currently under arbitration.",
+            status: "Pending Hearing",
+            filedBy: "Canteen Contractor (M/s Annapurna Foods)",
+            filedDate: "November 2024",
+            hearingDate: "January 2026 (Scheduled)",
+            outcome: "",
+            penalty: "",
+            evidenceRef: "Arbitration Notice #ARB-2025-12",
+            isActive: true
+          }
+        ],
+
+        financialDisclosures: [
+          {
+            year: "2024-2025",
+            totalExpenditure: 2850000,
+            totalIncome: 3200000,
+            majorExpenses: [
+              { category: "Water Purification Systems", amount: 540000, description: "18 RO+UV units across 6 hostels" },
+              { category: "Sports Court Resurfacing", amount: 680000, description: "Acrylic synthetic courts + LED floodlights" },
+              { category: "Hostel A Wi-Fi 6 Deployment", amount: 1400000, description: "48 access points + fiber backhaul" },
+              { category: "Emergency Medical Van Conversion", amount: 120000, description: "Vehicle retrofit + medical equipment" },
+              { category: "Spandan Cultural Fest 2024", amount: 110000, description: "Artist fees, venue, logistics (over budget)" }
+            ],
+            fundingSources: [
+              { source: "University Student Welfare Fund", amount: 2500000, type: "University Grant" },
+              { source: "Alumni Association Contribution", amount: 500000, type: "Donation" },
+              { source: "Council Contingency Reserve", amount: 200000, type: "Party Fund" }
+            ],
+            auditStatus: "Audited",
+            auditRef: "Council Financial Audit #CFA-2024-Q4"
+          },
+          {
+            year: "2023-2024",
+            totalExpenditure: 1950000,
+            totalIncome: 2100000,
+            majorExpenses: [
+              { category: "ApexHack 2023 Organization", amount: 450000, description: "Venue, prizes, logistics" },
+              { category: "Hostel Welfare Initiatives", amount: 300000, description: "Common room upgrades, water coolers" },
+              { category: "Senate Representation Activities", amount: 200000, description: "Travel, documentation, outreach" },
+              { category: "Miscellaneous Council Operations", amount: 1000000, description: "Stationery, communications, meetings" }
+            ],
+            fundingSources: [
+              { source: "University Student Welfare Fund", amount: 1800000, type: "University Grant" },
+              { source: "PSA Party Membership Fees", amount: 150000, type: "Party Fund" },
+              { source: "Personal Contribution", amount: 150000, type: "Personal" }
+            ],
+            auditStatus: "Audited",
+            auditRef: "Council Financial Audit #CFA-2023-Q4"
+          }
+        ],
+
+        votingRecord: [
+          {
+            motionId: "MOT-2024-01",
+            motionTitle: "Hostel Water Purification Capital Expenditure",
+            date: "August 5, 2024",
+            vote: "For",
+            category: "Campus Infrastructure",
+            controversyLevel: "None",
+            notes: "Unanimous council support. Critical health need."
+          },
+          {
+            motionId: "MOT-2024-02",
+            motionTitle: "Library 24/7 Extension Trial",
+            date: "September 12, 2024",
+            vote: "For",
+            category: "Library and Learning Resources",
+            controversyLevel: "Low",
+            notes: "Passed 7-2. Opposition cited security costs."
+          },
+          {
+            motionId: "MOT-2024-03",
+            motionTitle: "Sports Court Resurfacing Contract Award",
+            date: "October 20, 2024",
+            vote: "For",
+            category: "Sports and Gym Facilities",
+            controversyLevel: "Medium",
+            notes: "Executive order bypassed tender. Voted for own motion as President. Criticized by opposition."
+          },
+          {
+            motionId: "MOT-2024-04",
+            motionTitle: "Canteen Price Cap Renewal",
+            date: "November 8, 2024",
+            vote: "For",
+            category: "Canteen Food Quality and Affordability",
+            controversyLevel: "Low",
+            notes: "Passed unanimously. Contractor objected but complied."
+          },
+          {
+            motionId: "MOT-2024-05",
+            motionTitle: "Electric Shuttle Procurement",
+            date: "November 25, 2024",
+            vote: "For",
+            category: "Transport and Hostel Facilities",
+            controversyLevel: "High",
+            notes: "Failed at Finance Committee (4-5). Aarav voted for but lacked numbers. Major campaign promise unfulfilled."
+          },
+          {
+            motionId: "MOT-2024-06",
+            motionTitle: "Mental Health Counselor Positions (2 FTE)",
+            date: "December 15, 2024",
+            vote: "For",
+            category: "Mental Wellbeing and Student Support",
+            controversyLevel: "Medium",
+            notes: "Passed 6-3. Budget allocation pending Dean approval. Not yet implemented."
+          },
+          {
+            motionId: "MOT-2024-07",
+            motionTitle: "Grievance Portal Development Funding",
+            date: "January 10, 2025",
+            vote: "For",
+            category: "Student Grievances and Transparency",
+            controversyLevel: "None",
+            notes: "Development funded. Deployment blocked by CoE (not council vote)."
+          }
+        ],
+
+        attendanceRecord: [
+          {
+            sessionType: "Council Meeting",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 24,
+            sessionsAttended: 22
+          },
+          {
+            sessionType: "Senate",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 12,
+            sessionsAttended: 10
+          },
+          {
+            sessionType: "Committee",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 36,
+            sessionsAttended: 31
+          },
+          {
+            sessionType: "Town Hall",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 4,
+            sessionsAttended: 3
+          },
+          {
+            sessionType: "Emergency Session",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 3,
+            sessionsAttended: 3
+          }
+        ],
+
+        publicFeedback: {
+          overallRating: 3.7,
+          totalReviews: 847,
+          categoryRatings: [
+            { category: "Infrastructure Delivery", rating: 4.2, reviewCount: 312 },
+            { category: "Transparency", rating: 3.1, reviewCount: 289 },
+            { category: "Responsiveness", rating: 3.5, reviewCount: 267 },
+            { category: "Inclusivity", rating: 3.3, reviewCount: 245 },
+            { category: "Fiscal Responsibility", rating: 3.4, reviewCount: 198 }
+          ],
+          sentimentBreakdown: {
+            positive: 412,
+            neutral: 234,
+            negative: 201
+          },
+          topPraises: [
+            "Water purifiers actually delivered - huge quality of life improvement",
+            "Sports courts are genuinely world-class now",
+            "Emergency medical van saved lives - literally",
+            "Library 2 AM extension helped during finals"
+          ],
+          topComplaints: [
+            "Wi-Fi only in Hostel A - what about the rest of us?",
+            "Grievance portal promised but never launched",
+            "Too centralized - doesn't listen to opposition",
+            "Alumni fund opacity - where did the money go?"
+          ],
+          lastUpdated: "January 2026"
+        },
+
+        sources: [
+          // Manifesto promises
+          { claimType: "Manifesto Promise", claimRef: "C1-P01", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P02", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P03", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P04", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P05", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P06", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P07", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P08", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P09", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P10", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P11", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P12", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P13", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C1-P14", sourceType: "Official Document", sourceTitle: "PSA Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+
+          // Performance records
+          { claimType: "Performance Record", claimRef: "C1-PERF-01", sourceType: "Official Document", sourceTitle: "Council Resolution #CR-2025-04", sourceUrl: "", sourceDate: "August 2024", verificationStatus: "Verified", verifiedBy: "Dean Student Welfare" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-01", sourceType: "Third-Party Audit", sourceTitle: "Municipal Lab Water Quality Certificate #MWQ-892", sourceUrl: "", sourceDate: "September 2024", verificationStatus: "Verified", verifiedBy: "Public Health Lab" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-02", sourceType: "Official Document", sourceTitle: "Academic Senate Minutes #ASM-88", sourceUrl: "", sourceDate: "October 2024", verificationStatus: "Verified", verifiedBy: "Academic Senate" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-03", sourceType: "Official Document", sourceTitle: "Work Order #WD-4091", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Works & Estate Dept" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-04", sourceType: "Official Document", sourceTitle: "Campus Health Center Order #SWD-102", sourceUrl: "", sourceDate: "August 2024", verificationStatus: "Verified", verifiedBy: "Campus Health Center" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-05", sourceType: "Third-Party Audit", sourceTitle: "IT Infrastructure Audit Report #IT-2025-11", sourceUrl: "", sourceDate: "February 2025", verificationStatus: "Verified", verifiedBy: "Central Computer Centre" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-06", sourceType: "Official Document", sourceTitle: "Canteen Inspection Committee Report #CC-2025-Q3", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Mess Monitoring Committee" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-07", sourceType: "Official Document", sourceTitle: "Software Audit & Deployment Request #SAD-2024-19", sourceUrl: "", sourceDate: "December 2024", verificationStatus: "Verified", verifiedBy: "Student Developer Team" },
+          { claimType: "Performance Record", claimRef: "C1-PERF-08", sourceType: "Official Document", sourceTitle: "University Finance Committee Minutes #UFC-2024-11", sourceUrl: "", sourceDate: "November 2024", verificationStatus: "Verified", verifiedBy: "Finance Committee" },
+
+          // Criticisms
+          { claimType: "Criticism", claimRef: "CRIT-C1-01", sourceType: "Official Document", sourceTitle: "Council Minutes #CM-2025-11 & RTI Response #RTI-2025-047", sourceUrl: "", sourceDate: "November 2025", verificationStatus: "Verified", verifiedBy: "RTI Cell" },
+          { claimType: "Criticism", claimRef: "CRIT-C1-02", sourceType: "RTI Response", sourceTitle: "RTI Response #RTI-2025-089", sourceUrl: "", sourceDate: "December 2025", verificationStatus: "Verified", verifiedBy: "RTI Cell" },
+          { claimType: "Criticism", claimRef: "CRIT-C1-02", sourceType: "Student Survey", sourceTitle: "Student Entrepreneur Survey (n=1,240)", sourceUrl: "", sourceDate: "December 2025", verificationStatus: "Verified", verifiedBy: "Independent Survey Team" },
+          { claimType: "Criticism", claimRef: "CRIT-C1-03", sourceType: "Third-Party Audit", sourceTitle: "IT Audit Report #IT-2025-11", sourceUrl: "", sourceDate: "February 2025", verificationStatus: "Verified", verifiedBy: "Central Computer Centre" },
+          { claimType: "Criticism", claimRef: "CRIT-C1-04", sourceType: "Official Document", sourceTitle: "Software Audit #SAD-2024-19", sourceUrl: "", sourceDate: "December 2024", verificationStatus: "Verified", verifiedBy: "Student Developer Team" },
+          { claimType: "Criticism", claimRef: "CRIT-C1-05", sourceType: "Third-Party Audit", sourceTitle: "Council Financial Audit #CFA-2024-Q4", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Internal Audit Cell" },
+
+          // Controversies
+          { claimType: "Controversy", claimRef: "CONT-2025-001", sourceType: "Official Document", sourceTitle: "Ethics Committee Report #EC-2023-07", sourceUrl: "", sourceDate: "April 2023", verificationStatus: "Verified", verifiedBy: "Ethics Committee" },
+          { claimType: "Controversy", claimRef: "CONT-2025-002", sourceType: "Official Document", sourceTitle: "Information Commission Order #ICO-2025-03", sourceUrl: "", sourceDate: "February 2025", verificationStatus: "Verified", verifiedBy: "Information Commission" },
+          { claimType: "Controversy", claimRef: "CONT-2025-003", sourceType: "Official Document", sourceTitle: "Arbitration Notice #ARB-2025-12", sourceUrl: "", sourceDate: "November 2024", verificationStatus: "Partially Verified", verifiedBy: "Arbitration Tribunal" },
+
+          // Financial
+          { claimType: "Financial", claimRef: "FIN-C1-2024", sourceType: "Third-Party Audit", sourceTitle: "Council Financial Audit #CFA-2024-Q4", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Internal Audit Cell" },
+          { claimType: "Financial", claimRef: "FIN-C1-2023", sourceType: "Third-Party Audit", sourceTitle: "Council Financial Audit #CFA-2023-Q4", sourceUrl: "", sourceDate: "January 2024", verificationStatus: "Verified", verifiedBy: "Internal Audit Cell" },
+
+          // Voting Record
+          { claimType: "Voting Record", claimRef: "MOT-2024-01", sourceType: "Official Document", sourceTitle: "Council Meeting Minutes - August 2024", sourceUrl: "", sourceDate: "August 2024", verificationStatus: "Verified", verifiedBy: "Council Secretary" },
+          { claimType: "Voting Record", claimRef: "MOT-2024-02", sourceType: "Official Document", sourceTitle: "Council Meeting Minutes - September 2024", sourceUrl: "", sourceDate: "September 2024", verificationStatus: "Verified", verifiedBy: "Council Secretary" },
+          { claimType: "Voting Record", claimRef: "MOT-2024-03", sourceType: "Official Document", sourceTitle: "Council Meeting Minutes - October 2024", sourceUrl: "", sourceDate: "October 2024", verificationStatus: "Verified", verifiedBy: "Council Secretary" },
+          { claimType: "Voting Record", claimRef: "MOT-2024-04", sourceType: "Official Document", sourceTitle: "Council Meeting Minutes - November 2024", sourceUrl: "", sourceDate: "November 2024", verificationStatus: "Verified", verifiedBy: "Council Secretary" },
+          { claimType: "Voting Record", claimRef: "MOT-2024-05", sourceType: "Official Document", sourceTitle: "Finance Committee Minutes #UFC-2024-11", sourceUrl: "", sourceDate: "November 2024", verificationStatus: "Verified", verifiedBy: "Finance Committee" },
+          { claimType: "Voting Record", claimRef: "MOT-2024-06", sourceType: "Official Document", sourceTitle: "Council Meeting Minutes - December 2024", sourceUrl: "", sourceDate: "December 2024", verificationStatus: "Verified", verifiedBy: "Council Secretary" },
+          { claimType: "Voting Record", claimRef: "MOT-2024-07", sourceType: "Official Document", sourceTitle: "Council Meeting Minutes - January 2025", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Council Secretary" },
+
+          // Attendance
+          { claimType: "Attendance", claimRef: "ATT-C1-2024", sourceType: "Official Document", sourceTitle: "Council Attendance Registers 2024-2025", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Verified", verifiedBy: "Council Secretariat" },
+
+          // Feedback
+          { claimType: "Feedback", claimRef: "FB-C1-2026", sourceType: "Student Survey", sourceTitle: "Comprehensive Candidate Feedback Survey (n=847)", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Independent Survey Team" }
+        ],
+
+        profileCompleteness: {
+          manifestoComplete: true,
+          performanceComplete: true,
+          criticismsDocumented: true,
+          controversiesDocumented: true,
+          financialsDisclosed: true,
+          votingRecordDisclosed: true,
+          attendanceDisclosed: true,
+          feedbackCollected: true,
+          sourcesVerified: true,
+          overallScore: 95
+        }
       },
       {
         candidateId: "2",
@@ -803,7 +1156,217 @@ const seedManifestoData = async () => {
             dateOrPeriod: "Month 9–11",
             status: "Upcoming"
           }
-        ]
+        ],
+
+        // --- COMPREHENSIVE PROFILE FIELDS FOR CANDIDATE 2 (ANANYA IYER) ---
+
+        criticisms: [
+          {
+            category: "Governance",
+            title: "Lack of Executive Experience",
+            description: "Ananya has never held an elected executive position (President/VP level). Her roles have been departmental/academic (IEEE Chair, Academic Secretary). Critics question whether academic leadership translates to council governance with budget authority.",
+            severity: "Moderate",
+            source: "Student Survey (n=1,240) & Opposition Campaign Literature",
+            evidenceRef: "Leadership Experience Comparison Chart #LEC-2026",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Academic Secretary role involved managing ₹50L department budget and 200+ student coordination. IEEE Chair managed multi-college symposium with ₹12L corporate sponsorship. Governance is learned; fresh perspective is asset."
+          },
+          {
+            category: "Transparency",
+            title: "Research Grant Selection Criteria Opacity",
+            description: "As IEEE Chair, Ananya oversaw a ₹3L student project fund. Allegations that grant recipients were disproportionately from ECE/IEEE members (78% of awards). No public scoring rubric published.",
+            severity: "Major",
+            source: "RTI Response #RTI-2025-112 & Student Survey",
+            evidenceRef: "IEEE Project Fund Disbursement Records (Partial) #IPF-2024",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Selection was merit-based by faculty panel. ECE students applied more due to IEEE chapter outreach. Committed to public rubric, cross-department panel, and blind review for Council Seed Fund."
+          },
+          {
+            category: "Feasibility",
+            title: "Over-Promising on Infrastructure Timelines",
+            description: "Promises 1 Gbps NKN fiber upgrade in 60 days and Wi-Fi 6 in all hostels in 90 days. NKN lease line provisioning typically takes 6-12 months due to bureaucratic approvals. Network engineers call timelines 'unrealistic'.",
+            severity: "Moderate",
+            source: "IT Audit Report #IT-2025-11 & Network Engineer Interviews",
+            evidenceRef: "NKN Provisioning Timeline Analysis #NKN-2025",
+            acknowledgedByCandidate: false,
+            candidateResponse: "NKN connection already exists; this is bandwidth upgrade, not new line. Have preliminary approval from NKN nodal officer. Will publish milestone tracker for accountability."
+          },
+          {
+            category: "Inclusivity",
+            title: "Esports Arena Excludes Non-Gamers",
+            description: "Proposed 20-seat Esports Arena with high-end PCs (est. ₹15L) while general sports facilities remain underfunded. Critics say this serves niche demographic (mostly CSE/ECE male students) over broader student body.",
+            severity: "Minor",
+            source: "Student Survey & Sports Council Feedback",
+            evidenceRef: "Sports Facility Utilization Survey #SFU-2025",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Esports is growing globally; arena doubles as coding/hackathon space. Gear subsidy covers ALL sports (cricket, football, badminton). Not zero-sum - corporate sponsorship covers esports PCs."
+          },
+          {
+            category: "Financial",
+            title: "Uncosted Promises in Manifesto",
+            description: "Several promises lack budget estimates: 'Free DSA/GATE Bootcamps', 'Branch-Specific Placement Ambassadors', 'Open Senate Livestream'. Independent analysis estimates ₹25L+ unfunded commitments.",
+            severity: "Moderate",
+            source: "Independent Fiscal Analysis #IFA-2026",
+            evidenceRef: "Manifesto Costing Sheet (ARDCI Internal) #MCS-2026",
+            acknowledgedByCandidate: false,
+            candidateResponse: "DSA/GATE bootcamps use peer tutors (zero cost). Livestream uses existing AV equipment. Ambassadors are volunteer roles. Detailed costing to be released pre-election."
+          }
+        ],
+
+        controversies: [
+          {
+            caseId: "CONT-2025-004",
+            title: "Peer Tutoring Network Grade Inflation Allegation",
+            description: "As founder of Campus Peer Tutoring Network, Ananya's team allegedly shared past exam papers with tutees. Professor complaint filed. Investigation found no evidence of paper leakage but noted 'insufficient boundary protocols'.",
+            status: "Resolved - Cleared",
+            filedBy: "Professor, Department of ECE",
+            filedDate: "October 2024",
+            hearingDate: "November 15, 2024",
+            outcome: "Academic Integrity Committee cleared tutoring network of paper sharing. Recommended formal tutoring guidelines and tutor training on academic integrity boundaries.",
+            penalty: "None. Guidelines implemented.",
+            evidenceRef: "Academic Integrity Committee Report #AIC-2024-11",
+            isActive: false
+          },
+          {
+            caseId: "CONT-2025-005",
+            title: "Women in STEM Conclave Sponsorship Transparency",
+            description: "As Organizer of WiSTEM 2024, Ananya secured ₹8L corporate sponsorship. RTI revealed ₹1.2L spent on 'organizer hospitality' (premium hotel, meals for 12 organizers). Questions raised about proportionality.",
+            status: "Resolved - Penalty",
+            filedBy: "Student RTI Forum",
+            filedDate: "December 2024",
+            hearingDate: "January 20, 2025",
+            outcome: "Finance Committee found hospitality expenses exceeded university norms (max ₹2,000/day/person). Ananya directed to reimburse ₹68,000 from personal funds. Reimbursed within 30 days.",
+            penalty: "₹68,000 personal reimbursement",
+            evidenceRef: "Finance Committee Order #FCO-2025-02",
+            isActive: false
+          }
+        ],
+
+        financialDisclosures: [
+          {
+            year: "2024-2025",
+            totalExpenditure: 850000,
+            totalIncome: 920000,
+            majorExpenses: [
+              { category: "IEEE Student Chapter Operations", amount: 320000, description: "Workshops, symposiums, hardware kits" },
+              { category: "WiSTEM National Conclave 2024", amount: 480000, description: "Venue, speakers, hospitality (incl. flagged expenses)" },
+              { category: "Peer Tutoring Network", amount: 50000, description: "Platform hosting, tutor stipends" }
+            ],
+            fundingSources: [
+              { source: "IEEE Global Chapter Grant", amount: 400000, type: "Sponsorship" },
+              { source: "Corporate Sponsorships (WiSTEM)", amount: 800000, type: "Sponsorship" },
+              { source: "Department Academic Fund", amount: 150000, type: "University Grant" },
+              { source: "Personal Contribution", amount: 50000, type: "Personal" }
+            ],
+            auditStatus: "Audited",
+            auditRef: "IEEE Chapter Audit #ICA-2024 & WiSTEM Finance Report"
+          }
+        ],
+
+        votingRecord: [],
+
+        attendanceRecord: [
+          {
+            sessionType: "Committee",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 18,
+            sessionsAttended: 16
+          },
+          {
+            sessionType: "Town Hall",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 4,
+            sessionsAttended: 4
+          }
+        ],
+
+        publicFeedback: {
+          overallRating: 4.1,
+          totalReviews: 623,
+          categoryRatings: [
+            { category: "Academic Advocacy", rating: 4.5, reviewCount: 234 },
+            { category: "Technical Competence", rating: 4.6, reviewCount: 198 },
+            { category: "Inclusivity", rating: 4.2, reviewCount: 178 },
+            { category: "Feasibility", rating: 3.4, reviewCount: 156 },
+            { category: "Transparency", rating: 3.7, reviewCount: 142 }
+          ],
+          sentimentBreakdown: {
+            positive: 356,
+            neutral: 167,
+            negative: 100
+          },
+          topPraises: [
+            "Peer tutoring network genuinely helped hundreds of students",
+            "WiSTEM conclave was best women-in-tech event on campus",
+            "Clear, data-driven proposals with implementation details",
+            "Strong on research culture - IEEE grants actually work"
+          ],
+          topComplaints: [
+            "Never run a budget this big - can she handle council finances?",
+            "Esports arena feels like pet project for her department",
+            "Timelines for internet upgrade seem fantasy",
+            "Hospitality expenses at WiSTEM looked bad even if cleared"
+          ],
+          lastUpdated: "January 2026"
+        },
+
+        sources: [
+          // Party info
+          { claimType: "Manifesto Promise", claimRef: "C2-PARTY", sourceType: "Official Document", sourceTitle: "ARDCI Party Constitution & Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+
+          // Manifesto promises (14)
+          { claimType: "Manifesto Promise", claimRef: "C2-P01", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P02", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P03", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P04", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P05", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P06", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P07", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P08", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P09", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P10", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P11", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P12", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P13", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C2-P14", sourceType: "Official Document", sourceTitle: "ARDCI Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+
+          // Criticisms
+          { claimType: "Criticism", claimRef: "CRIT-C2-01", sourceType: "Student Survey", sourceTitle: "Student Leadership Perception Survey (n=1,240)", sourceUrl: "", sourceDate: "December 2025", verificationStatus: "Verified", verifiedBy: "Independent Survey Team" },
+          { claimType: "Criticism", claimRef: "CRIT-C2-02", sourceType: "RTI Response", sourceTitle: "RTI Response #RTI-2025-112", sourceUrl: "", sourceDate: "December 2025", verificationStatus: "Verified", verifiedBy: "RTI Cell" },
+          { claimType: "Criticism", claimRef: "CRIT-C2-03", sourceType: "Third-Party Audit", sourceTitle: "IT Audit Report #IT-2025-11", sourceUrl: "", sourceDate: "February 2025", verificationStatus: "Verified", verifiedBy: "Central Computer Centre" },
+          { claimType: "Criticism", claimRef: "CRIT-C2-04", sourceType: "Third-Party Audit", sourceTitle: "Sports Facility Utilization Survey #SFU-2025", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Sports Council" },
+          { claimType: "Criticism", claimRef: "CRIT-C2-05", sourceType: "Third-Party Audit", sourceTitle: "Independent Fiscal Analysis #IFA-2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Independent Analyst" },
+
+          // Controversies
+          { claimType: "Controversy", claimRef: "CONT-2025-004", sourceType: "Official Document", sourceTitle: "Academic Integrity Committee Report #AIC-2024-11", sourceUrl: "", sourceDate: "November 2024", verificationStatus: "Verified", verifiedBy: "Academic Integrity Committee" },
+          { claimType: "Controversy", claimRef: "CONT-2025-005", sourceType: "Official Document", sourceTitle: "Finance Committee Order #FCO-2025-02", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "Finance Committee" },
+
+          // Financial
+          { claimType: "Financial", claimRef: "FIN-C2-2024", sourceType: "Third-Party Audit", sourceTitle: "IEEE Chapter Audit #ICA-2024 & WiSTEM Finance Report", sourceUrl: "", sourceDate: "January 2025", verificationStatus: "Verified", verifiedBy: "IEEE Audit Committee" },
+
+          // Attendance
+          { claimType: "Attendance", claimRef: "ATT-C2-2024", sourceType: "Official Document", sourceTitle: "IEEE & Committee Attendance Registers 2024-2025", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Verified", verifiedBy: "Committee Secretariat" },
+
+          // Feedback
+          { claimType: "Feedback", claimRef: "FB-C2-2026", sourceType: "Student Survey", sourceTitle: "Comprehensive Candidate Feedback Survey (n=623)", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Independent Survey Team" }
+        ],
+
+        profileCompleteness: {
+          manifestoComplete: true,
+          performanceComplete: false,
+          criticismsDocumented: true,
+          controversiesDocumented: true,
+          financialsDisclosed: true,
+          votingRecordDisclosed: false,
+          attendanceDisclosed: true,
+          feedbackCollected: true,
+          sourcesVerified: true,
+          overallScore: 82
+        }
       },
       {
         candidateId: "3",
@@ -1119,7 +1682,215 @@ const seedManifestoData = async () => {
             dateOrPeriod: "Month 9–11",
             status: "Upcoming"
           }
-        ]
+        ],
+
+        // --- COMPREHENSIVE PROFILE FIELDS FOR CANDIDATE 3 (ROHAN VARMA) ---
+
+        criticisms: [
+          {
+            category: "Governance",
+            title: "Populist Promises Without Fiscal Backing",
+            description: "Rohan's platform is heavy on popular giveaways (₹35 thali, free gym, night shuttles, mental health app) but light on revenue sources. Sports Council budget of ₹7.2L for floodlights/trainers is already allocated; other promises require new funds. Critics call it 'promise inflation'.",
+            severity: "Major",
+            source: "Independent Fiscal Analysis #IFA-2026 & Sports Council Budget Docs",
+            evidenceRef: "Sports Council Audit #SCA-2025 & Fiscal Gap Analysis #FGA-2026",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Prioritization is key. Year 1 focuses on price cap (contractual, zero cost) and gym hours (existing staff overtime). Shuttles & app funded via alumni CSR (₹8L committed). Mental health grant application submitted to UGC."
+          },
+          {
+            category: "Transparency",
+            title: "Spandan Fest 2024 Budget Opacity",
+            description: "As Head Coordinator of Spandan 2024, Rohan managed ₹18L budget. Post-fest audit showed ₹4.3L 'miscellaneous expenses' with no itemization. Student RTI forum flagged 24% of budget as unverifiable. No public ledger published.",
+            severity: "Moderate",
+            source: "RTI Response #RTI-2025-134 & Fest Audit #SFR-2024",
+            evidenceRef: "Spandan 2024 Expenditure Statement (Unaudited) #SFS-2024",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Miscellaneous included emergency artist fees, last-minute logistics, weather contingencies. Receipts exist but were not consolidated. Committed to real-time public ledger for Spandan 2026 with daily updates."
+          },
+          {
+            category: "Feasibility",
+            title: "Night Shuttle Operations Unproven",
+            description: "Promises electric golf carts running until 1 AM. Previous similar proposal (Aarav Sharma) failed Finance Committee. No driver hiring plan, no insurance framework, no maintenance budget. Campus security opposes extended patrol hours.",
+            severity: "Moderate",
+            source: "University Finance Committee Minutes #UFC-2024-11 & Security Council Feedback",
+            evidenceRef: "Finance Committee Rejection Rationale #FCR-2024-11",
+            acknowledgedByCandidate: false,
+            candidateResponse: "Different model: golf carts (not van), leased not purchased, student drivers (work-study), security partnership not replacement. MoU with Security Council in draft."
+          },
+          {
+            category: "Inclusivity",
+            title: "Sports-Centric Platform Neglects Academic Needs",
+            description: "4 of 5 key promises are sports/wellness/food. Only 1 academic promise (hackathons). ECE, Civil, Biotech students say platform ignores lab funding, research grants, placement diversity. 'Basketball captain running for Sports Secretary, not Council President'.",
+            severity: "Moderate",
+            source: "Student Survey by Department (n=1,240) & Department Representatives",
+            evidenceRef: "Department-Wise Manifesto Relevance Survey #DMR-2026",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Wellbeing IS academic performance. Hungry, stressed, unfit students don't learn. Hackathons are interdisciplinary (Mech+Biotech+IoT). Open to adding academic promises based on feedback."
+          },
+          {
+            category: "Accountability",
+            title: "Hostel Warden Council Record - Limited Impact",
+            description: "As Hostel Block Warden Council Rep (2023-24), Rohan's tenure saw 3 wardens replaced for misconduct but no systemic reform. Complaint resolution time averaged 18 days (university norm: 7 days). No policy changes enacted.",
+            severity: "Minor",
+            source: "Hostel Warden Council Minutes #HWC-2024 & Student Grievance Data",
+            evidenceRef: "Hostel Grievance Resolution Analytics #HGR-2024",
+            acknowledgedByCandidate: true,
+            candidateResponse: "Warden replacement IS systemic reform. Resolution time skewed by 2 complex legal cases (avg 45 days). Excluding those, avg was 6 days. Proposed 'Direct Action Slips' with 72-hour SLA addresses this."
+          }
+        ],
+
+        controversies: [
+          {
+            caseId: "CONT-2025-006",
+            title: "Basketball Team Fund Misallocation Allegation",
+            description: "As Team Captain, Rohan managed ₹2.5L team budget (travel, equipment, coaching). Anonymous complaint alleged personal expense reimbursement (protein supplements, personal training). Investigation found ₹47,000 in 'gray area' expenses not clearly team-related.",
+            status: "Resolved - Penalty",
+            filedBy: "Anonymous Team Member",
+            filedDate: "February 2025",
+            hearingDate: "March 10, 2025",
+            outcome: "Sports Council Ethics Panel found expenses not explicitly prohibited but lacking pre-approval. Rohan directed to reimburse ₹47,000 and attend financial ethics workshop. Reimbursed within 14 days.",
+            penalty: "₹47,000 reimbursement + mandatory ethics workshop",
+            evidenceRef: "Sports Council Ethics Panel Report #SCEP-2025-03",
+            isActive: false
+          },
+          {
+            caseId: "CONT-2025-007",
+            title: "Red Cross Blood Drive Data Privacy Complaint",
+            description: "As Volunteer Coordinator for 2023 Blood Drive, Rohan's team collected donor contact details on personal Google Sheets instead of secure university system. Data protection officer flagged violation. No breach occurred but process was non-compliant.",
+            status: "Resolved - Cleared",
+            filedBy: "Data Protection Officer, University",
+            filedDate: "October 2023",
+            hearingDate: "November 5, 2023",
+            outcome: "No data breach or misuse found. Process violation acknowledged. Directed to use university CRM for all future drives. Rohan implemented compliant process for 2024 drive.",
+            penalty: "Process correction only. No fine.",
+            evidenceRef: "Data Protection Office Notice #DPO-2023-10",
+            isActive: false
+          }
+        ],
+
+        financialDisclosures: [
+          {
+            year: "2024-2025",
+            totalExpenditure: 1250000,
+            totalIncome: 1300000,
+            majorExpenses: [
+              { category: "Spandan Cultural & Sports Fest 2024", amount: 1100000, description: "Artists, venue, logistics, hospitality (incl. flagged misc)" },
+              { category: "Basketball Team Operations", amount: 150000, description: "Travel, equipment, coaching (incl. reimbursed expenses)" }
+            ],
+            fundingSources: [
+              { source: "Corporate Sponsorships (Spandan)", amount: 1200000, type: "Sponsorship" },
+              { source: "Sports Council Allocation", amount: 200000, type: "University Grant" },
+              { source: "Personal Contribution", amount: 100000, type: "Personal" }
+            ],
+            auditStatus: "Flagged",
+            auditRef: "Spandan Audit #SFS-2024 & Sports Council Ethics Panel #SCEP-2025-03"
+          }
+        ],
+
+        votingRecord: [],
+
+        attendanceRecord: [
+          {
+            sessionType: "Committee",
+            date: "2023-2024 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 24,
+            sessionsAttended: 21
+          },
+          {
+            sessionType: "Town Hall",
+            date: "2024-2025 Academic Year",
+            attended: true,
+            reasonIfAbsent: "",
+            totalSessions: 4,
+            sessionsAttended: 4
+          }
+        ],
+
+        publicFeedback: {
+          overallRating: 3.9,
+          totalReviews: 712,
+          categoryRatings: [
+            { category: "Student Welfare Focus", rating: 4.4, reviewCount: 267 },
+            { category: "Mental Health Advocacy", rating: 4.3, reviewCount: 234 },
+            { category: "Sports & Recreation", rating: 4.5, reviewCount: 198 },
+            { category: "Fiscal Responsibility", rating: 3.0, reviewCount: 178 },
+            { category: "Academic Advocacy", rating: 2.8, reviewCount: 156 }
+          ],
+          sentimentBreakdown: {
+            positive: 389,
+            neutral: 167,
+            negative: 156
+          },
+          topPraises: [
+            "Genuinely cares about food quality and student hunger",
+            "Mental health sanctuary + tele-therapy is exactly what we need",
+            "Night shuttles would be life-saving for late lab students",
+            "Bicycle co-op is practical, low-cost, high-impact"
+          ],
+          topComplaints: [
+            "Spandan budget mess - where did ₹4.3L go?",
+            "Basketball fund reimbursement looks bad for a 'welfare' candidate",
+            "All sports/food/wellness - what about labs, placements, research?",
+            "Night shuttles sound great but previous admin tried and failed"
+          ],
+          lastUpdated: "January 2026"
+        },
+
+        sources: [
+          // Party info
+          { claimType: "Manifesto Promise", claimRef: "C3-PARTY", sourceType: "Official Document", sourceTitle: "USWAC Party Constitution & Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+
+          // Manifesto promises (14)
+          { claimType: "Manifesto Promise", claimRef: "C3-P01", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P02", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P03", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P04", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P05", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P06", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P07", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P08", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P09", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P10", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P11", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P12", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P13", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+          { claimType: "Manifesto Promise", claimRef: "C3-P14", sourceType: "Official Document", sourceTitle: "USWAC Election Manifesto 2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Election Commission" },
+
+          // Criticisms
+          { claimType: "Criticism", claimRef: "CRIT-C3-01", sourceType: "Third-Party Audit", sourceTitle: "Independent Fiscal Analysis #IFA-2026 & Sports Council Audit #SCA-2025", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Independent Analyst" },
+          { claimType: "Criticism", claimRef: "CRIT-C3-02", sourceType: "RTI Response", sourceTitle: "RTI Response #RTI-2025-134", sourceUrl: "", sourceDate: "December 2025", verificationStatus: "Verified", verifiedBy: "RTI Cell" },
+          { claimType: "Criticism", claimRef: "CRIT-C3-03", sourceType: "Official Document", sourceTitle: "Finance Committee Minutes #UFC-2024-11", sourceUrl: "", sourceDate: "November 2024", verificationStatus: "Verified", verifiedBy: "Finance Committee" },
+          { claimType: "Criticism", claimRef: "CRIT-C3-04", sourceType: "Student Survey", sourceTitle: "Department-Wise Manifesto Relevance Survey #DMR-2026", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Independent Survey Team" },
+          { claimType: "Criticism", claimRef: "CRIT-C3-05", sourceType: "Official Document", sourceTitle: "Hostel Warden Council Minutes #HWC-2024 & Grievance Analytics #HGR-2024", sourceUrl: "", sourceDate: "March 2024", verificationStatus: "Verified", verifiedBy: "Hostel Council Secretariat" },
+
+          // Controversies
+          { claimType: "Controversy", claimRef: "CONT-2025-006", sourceType: "Official Document", sourceTitle: "Sports Council Ethics Panel Report #SCEP-2025-03", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Verified", verifiedBy: "Sports Council Ethics Panel" },
+          { claimType: "Controversy", claimRef: "CONT-2025-007", sourceType: "Official Document", sourceTitle: "Data Protection Office Notice #DPO-2023-10", sourceUrl: "", sourceDate: "November 2023", verificationStatus: "Verified", verifiedBy: "Data Protection Officer" },
+
+          // Financial
+          { claimType: "Financial", claimRef: "FIN-C3-2024", sourceType: "Third-Party Audit", sourceTitle: "Spandan Audit #SFS-2024 & Sports Council Ethics Panel #SCEP-2025-03", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Flagged", verifiedBy: "Sports Council Ethics Panel" },
+
+          // Attendance
+          { claimType: "Attendance", claimRef: "ATT-C3-2023", sourceType: "Official Document", sourceTitle: "Hostel Warden Council & Committee Attendance Registers", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Verified", verifiedBy: "Council Secretariat" },
+
+          // Feedback
+          { claimType: "Feedback", claimRef: "FB-C3-2026", sourceType: "Student Survey", sourceTitle: "Comprehensive Candidate Feedback Survey (n=712)", sourceUrl: "", sourceDate: "January 2026", verificationStatus: "Verified", verifiedBy: "Independent Survey Team" }
+        ],
+
+        profileCompleteness: {
+          manifestoComplete: true,
+          performanceComplete: false,
+          criticismsDocumented: true,
+          controversiesDocumented: true,
+          financialsDisclosed: true,
+          votingRecordDisclosed: false,
+          attendanceDisclosed: true,
+          feedbackCollected: true,
+          sourcesVerified: true,
+          overallScore: 78
+        }
       }
     ];
 
