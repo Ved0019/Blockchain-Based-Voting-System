@@ -1870,7 +1870,7 @@ const seedManifestoData = async () => {
           { claimType: "Controversy", claimRef: "CONT-2025-007", sourceType: "Official Document", sourceTitle: "Data Protection Office Notice #DPO-2023-10", sourceUrl: "", sourceDate: "November 2023", verificationStatus: "Verified", verifiedBy: "Data Protection Officer" },
 
           // Financial
-          { claimType: "Financial", claimRef: "FIN-C3-2024", sourceType: "Third-Party Audit", sourceTitle: "Spandan Audit #SFS-2024 & Sports Council Ethics Panel #SCEP-2025-03", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Flagged", verifiedBy: "Sports Council Ethics Panel" },
+          { claimType: "Financial", claimRef: "FIN-C3-2024", sourceType: "Third-Party Audit", sourceTitle: "Spandan Audit #SFS-2024 & Sports Council Ethics Panel #SCEP-2025-03", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Disputed", verifiedBy: "Sports Council Ethics Panel" },
 
           // Attendance
           { claimType: "Attendance", claimRef: "ATT-C3-2023", sourceType: "Official Document", sourceTitle: "Hostel Warden Council & Committee Attendance Registers", sourceUrl: "", sourceDate: "March 2025", verificationStatus: "Verified", verifiedBy: "Council Secretariat" },
