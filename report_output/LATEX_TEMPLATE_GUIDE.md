@@ -45,23 +45,24 @@ report_output/
 
 ## Local Compilation
 
+### Option 1: Using Podman / Docker (Fastest, zero system clutter)
 ```bash
-# Install LaTeX (Ubuntu/Debian)
-sudo apt-get install texlive-full texlive-latex-extra latexmk biber
-
-# Compile
 cd report_output
-latexmk -pdf main.tex
+podman run --rm -v "$PWD":/workdir:Z -w /workdir docker.io/danteev/texlive latexmk -pdf -g main.tex
+```
 
-# Or step by step:
-pdflatex main.tex
-biber main
-pdflatex main.tex
-pdflatex main.tex
+### Option 2: Native Install (Fedora Linux)
+```bash
+sudo dnf install texlive-scheme-medium texlive-latexmk texlive-biber texlive-glossaries texlive-pgfplots texlive-csquotes
+cd report_output
+latexmk -pdf -g main.tex
+```
 
-# For glossaries:
-makeglossaries main
-pdflatex main.tex
+### Option 3: Native Install (Ubuntu/Debian)
+```bash
+sudo apt-get install texlive-full texlive-latex-extra latexmk biber
+cd report_output
+latexmk -pdf -g main.tex
 ```
 
 ## Customization Points

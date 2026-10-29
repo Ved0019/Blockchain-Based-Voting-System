@@ -34,10 +34,10 @@ hederaErrors.test.js & 2 & Hedera error-message handling \\
 \toprule
 \textbf{Scenario} & \textbf{Steps} & \textbf{Expected} \\
 \midrule
-Full vote flow & Login → Manifesto → Vote → Verify & HCS tx, receipt, tally \\
-Admin workflow & Login → Add candidate → Enroll voter → Toggle & All operations succeed \\
+Full vote flow & Login $\rightarrow$ Manifesto $\rightarrow$ Vote $\rightarrow$ Verify & HCS tx, receipt, tally \\
+Admin workflow & Login $\rightarrow$ Add candidate $\rightarrow$ Enroll voter $\rightarrow$ Toggle & All operations succeed \\
 Concurrent votes & 10 simultaneous vote submissions & All processed, no duplicates \\
-Token expiry & Wait for JWT exp → API call → Refresh & 403 then new token \\
+Token expiry & Wait for JWT exp $\rightarrow$ API call $\rightarrow$ Refresh & 403 then new token \\
 \midrule
 \end{tabular}
 \end{table}

@@ -1,0 +1,733 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{adida2008helios}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=dc10b98d1ed54eb3a80022aa3b38e7ca}{%
+           family={Adida},
+           familyi={A\bibinitperiod},
+           given={Ben},
+           giveni={B\bibinitperiod}}}%
+        {{hash=a55bc4b82b65329ffbe3e5d697777455}{%
+           family={De\bibnamedelima Marneffe},
+           familyi={D\bibinitperiod\bibinitdelim M\bibinitperiod},
+           given={Olivier},
+           giveni={O\bibinitperiod}}}%
+        {{hash=3c6ed346633d45823651d9d6eb7bf4f4}{%
+           family={Pereira},
+           familyi={P\bibinitperiod},
+           given={Olivier},
+           giveni={O\bibinitperiod}}}%
+        {{hash=2a6e6a997940d16ad9bb1f723ceb8ec9}{%
+           family={Quisquater},
+           familyi={Q\bibinitperiod},
+           given={Jean-Jacques},
+           giveni={J\bibinithyphendelim J\bibinitperiod}}}%
+      }
+      \strng{namehash}{b045cc9cb846d39f94fcdca663d719fc}
+      \strng{fullhash}{541dcb1ccf7d54ac1798dc66e7ee2ff3}
+      \strng{fullhashraw}{541dcb1ccf7d54ac1798dc66e7ee2ff3}
+      \strng{bibnamehash}{541dcb1ccf7d54ac1798dc66e7ee2ff3}
+      \strng{authorbibnamehash}{541dcb1ccf7d54ac1798dc66e7ee2ff3}
+      \strng{authornamehash}{b045cc9cb846d39f94fcdca663d719fc}
+      \strng{authorfullhash}{541dcb1ccf7d54ac1798dc66e7ee2ff3}
+      \strng{authorfullhashraw}{541dcb1ccf7d54ac1798dc66e7ee2ff3}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{USENIX Security Symposium}
+      \field{title}{Helios: Web-based Open-Audit Voting}
+      \field{volume}{17}
+      \field{year}{2008}
+      \field{pages}{335\bibrangedash 348}
+      \range{pages}{14}
+    \endentry
+    \entry{androulaki2018hyperledger}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{10}{}{%
+        {{hash=f5c17868bc40b8f88d6b6465fd2d4ab5}{%
+           family={Androulaki},
+           familyi={A\bibinitperiod},
+           given={Elli},
+           giveni={E\bibinitperiod}}}%
+        {{hash=cebfb3c4c7037950f54f9fbdda04d711}{%
+           family={Barger},
+           familyi={B\bibinitperiod},
+           given={Artem},
+           giveni={A\bibinitperiod}}}%
+        {{hash=34b1502d582f3cd56a5392a5365d5e83}{%
+           family={Bortnikov},
+           familyi={B\bibinitperiod},
+           given={Vita},
+           giveni={V\bibinitperiod}}}%
+        {{hash=61f4a4d4aad7fed4999cd33172ca4ff3}{%
+           family={Cachin},
+           familyi={C\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=aad61dbc6c1f77867a97b4a9fd043466}{%
+           family={Christidis},
+           familyi={C\bibinitperiod},
+           given={Konstantinos},
+           giveni={K\bibinitperiod}}}%
+        {{hash=52727cd2ba1a4ab65e9f3abdc19d37a2}{%
+           family={De\bibnamedelima Caro},
+           familyi={D\bibinitperiod\bibinitdelim C\bibinitperiod},
+           given={Angelo},
+           giveni={A\bibinitperiod}}}%
+        {{hash=854eac638e343db8ba3d8d38de27013e}{%
+           family={Enyeart},
+           familyi={E\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=780ed76e046010af542c5e6d9e05fb35}{%
+           family={Ferris},
+           familyi={F\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+        {{hash=abd23caca224cfe6330e47c92eef5625}{%
+           family={Laventman},
+           familyi={L\bibinitperiod},
+           given={Gennady},
+           giveni={G\bibinitperiod}}}%
+        {{hash=7d7297d1eb639e13b0bd174e2dbbbd4e}{%
+           family={Manevich},
+           familyi={M\bibinitperiod},
+           given={Yacov},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{3f4b7cc5200bc62e87c626dc68eec5c5}
+      \strng{fullhash}{4122eb3247a32736b95cfa2f4b65ae57}
+      \strng{fullhashraw}{4122eb3247a32736b95cfa2f4b65ae57}
+      \strng{bibnamehash}{3f4b7cc5200bc62e87c626dc68eec5c5}
+      \strng{authorbibnamehash}{3f4b7cc5200bc62e87c626dc68eec5c5}
+      \strng{authornamehash}{3f4b7cc5200bc62e87c626dc68eec5c5}
+      \strng{authorfullhash}{4122eb3247a32736b95cfa2f4b65ae57}
+      \strng{authorfullhashraw}{4122eb3247a32736b95cfa2f4b65ae57}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the Thirteenth EuroSys Conference}
+      \field{title}{Hyperledger Fabric: A Distributed Operating System for Permissioned Blockchains}
+      \field{year}{2018}
+      \field{pages}{1\bibrangedash 15}
+      \range{pages}{15}
+    \endentry
+    \entry{appel2009security}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=d6edf223804f6636786fa6eb19a383d9}{%
+           family={Appel},
+           familyi={A\bibinitperiod},
+           given={Andrew\bibnamedelima W},
+           giveni={A\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \strng{namehash}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{fullhash}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{fullhashraw}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{bibnamehash}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{authorbibnamehash}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{authornamehash}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{authorfullhash}{d6edf223804f6636786fa6eb19a383d9}
+      \strng{authorfullhashraw}{d6edf223804f6636786fa6eb19a383d9}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Communications of the ACM}
+      \field{number}{10}
+      \field{title}{Security of Electronic Voting Machines}
+      \field{volume}{52}
+      \field{year}{2009}
+      \field{pages}{28\bibrangedash 31}
+      \range{pages}{4}
+    \endentry
+    \entry{baird2016hashgraph}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=054d46f4abfc58097496b76716582eb2}{%
+           family={Baird},
+           familyi={B\bibinitperiod},
+           given={Leemon},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{054d46f4abfc58097496b76716582eb2}
+      \strng{fullhash}{054d46f4abfc58097496b76716582eb2}
+      \strng{fullhashraw}{054d46f4abfc58097496b76716582eb2}
+      \strng{bibnamehash}{054d46f4abfc58097496b76716582eb2}
+      \strng{authorbibnamehash}{054d46f4abfc58097496b76716582eb2}
+      \strng{authornamehash}{054d46f4abfc58097496b76716582eb2}
+      \strng{authorfullhash}{054d46f4abfc58097496b76716582eb2}
+      \strng{authorfullhashraw}{054d46f4abfc58097496b76716582eb2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Swirlds Tech Report}
+      \field{title}{The Swirlds Hashgraph Consensus Algorithm: Fair, Fast, Byzantine Fault Tolerance}
+      \field{volume}{1}
+      \field{year}{2016}
+    \endentry
+    \entry{chaum2008scantegrity}{article}{}{}
+      \name{author}{9}{}{%
+        {{hash=615e97951d5e1c224ddda5bded8c9081}{%
+           family={Chaum},
+           familyi={C\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=e139547819f8375247da2039dcdf183a}{%
+           family={Carback},
+           familyi={C\bibinitperiod},
+           given={Richard},
+           giveni={R\bibinitperiod}}}%
+        {{hash=d0054c54f53e249b95a1f7e7b702a6bf}{%
+           family={Clark},
+           familyi={C\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+        {{hash=0f7091798e3f8dd576f5f10499bae494}{%
+           family={Essex},
+           familyi={E\bibinitperiod},
+           given={Aleksander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=7a7928bd218d6d0cb475bd9d0554e959}{%
+           family={Popoveniuc},
+           familyi={P\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=3a964821f97ee17f8bb285bc61c52899}{%
+           family={Rivest},
+           familyi={R\bibinitperiod},
+           given={Ronald\bibnamedelima L},
+           giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=69b04da83246c08423266fb722675fc5}{%
+           family={Ryan},
+           familyi={R\bibinitperiod},
+           given={Peter\bibnamedelima YA},
+           giveni={P\bibinitperiod\bibinitdelim Y\bibinitperiod}}}%
+        {{hash=baeb5c24b2b9f83acf9da574f69a9c1f}{%
+           family={Shen},
+           familyi={S\bibinitperiod},
+           given={Emily},
+           giveni={E\bibinitperiod}}}%
+        {{hash=1a8a50c4c69b879caa03ffa069acbb67}{%
+           family={Sherman},
+           familyi={S\bibinitperiod},
+           given={Alan\bibnamedelima T},
+           giveni={A\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \strng{namehash}{d8c89d14d96688dd5279f25b77b6d79d}
+      \strng{fullhash}{491c0e0f67af976081fcb00990118e20}
+      \strng{fullhashraw}{491c0e0f67af976081fcb00990118e20}
+      \strng{bibnamehash}{d8c89d14d96688dd5279f25b77b6d79d}
+      \strng{authorbibnamehash}{d8c89d14d96688dd5279f25b77b6d79d}
+      \strng{authornamehash}{d8c89d14d96688dd5279f25b77b6d79d}
+      \strng{authorfullhash}{491c0e0f67af976081fcb00990118e20}
+      \strng{authorfullhashraw}{491c0e0f67af976081fcb00990118e20}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Security \& Privacy}
+      \field{number}{3}
+      \field{title}{Scantegrity: End-to-End Voter-Verifiable Optical-Scan Voting}
+      \field{volume}{6}
+      \field{year}{2008}
+      \field{pages}{40\bibrangedash 46}
+      \range{pages}{7}
+    \endentry
+    \entry{chen2022web25}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=06debc36f6b61a405e8f0da1c7ccd6ca}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Wei},
+           giveni={W\bibinitperiod}}}%
+        {{hash=b8238061b3c805be2a30dd55bb11fb21}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Yue},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=300c264a6e226ecdca51ccf8e495dc6b}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Ming},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{46dc3b07a9540484d03b9e9b392b984f}
+      \strng{fullhash}{c80762ba2727191289fe1508d128db6b}
+      \strng{fullhashraw}{c80762ba2727191289fe1508d128db6b}
+      \strng{bibnamehash}{c80762ba2727191289fe1508d128db6b}
+      \strng{authorbibnamehash}{c80762ba2727191289fe1508d128db6b}
+      \strng{authornamehash}{46dc3b07a9540484d03b9e9b392b984f}
+      \strng{authorfullhash}{c80762ba2727191289fe1508d128db6b}
+      \strng{authorfullhashraw}{c80762ba2727191289fe1508d128db6b}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE International Conference on Blockchain}
+      \field{title}{Web2.5: Bridging Web2 and Web3 for Decentralized Applications}
+      \field{year}{2022}
+      \field{pages}{123\bibrangedash 130}
+      \range{pages}{8}
+    \endentry
+    \entry{felten2006security}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=1527a830397c4e7dfb4604830ab3ae90}{%
+           family={Felten},
+           familyi={F\bibinitperiod},
+           given={Edward\bibnamedelima W},
+           giveni={E\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=b8377e0e645e051a96be31a5e76e4a85}{%
+           family={Goguen},
+           familyi={G\bibinitperiod},
+           given={Ariel},
+           giveni={A\bibinitperiod}}}%
+        {{hash=9bac2c3a88e541708771e7b7afd80f95}{%
+           family={Somani},
+           familyi={S\bibinitperiod},
+           given={Siddharth},
+           giveni={S\bibinitperiod}}}%
+        {{hash=18793e25a5bbb2202e31f6421ff5f301}{%
+           family={Wolchok},
+           familyi={W\bibinitperiod},
+           given={Samuel},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{e0d09bdcccd6872c41bac122badc5387}
+      \strng{fullhash}{ffc1336452bd40e11093715a26bfcfca}
+      \strng{fullhashraw}{ffc1336452bd40e11093715a26bfcfca}
+      \strng{bibnamehash}{ffc1336452bd40e11093715a26bfcfca}
+      \strng{authorbibnamehash}{ffc1336452bd40e11093715a26bfcfca}
+      \strng{authornamehash}{e0d09bdcccd6872c41bac122badc5387}
+      \strng{authorfullhash}{ffc1336452bd40e11093715a26bfcfca}
+      \strng{authorfullhashraw}{ffc1336452bd40e11093715a26bfcfca}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Princeton University Technical Report}
+      \field{title}{Security Analysis of the Diebold AccuVote-TS Voting Machine}
+      \field{year}{2006}
+    \endentry
+    \entry{haenni2017swiss}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=fa007e82343ac60643472d0125cc8ba0}{%
+           family={Haenni},
+           familyi={H\bibinitperiod},
+           given={Rolf},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f8256f661ccc2c0842d77b189a95571e}{%
+           family={Koenig},
+           familyi={K\bibinitperiod},
+           given={Reto},
+           giveni={R\bibinitperiod}}}%
+        {{hash=f8987b63404570f8fd3951b2db1aaeda}{%
+           family={Locher},
+           familyi={L\bibinitperiod},
+           given={Philipp},
+           giveni={P\bibinitperiod}}}%
+        {{hash=53a4df4f4a55739e135c5b6af57a2245}{%
+           family={Dubuis},
+           familyi={D\bibinitperiod},
+           given={Eric},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{de429f914a2946936411ea09d013fc08}
+      \strng{fullhash}{e7530cfb13f4f9a78f7753cead60049c}
+      \strng{fullhashraw}{e7530cfb13f4f9a78f7753cead60049c}
+      \strng{bibnamehash}{e7530cfb13f4f9a78f7753cead60049c}
+      \strng{authorbibnamehash}{e7530cfb13f4f9a78f7753cead60049c}
+      \strng{authornamehash}{de429f914a2946936411ea09d013fc08}
+      \strng{authorfullhash}{e7530cfb13f4f9a78f7753cead60049c}
+      \strng{authorfullhashraw}{e7530cfb13f4f9a78f7753cead60049c}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{E-Voting and Identity Conference}
+      \field{title}{Swiss Post E-Voting System: Security Analysis}
+      \field{year}{2017}
+    \endentry
+    \entry{heiberg2011verifiability}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=9d7d20b5241a114e1da91e9928dce69d}{%
+           family={Heiberg},
+           familyi={H\bibinitperiod},
+           given={Sven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=84c0ea6e2426a80d6f8ab982315010ff}{%
+           family={Willemson},
+           familyi={W\bibinitperiod},
+           given={Jan},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{fullhash}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{fullhashraw}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{bibnamehash}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{authorbibnamehash}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{authornamehash}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{authorfullhash}{79c6604f5a3cc9b4f3723effc47df381}
+      \strng{authorfullhashraw}{79c6604f5a3cc9b4f3723effc47df381}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Conference on E-Voting and Identity}
+      \field{title}{Verifiability of the Estonian Internet Voting System}
+      \field{year}{2011}
+      \field{pages}{1\bibrangedash 18}
+      \range{pages}{18}
+    \endentry
+    \entry{kohno2004analysis}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=ac531ee83558be0e3798db153ad74d17}{%
+           family={Kohno},
+           familyi={K\bibinitperiod},
+           given={Tadayoshi},
+           giveni={T\bibinitperiod}}}%
+        {{hash=affe62342f6e9a3da8fa30b04b6137e5}{%
+           family={Stubblefield},
+           familyi={S\bibinitperiod},
+           given={Adam},
+           giveni={A\bibinitperiod}}}%
+        {{hash=965642065f2b3bc3ffcbcb6a2dea0f92}{%
+           family={Rubin},
+           familyi={R\bibinitperiod},
+           given={Aviel\bibnamedelima D},
+           giveni={A\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=ccdabeaeaea069c5504cc19de9e374ba}{%
+           family={Wallach},
+           familyi={W\bibinitperiod},
+           given={Dan\bibnamedelima S},
+           giveni={D\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{47e53870c05f495c1dde3893d1d1b51e}
+      \strng{fullhash}{fbba1ff5bf61a5ce5158c7b7a72cf19a}
+      \strng{fullhashraw}{fbba1ff5bf61a5ce5158c7b7a72cf19a}
+      \strng{bibnamehash}{fbba1ff5bf61a5ce5158c7b7a72cf19a}
+      \strng{authorbibnamehash}{fbba1ff5bf61a5ce5158c7b7a72cf19a}
+      \strng{authornamehash}{47e53870c05f495c1dde3893d1d1b51e}
+      \strng{authorfullhash}{fbba1ff5bf61a5ce5158c7b7a72cf19a}
+      \strng{authorfullhashraw}{fbba1ff5bf61a5ce5158c7b7a72cf19a}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Symposium on Security and Privacy}
+      \field{title}{Analysis of an Electronic Voting System}
+      \field{year}{2004}
+      \field{pages}{27\bibrangedash 40}
+      \range{pages}{14}
+    \endentry
+    \entry{kumar2019blockchain}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=d6e7552c865637927e1649455d2326f4}{%
+           family={Kumar},
+           familyi={K\bibinitperiod},
+           given={Amit},
+           giveni={A\bibinitperiod}}}%
+        {{hash=582e61688f938e2dc9f9c019ba6e496f}{%
+           family={Fischer},
+           familyi={F\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=87f81b78f80de1ed6d8a7f701571d2d9}{%
+           family={Tople},
+           familyi={T\bibinitperiod},
+           given={Suvradip},
+           giveni={S\bibinitperiod}}}%
+        {{hash=bd8f6be2fb6f2a6af3303717f7903800}{%
+           family={Saxena},
+           familyi={S\bibinitperiod},
+           given={Prateek},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{0f7124dc6c58efc9c89ae8d07b4e8d02}
+      \strng{fullhash}{691c1d3c31909bc150c4da17bcc952a1}
+      \strng{fullhashraw}{691c1d3c31909bc150c4da17bcc952a1}
+      \strng{bibnamehash}{691c1d3c31909bc150c4da17bcc952a1}
+      \strng{authorbibnamehash}{691c1d3c31909bc150c4da17bcc952a1}
+      \strng{authornamehash}{0f7124dc6c58efc9c89ae8d07b4e8d02}
+      \strng{authorfullhash}{691c1d3c31909bc150c4da17bcc952a1}
+      \strng{authorfullhashraw}{691c1d3c31909bc150c4da17bcc952a1}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Conference on Financial Cryptography and Data Security}
+      \field{title}{Blockchain-based E-voting System for Student Council Elections}
+      \field{year}{2019}
+      \field{pages}{234\bibrangedash 251}
+      \range{pages}{18}
+    \endentry
+    \entry{hedera2020hcs}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=03c19139ab465ca25637c8b87e37c837}{%
+           family={LLC},
+           familyi={L\bibinitperiod},
+           given={Hedera\bibnamedelima Hashgraph},
+           giveni={H\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{03c19139ab465ca25637c8b87e37c837}
+      \strng{fullhash}{03c19139ab465ca25637c8b87e37c837}
+      \strng{fullhashraw}{03c19139ab465ca25637c8b87e37c837}
+      \strng{bibnamehash}{03c19139ab465ca25637c8b87e37c837}
+      \strng{authorbibnamehash}{03c19139ab465ca25637c8b87e37c837}
+      \strng{authornamehash}{03c19139ab465ca25637c8b87e37c837}
+      \strng{authorfullhash}{03c19139ab465ca25637c8b87e37c837}
+      \strng{authorfullhashraw}{03c19139ab465ca25637c8b87e37c837}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Hedera Technical Whitepaper}
+      \field{title}{Hedera Consensus Service: A Public Ledger for Trusted Timestamping and Ordering}
+      \field{year}{2020}
+    \endentry
+    \entry{mcmurray2018blockchain}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=316f149746517d79351d171718735f7b}{%
+           family={McMurray},
+           familyi={M\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+        {{hash=2fc43e3d0810d31ef1843085ed53cdaa}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=8c968bc9d16a09d1a076ffd3f9b09c10}{%
+           family={Scott},
+           familyi={S\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{ab36347793832d603d166cc59b1b86a2}
+      \strng{fullhash}{7d8b127d6533c729730cd212573fd548}
+      \strng{fullhashraw}{7d8b127d6533c729730cd212573fd548}
+      \strng{bibnamehash}{7d8b127d6533c729730cd212573fd548}
+      \strng{authorbibnamehash}{7d8b127d6533c729730cd212573fd548}
+      \strng{authornamehash}{ab36347793832d603d166cc59b1b86a2}
+      \strng{authorfullhash}{7d8b127d6533c729730cd212573fd548}
+      \strng{authorfullhashraw}{7d8b127d6533c729730cd212573fd548}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Conference on Blockchain Technology}
+      \field{title}{Blockchain-based Electronic Voting System}
+      \field{year}{2018}
+      \field{pages}{45\bibrangedash 52}
+      \range{pages}{8}
+    \endentry
+    \entry{ryan2009pret}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{4}{}{%
+        {{hash=69b04da83246c08423266fb722675fc5}{%
+           family={Ryan},
+           familyi={R\bibinitperiod},
+           given={Peter\bibnamedelima YA},
+           giveni={P\bibinitperiod\bibinitdelim Y\bibinitperiod}}}%
+        {{hash=807402dc704847ec817ce1e776cd3b46}{%
+           family={Schneider},
+           familyi={S\bibinitperiod},
+           given={Steve},
+           giveni={S\bibinitperiod}}}%
+        {{hash=14abb109521defaa76cf644620ae43b6}{%
+           family={Teague},
+           familyi={T\bibinitperiod},
+           given={Vanessa},
+           giveni={V\bibinitperiod}}}%
+        {{hash=812a35d8bdfe81b04bc6c97f69522e96}{%
+           family={Xia},
+           familyi={X\bibinitperiod},
+           given={Zhe},
+           giveni={Z\bibinitperiod}}}%
+      }
+      \strng{namehash}{3cddaa697251cc4aabb2c4c7cd13b699}
+      \strng{fullhash}{834f9eeb20245d4cd402138ebda59623}
+      \strng{fullhashraw}{834f9eeb20245d4cd402138ebda59623}
+      \strng{bibnamehash}{834f9eeb20245d4cd402138ebda59623}
+      \strng{authorbibnamehash}{834f9eeb20245d4cd402138ebda59623}
+      \strng{authornamehash}{3cddaa697251cc4aabb2c4c7cd13b699}
+      \strng{authorfullhash}{834f9eeb20245d4cd402138ebda59623}
+      \strng{authorfullhashraw}{834f9eeb20245d4cd402138ebda59623}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Information Forensics and Security}
+      \field{number}{4}
+      \field{title}{Prêt à Voter: A Voter-Verifiable Voting System}
+      \field{volume}{4}
+      \field{year}{2009}
+      \field{pages}{662\bibrangedash 673}
+      \range{pages}{12}
+    \endentry
+    \entry{aws2021blockchain}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=4d7e5f784bb5801c23c91ba37ed2649d}{%
+           family={Services},
+           familyi={S\bibinitperiod},
+           given={Amazon\bibnamedelima Web},
+           giveni={A\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \strng{namehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{fullhash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{fullhashraw}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{bibnamehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authorbibnamehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authornamehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authorfullhash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authorfullhashraw}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \field{extraname}{1}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AWS Whitepaper}
+      \field{title}{AWS Blockchain Templates: Deploying Blockchain Networks on AWS}
+      \field{year}{2021}
+    \endentry
+    \entry{aws2022identity}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=4d7e5f784bb5801c23c91ba37ed2649d}{%
+           family={Services},
+           familyi={S\bibinitperiod},
+           given={Amazon\bibnamedelima Web},
+           giveni={A\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+      }
+      \strng{namehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{fullhash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{fullhashraw}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{bibnamehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authorbibnamehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authornamehash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authorfullhash}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \strng{authorfullhashraw}{4d7e5f784bb5801c23c91ba37ed2649d}
+      \field{extraname}{2}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AWS Whitepaper}
+      \field{title}{Decentralized Identity on AWS: Architecture and Patterns}
+      \field{year}{2022}
+    \endentry
+    \entry{springall2014security}{article}{}{}
+      \name{author}{7}{}{%
+        {{hash=e5581f350d8983a785c820b17a960dbe}{%
+           family={Springall},
+           familyi={S\bibinitperiod},
+           given={Drew},
+           giveni={D\bibinitperiod}}}%
+        {{hash=1cb7b25f1b598fbfbf7e45e97121a1bc}{%
+           family={Finkenauer},
+           familyi={F\bibinitperiod},
+           given={Travis},
+           giveni={T\bibinitperiod}}}%
+        {{hash=daebddaacc5baf61c90307ca461e704b}{%
+           family={Durumeric},
+           familyi={D\bibinitperiod},
+           given={Zakir},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=d72789f51faf6a6e613ef3931663c694}{%
+           family={Kitcat},
+           familyi={K\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+        {{hash=39d083c96a9d4c25fa688889d36b59f9}{%
+           family={Hursti},
+           familyi={H\bibinitperiod},
+           given={Harri},
+           giveni={H\bibinitperiod}}}%
+        {{hash=d77bd66a90b6e2c0c69b2606ed79dd63}{%
+           family={MacAlpine},
+           familyi={M\bibinitperiod},
+           given={Margaret},
+           giveni={M\bibinitperiod}}}%
+        {{hash=6cba604de51e7ad2b27a90bc7f4ce019}{%
+           family={Halderman},
+           familyi={H\bibinitperiod},
+           given={J\bibnamedelima Alex},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{d2b3c0522ef00ce9693dbed73a642c62}
+      \strng{fullhash}{e64f9093327f89e1a2849864e7eddd25}
+      \strng{fullhashraw}{e64f9093327f89e1a2849864e7eddd25}
+      \strng{bibnamehash}{d2b3c0522ef00ce9693dbed73a642c62}
+      \strng{authorbibnamehash}{d2b3c0522ef00ce9693dbed73a642c62}
+      \strng{authornamehash}{d2b3c0522ef00ce9693dbed73a642c62}
+      \strng{authorfullhash}{e64f9093327f89e1a2849864e7eddd25}
+      \strng{authorfullhashraw}{e64f9093327f89e1a2849864e7eddd25}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Conference on Computer and Communications Security}
+      \field{title}{Security Analysis of the Estonian Internet Voting System}
+      \field{year}{2014}
+      \field{pages}{703\bibrangedash 715}
+      \range{pages}{13}
+    \endentry
+    \entry{tran2023blockchain}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=b1e0f71e7e69e49999942188819ca593}{%
+           family={Tran},
+           familyi={T\bibinitperiod},
+           given={Phong},
+           giveni={P\bibinitperiod}}}%
+        {{hash=11aef84bc550d2f165f50488ad806d19}{%
+           family={Nguyen},
+           familyi={N\bibinitperiod},
+           given={Minh},
+           giveni={M\bibinitperiod}}}%
+        {{hash=414d3c0ae23d9fd53a46ffe37dc59eb2}{%
+           family={Le},
+           familyi={L\bibinitperiod},
+           given={Duy},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{a7163f3f92361b1d1d7b284a4015d90a}
+      \strng{fullhash}{f0552e25435d80d54f8f2d190afc120c}
+      \strng{fullhashraw}{f0552e25435d80d54f8f2d190afc120c}
+      \strng{bibnamehash}{f0552e25435d80d54f8f2d190afc120c}
+      \strng{authorbibnamehash}{f0552e25435d80d54f8f2d190afc120c}
+      \strng{authornamehash}{a7163f3f92361b1d1d7b284a4015d90a}
+      \strng{authorfullhash}{f0552e25435d80d54f8f2d190afc120c}
+      \strng{authorfullhashraw}{f0552e25435d80d54f8f2d190afc120c}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Master's Thesis, University of Technology}
+      \field{title}{Blockchain-Based E-Voting System Using Hedera Consensus Service}
+      \field{year}{2023}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

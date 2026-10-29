@@ -13,7 +13,7 @@ five logical layers:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[node distance=1.5cm, every node/.style={font=\small}]
+\begin{tikzpicture}[node distance=1.5cm, every node/.style={font=\small, align=center}]
 \node[draw, rounded corners, fill=blue!5] (frontend) {Frontend Layer\\React/Vite SPA $\rightarrow$ CloudFront/S3};
 \node[draw, rounded corners, fill=green!5, below of=frontend] (auth) {Authentication Layer\\JWT / Amazon Cognito};
 \node[draw, rounded corners, fill=orange!5, below of=auth] (app) {Application Layer\\API Gateway $\rightarrow$ Express/$\lambda$};
@@ -83,7 +83,7 @@ models/* & MongoDB schemas (User, Election, Candidate, Vote, etc.) \\
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[node distance=2cm, every node/.style={font=\small}]
+\begin{tikzpicture}[node distance=2cm, every node/.style={font=\small, align=center}]
 \node[draw, rectangle, rounded corners] (voter) {Voter\\voterId, name, passwordHash, role, hasVoted, votedAt};
 \node[draw, rectangle, rounded corners, right of=voter] (election) {Election\\title, description, dates, status, topicId};
 \node[draw, rectangle, rounded corners, below of=voter] (candidate) {Candidate\\candidateId, name, party, manifesto[], performance[]};
@@ -173,7 +173,7 @@ Rate Limiting & Not implemented & Production deployment requirement \\
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[node distance=1.5cm, every node/.style={font=\small}]
+\begin{tikzpicture}[node distance=1.5cm, every node/.style={font=\small, align=center}]
 \node[draw, rounded corners, fill=blue!10] (dev) {Development\\docker-compose.yml};
 \node[draw, rounded corners, fill=green!10, right of=dev] (prod) {Production\\AWS ECS/Fargate + CloudFront};
 \node[draw, rounded corners, fill=orange!10, below of=dev] (db) {MongoDB\\Replica Set (Atlas/Self-hosted)};
