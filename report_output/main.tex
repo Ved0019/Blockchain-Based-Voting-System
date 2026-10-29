@@ -14,12 +14,16 @@
 \usepackage{tabularx}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
 \usepackage{setspace}
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{caption}
 \usepackage{float}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath}
+% newtxmath already provides amssymb symbols; undefine \Bbbk if amssymb is needed
+\let\Bbbk\relax
+\usepackage{amssymb}
 
 % Clickable links (TOC) with professional styling (no ugly boxes)
 \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black]{hyperref}
@@ -827,7 +831,7 @@ async function main() {
     const receipt = await txResponse.getReceipt(client);
     const topicId = receipt.topicId;
 
-    console.log(`\n✅ Success! Your New Topic ID is: ${topicId.toString()}`);
+    console.log(`\n[SUCCESS] Your New Topic ID is: ${topicId.toString()}`);
     console.log("Copy this ID and add it to your .env file as HCS_TOPIC_ID\n");
 
     process.exit();

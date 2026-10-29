@@ -61,28 +61,53 @@ def p(text="", style=None, bold=False, italic=False, align="left", size=24, colo
 def page_break():
     return '<w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:br w:type="page"/></w:r></w:p>'
 
-def h1(text):
+bm_id_counter = 0
+
+def get_next_bm_id():
+    global bm_id_counter
+    bm_id_counter += 1
+    return bm_id_counter
+
+def h1(text, bookmark=None):
+    bm_start = ''
+    bm_end = ''
+    if bookmark:
+        bid = get_next_bm_id()
+        bm_start = f'<w:bookmarkStart w:id="{bid}" w:name="{bookmark}"/>'
+        bm_end = f'<w:bookmarkEnd w:id="{bid}"/>'
     return (
         f'<w:p><w:pPr><w:pStyle w:val="Heading1"/><w:spacing w:before="360" w:after="120"/><w:jc w:val="left"/></w:pPr>'
-        f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
+        f'{bm_start}<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
         f'<w:b/><w:color w:val="000000"/><w:sz w:val="32"/></w:rPr>'
-        f'<w:t>{escape_xml(text)}</w:t></w:r></w:p>'
+        f'<w:t>{escape_xml(text)}</w:t></w:r>{bm_end}</w:p>'
     )
 
-def h2(text):
+def h2(text, bookmark=None):
+    bm_start = ''
+    bm_end = ''
+    if bookmark:
+        bid = get_next_bm_id()
+        bm_start = f'<w:bookmarkStart w:id="{bid}" w:name="{bookmark}"/>'
+        bm_end = f'<w:bookmarkEnd w:id="{bid}"/>'
     return (
         f'<w:p><w:pPr><w:pStyle w:val="Heading2"/><w:spacing w:before="240" w:after="80"/><w:jc w:val="left"/></w:pPr>'
-        f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
+        f'{bm_start}<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
         f'<w:b/><w:color w:val="000000"/><w:sz w:val="26"/></w:rPr>'
-        f'<w:t>{escape_xml(text)}</w:t></w:r></w:p>'
+        f'<w:t>{escape_xml(text)}</w:t></w:r>{bm_end}</w:p>'
     )
 
-def h3(text):
+def h3(text, bookmark=None):
+    bm_start = ''
+    bm_end = ''
+    if bookmark:
+        bid = get_next_bm_id()
+        bm_start = f'<w:bookmarkStart w:id="{bid}" w:name="{bookmark}"/>'
+        bm_end = f'<w:bookmarkEnd w:id="{bid}"/>'
     return (
         f'<w:p><w:pPr><w:pStyle w:val="Heading3"/><w:spacing w:before="180" w:after="60"/><w:jc w:val="left"/></w:pPr>'
-        f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
+        f'{bm_start}<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
         f'<w:b/><w:color w:val="000000"/><w:sz w:val="24"/></w:rPr>'
-        f'<w:t>{escape_xml(text)}</w:t></w:r></w:p>'
+        f'<w:t>{escape_xml(text)}</w:t></w:r>{bm_end}</w:p>'
     )
 
 def body(text):
@@ -102,6 +127,92 @@ def bullet(bold_label, text):
         f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/><w:sz w:val="24"/><w:color w:val="000000"/></w:rPr>'
         f'<w:t xml:space="preserve">{escape_xml(text)}</w:t></w:r></w:p>'
     )
+
+def toc_table_with_hyperlinks(entries, col_widths=None):
+    if not col_widths:
+        col_widths = [1400, 6500, 1460]
+        
+    xml = [
+        '<w:tbl>',
+        '<w:tblPr><w:tblW w:w="9360" w:type="dxa"/><w:jc w:val="center"/>'
+        '<w:tblBorders>'
+        '<w:top w:val="single" w:sz="8" w:space="0" w:color="000000"/>'
+        '<w:bottom w:val="single" w:sz="8" w:space="0" w:color="000000"/>'
+        '<w:left w:val="single" w:sz="8" w:space="0" w:color="000000"/>'
+        '<w:right w:val="single" w:sz="8" w:space="0" w:color="000000"/>'
+        '<w:insideH w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+        '<w:insideV w:val="single" w:sz="4" w:space="0" w:color="000000"/>'
+        '</w:tblBorders></w:tblPr>'
+    ]
+    
+    xml.append('<w:tblGrid>')
+    for w in col_widths:
+        xml.append(f'<w:gridCol w:w="{w}"/>')
+    xml.append('</w:tblGrid>')
+    
+    # Header Row
+    headers = ["Section", "Title / Content Description", "Page"]
+    xml.append('<w:tr><w:trPr><w:tblHeader/></w:trPr>')
+    for i, h in enumerate(headers):
+        xml.append(
+            f'<w:tc><w:tcPr><w:tcW w:w="{col_widths[i]}" w:type="dxa"/>'
+            f'<w:shd w:val="clear" w:color="auto" w:fill="F2F2F2"/>'
+            f'<w:tcMar><w:top w:w="120"/><w:bottom w:w="120"/><w:left w:w="140"/><w:right w:w="140"/></w:tcMar></w:tcPr>'
+            f'<w:p><w:pPr><w:spacing w:before="0" w:after="0"/><w:jc w:val="center"/></w:pPr>'
+            f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>'
+            f'<w:b/><w:color w:val="000000"/><w:sz w:val="21"/></w:rPr>'
+            f'<w:t>{escape_xml(h)}</w:t></w:r></w:p></w:tc>'
+        )
+    xml.append('</w:tr>')
+    
+    for sec_num, title, page_num, bookmark in entries:
+        is_major = sec_num.endswith('.') or sec_num in ['', 'Appendix A', 'Appendix B', 'Appendix C', 'Appendix D', 'Appendix E'] or 'INTRODUCTION' in title or 'LITERATURE' in title or 'SYSTEM ARCHITECTURE' in title or 'IMPLEMENTATION' in title or 'RESULTS' in title or 'CONCLUSION' in title or 'SUPPORTING' in title or 'APPENDIX' in title
+        b_tag = '<w:b/>' if is_major else ''
+        size_val = '22' if is_major else '21'
+        
+        xml.append('<w:tr>')
+        
+        # Cell 1: Section Number (clickable link)
+        xml.append(
+            f'<w:tc><w:tcPr><w:tcW w:w="{col_widths[0]}" w:type="dxa"/>'
+            f'<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>'
+            f'<w:tcMar><w:top w:w="90"/><w:bottom w:w="90"/><w:left w:w="140"/><w:right w:w="140"/></w:tcMar></w:tcPr>'
+            f'<w:p><w:pPr><w:spacing w:before="0" w:after="0"/><w:jc w:val="left"/></w:pPr>'
+            f'<w:hyperlink w:anchor="{bookmark}" w:history="1">'
+            f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>{b_tag}<w:sz w:val="{size_val}"/><w:color w:val="000000"/></w:rPr>'
+            f'<w:t>{escape_xml(sec_num)}</w:t></w:r>'
+            f'</w:hyperlink></w:p></w:tc>'
+        )
+        
+        # Cell 2: Title (clickable link)
+        xml.append(
+            f'<w:tc><w:tcPr><w:tcW w:w="{col_widths[1]}" w:type="dxa"/>'
+            f'<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>'
+            f'<w:tcMar><w:top w:w="90"/><w:bottom w:w="90"/><w:left w:w="140"/><w:right w:w="140"/></w:tcMar></w:tcPr>'
+            f'<w:p><w:pPr><w:spacing w:before="0" w:after="0"/><w:jc w:val="left"/></w:pPr>'
+            f'<w:hyperlink w:anchor="{bookmark}" w:history="1">'
+            f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>{b_tag}<w:sz w:val="{size_val}"/><w:color w:val="000000"/></w:rPr>'
+            f'<w:t>{escape_xml(title)}</w:t></w:r>'
+            f'</w:hyperlink></w:p></w:tc>'
+        )
+        
+        # Cell 3: Page Number (clickable link)
+        xml.append(
+            f'<w:tc><w:tcPr><w:tcW w:w="{col_widths[2]}" w:type="dxa"/>'
+            f'<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>'
+            f'<w:tcMar><w:top w:w="90"/><w:bottom w:w="90"/><w:left w:w="140"/><w:right w:w="140"/></w:tcMar></w:tcPr>'
+            f'<w:p><w:pPr><w:spacing w:before="0" w:after="0"/><w:jc w:val="center"/></w:pPr>'
+            f'<w:hyperlink w:anchor="{bookmark}" w:history="1">'
+            f'<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>{b_tag}<w:sz w:val="{size_val}"/><w:color w:val="000000"/></w:rPr>'
+            f'<w:t>{escape_xml(str(page_num))}</w:t></w:r>'
+            f'</w:hyperlink></w:p></w:tc>'
+        )
+        
+        xml.append('</w:tr>')
+        
+    xml.append('</w:tbl>')
+    xml.append(p("", space_after=120))
+    return "".join(xml)
 
 def table_academic(headers, rows, col_widths=None):
     if not col_widths:
@@ -300,58 +411,57 @@ def build_report():
     # ==========================================
     doc.append(p("TABLE OF CONTENTS", bold=True, align="center", size=30, space_before=200, space_after=180))
     
-    toc_headers = ["Section", "Title / Content Description", "Page"]
     toc_rows = [
-        ["1.", "INTRODUCTION", "4"],
-        ["1.1", "Background and Motivation", "4"],
-        ["1.2", "Problem Statement", "4"],
-        ["1.3", "Project Objectives and Scope", "5"],
-        ["2.", "LITERATURE REVIEW AND CORE CONCEPTS", "6"],
-        ["2.1", "Review of Distributed Voting Systems", "6"],
-        ["2.2", "Consensus Mechanisms & Hedera Hashgraph", "7"],
-        ["2.3", "Decentralized Identity & Authentication", "8"],
-        ["2.4", "Cryptographic Auditing & Public Ledgers", "9"],
-        ["3.", "SYSTEM ARCHITECTURE AND METHODOLOGY", "10"],
-        ["3.1", "Proposed System Architecture", "10"],
-        ["3.2", "Module Interoperability and Data Flow", "12"],
-        ["3.3", "Implementation Environment", "14"],
-        ["3.3.1", "Required System Tools", "14"],
-        ["3.3.2", "Environment Variables", "15"],
-        ["3.3.3", "Key Packages & Dependencies", "16"],
-        ["3.3.4", "Runtime Considerations", "17"],
-        ["3.3.5", "Logging & Artifact Locations", "18"],
-        ["4.", "IMPLEMENTATION AND DETAILS", "20"],
-        ["4.1", "Orchestration and Entry Points", "20"],
-        ["4.2", "Authentication and Role-Based Access Control", "21"],
-        ["4.3", "Operator-Relayer Voting Engine & Concurrency Control", "22"],
-        ["4.4", "Atomic Claim & Ledger Rollback Algorithm", "23"],
-        ["4.5", "Mirror Node Public Audit & Explorer Verification", "25"],
-        ["5.", "RESULTS AND ANALYSIS", "27"],
-        ["5.1", "Qualitative Results (Artifacts & Verification)", "27"],
-        ["5.2", "Quantitative Performance Metrics", "31"],
-        ["5.3", "Edge Cases and Limitations", "34"],
-        ["5.4", "Log Analysis & Observability", "35"],
-        ["6.", "CONCLUSION AND FUTURE WORK", "37"],
-        ["6.1", "Conclusion", "37"],
-        ["6.2", "Future Enhancements", "38"],
-        ["", "SUPPORTING MATERIALS / REFERENCES", "39"],
-        ["", "APPENDIX", "41"],
-        ["Appendix A", "Full Code Listing of Key Modules", "41"],
-        ["Appendix B", "Deployment & Docker Configuration", "47"],
-        ["Appendix C", "User Manual and Operator Guide", "49"],
-        ["Appendix D", "Sample Output Visuals (Figures D.1 – D.8)", "51"],
-        ["Appendix E", "Technical Acronyms and Formal Domain Glossary", "54"]
+        ["1.", "INTRODUCTION", "5", "sec_1"],
+        ["1.1", "Background and Motivation", "5", "sec_1_1"],
+        ["1.2", "Problem Statement", "5", "sec_1_2"],
+        ["1.3", "Project Objectives and Scope", "5", "sec_1_3"],
+        ["2.", "LITERATURE REVIEW AND CORE CONCEPTS", "7", "sec_2"],
+        ["2.1", "Review of Distributed Voting Systems", "7", "sec_2_1"],
+        ["2.2", "Consensus Mechanisms & Hedera Hashgraph", "7", "sec_2_2"],
+        ["2.3", "Decentralized Identity & Authentication", "7", "sec_2_3"],
+        ["2.4", "Cryptographic Auditing & Public Ledgers", "8", "sec_2_4"],
+        ["3.", "SYSTEM ARCHITECTURE AND METHODOLOGY", "9", "sec_3"],
+        ["3.1", "Proposed System Architecture", "9", "sec_3_1"],
+        ["3.2", "Module Interoperability and Data Flow", "10", "sec_3_2"],
+        ["3.3", "Implementation Environment", "13", "sec_3_3"],
+        ["3.3.1", "Required System Tools", "13", "sec_3_3_1"],
+        ["3.3.2", "Environment Variables", "13", "sec_3_3_2"],
+        ["3.3.3", "Key Packages & Dependencies", "14", "sec_3_3_3"],
+        ["3.3.4", "Runtime Considerations", "15", "sec_3_3_4"],
+        ["3.3.5", "Logging & Artifact Locations", "15", "sec_3_3_5"],
+        ["4.", "IMPLEMENTATION AND DETAILS", "17", "sec_4"],
+        ["4.1", "Orchestration and Entry Points", "17", "sec_4_1"],
+        ["4.2", "Authentication and Role-Based Access Control", "17", "sec_4_2"],
+        ["4.3", "Operator-Relayer Voting Engine & Concurrency Control", "19", "sec_4_3"],
+        ["4.4", "The Atomic Ballot Claim & Ledger Rollback Algorithm", "19", "sec_4_4"],
+        ["4.5", "Mirror Node Public Audit & Explorer Verification", "20", "sec_4_5"],
+        ["5.", "RESULTS AND ANALYSIS", "21", "sec_5"],
+        ["5.1", "Qualitative Results (Artifacts & Verification)", "21", "sec_5_1"],
+        ["5.2", "Quantitative Performance Metrics", "21", "sec_5_2"],
+        ["5.3", "Edge Cases and Limitations", "23", "sec_5_3"],
+        ["5.4", "Log Analysis & Observability", "23", "sec_5_4"],
+        ["6.", "CONCLUSION AND FUTURE WORK", "24", "sec_6"],
+        ["6.1", "Conclusion", "24", "sec_6_1"],
+        ["6.2", "Future Enhancements", "24", "sec_6_2"],
+        ["", "SUPPORTING MATERIALS / REFERENCES", "25", "sec_ref"],
+        ["", "APPENDIX", "27", "sec_app"],
+        ["Appendix A", "Full Code Listing of Key Modules", "27", "sec_app_a"],
+        ["Appendix B", "Deployment & Docker Configuration", "50", "sec_app_b"],
+        ["Appendix C", "User Manual and Operator Guide", "52", "sec_app_c"],
+        ["Appendix D", "Sample Output Visuals (Figures D.1 – D.8)", "53", "sec_app_d"],
+        ["Appendix E", "Technical Acronyms and Formal Domain Glossary", "57", "sec_app_e"]
     ]
-    doc.append(table_academic(toc_headers, toc_rows, col_widths=[1400, 6500, 1460]))
+    doc.append(toc_table_with_hyperlinks(toc_rows, col_widths=[1400, 6500, 1460]))
     
     doc.append(page_break())
     
     # ==========================================
     # CHAPTER 1: INTRODUCTION
     # ==========================================
-    doc.append(h1("1. INTRODUCTION"))
+    doc.append(h1("1. INTRODUCTION", bookmark="sec_1"))
     
-    doc.append(h2("1.1 Background and Motivation"))
+    doc.append(h2("1.1 Background and Motivation", bookmark="sec_1_1"))
     doc.append(body(
         "Democratic elections and institutional decision-making processes depend fundamentally upon voter trust, "
         "ballot privacy, and result integrity. Over past decades, electoral administration has transitioned from paper-based "
@@ -372,7 +482,7 @@ def build_report():
         "into a publicly verifiable, enterprise-grade distributed ledger."
     ))
     
-    doc.append(h2("1.2 Problem Statement"))
+    doc.append(h2("1.2 Problem Statement", bookmark="sec_1_2"))
     doc.append(body(
         "Current electronic voting implementations suffer from four major engineering shortcomings:"
     ))
@@ -397,7 +507,7 @@ def build_report():
         "cryptographic receipt that external auditors can verify against an independent network."
     ))
     
-    doc.append(h2("1.3 Project Objectives and Scope"))
+    doc.append(h2("1.3 Project Objectives and Scope", bookmark="sec_1_3"))
     doc.append(body(
         "The objective of this project is to design, implement, and benchmark a complete hybrid Web2.5 electronic voting platform "
         "that resolves these vulnerabilities. Specifically, the project delivers:"
@@ -432,9 +542,9 @@ def build_report():
     # ==========================================
     # CHAPTER 2: LITERATURE REVIEW
     # ==========================================
-    doc.append(h1("2. LITERATURE REVIEW AND CORE CONCEPTS"))
+    doc.append(h1("2. LITERATURE REVIEW AND CORE CONCEPTS", bookmark="sec_2"))
     
-    doc.append(h2("2.1 Review of Distributed Voting Systems"))
+    doc.append(h2("2.1 Review of Distributed Voting Systems", bookmark="sec_2_1"))
     doc.append(body(
         "Academic research into electronic voting has evolved significantly over four decades. David Chaum's seminal 1981 work on "
         "untraceable electronic mail laid the foundation for modern cryptographic voting protocols. Subsequently, open-audit systems "
@@ -449,7 +559,7 @@ def build_report():
         "voters from independently verifying ledger state on public explorers."
     ))
     
-    doc.append(h2("2.2 Consensus Mechanisms & Hedera Hashgraph"))
+    doc.append(h2("2.2 Consensus Mechanisms & Hedera Hashgraph", bookmark="sec_2_2"))
     doc.append(body(
         "To achieve both public auditability and enterprise performance, our system adopts the Swirlds Hashgraph consensus algorithm, "
         "invented by Dr. Leemon Baird and implemented on the public Hedera network. Unlike blockchain architectures that discard forked "
@@ -472,7 +582,7 @@ def build_report():
         "even under malicious network partitions and distributed denial-of-service (DDoS) attacks, assuming fewer than one-third of nodes are Byzantine."
     ))
     
-    doc.append(h2("2.3 Decentralized Identity & Authentication"))
+    doc.append(h2("2.3 Decentralized Identity & Authentication", bookmark="sec_2_3"))
     doc.append(body(
         "In institutional elections, voter eligibility must be authenticated before a ballot is submitted. Centralized solutions like "
         "AWS Cognito provide managed OAuth 2.0 flows, but introduce third-party cloud vendor lock-in. For our implementation, we constructed "
@@ -481,7 +591,7 @@ def build_report():
         "enabling horizontal scaling across relayer nodes."
     ))
     
-    doc.append(h2("2.4 Cryptographic Auditing & Public Ledgers"))
+    doc.append(h2("2.4 Cryptographic Auditing & Public Ledgers", bookmark="sec_2_4"))
     doc.append(body(
         "In our architecture, the Hedera Consensus Service acts as a decentralized timestamping engine. Instead of executing heavyweight "
         "smart contracts for every vote, the system submits an immutable JSON payload to a dedicated Topic ID (e.g., 0.0.10697996). "
@@ -507,9 +617,9 @@ def build_report():
     # ==========================================
     # CHAPTER 3: SYSTEM ARCHITECTURE
     # ==========================================
-    doc.append(h1("3. SYSTEM ARCHITECTURE AND METHODOLOGY"))
+    doc.append(h1("3. SYSTEM ARCHITECTURE AND METHODOLOGY", bookmark="sec_3"))
     
-    doc.append(h2("3.1 Proposed System Architecture"))
+    doc.append(h2("3.1 Proposed System Architecture", bookmark="sec_3_1"))
     doc.append(body(
         "The proposed platform is organized into four distinct tiers: Presentation, Application Relayer, State Cache, "
         "and Distributed Consensus. This decoupling allows the application to deliver standard web responsiveness while offloading "
@@ -539,7 +649,7 @@ def build_report():
         "The decentralized trust engine that orders, timestamps, and immutably records all ballot submissions across the global Hashgraph network."
     ))
     
-    doc.append(h2("3.2 Module Interoperability and Data Flow"))
+    doc.append(h2("3.2 Module Interoperability and Data Flow", bookmark="sec_3_2"))
     doc.append(body(
         "The operational lifecycle of an election ballot proceeds through eight sequential stages, depicted in Figure 3.2:"
     ))
@@ -557,9 +667,9 @@ def build_report():
     doc.append(image_box(drawings[5], "Figure 3.3: Cryptographic Relayer Sequence Diagram showing Client, Server, Database, and Ledger interactions"))
     doc.append(image_box(drawings[3], "Figure 3.4: Decoupled Frontend and Backend Component Hierarchy"))
     
-    doc.append(h2("3.3 Implementation Environment"))
+    doc.append(h2("3.3 Implementation Environment", bookmark="sec_3_3"))
     
-    doc.append(h3("3.3.1 Required System Tools"))
+    doc.append(h3("3.3.1 Required System Tools", bookmark="sec_3_3_1"))
     doc.append(body(
         "The system requires the following runtime dependencies installed on host machines or execution containers:"
     ))
@@ -568,7 +678,7 @@ def build_report():
     doc.append(bullet("Database Engine", "MongoDB Community Server 8.0 with WiredTiger storage engine supporting document-level locking."))
     doc.append(bullet("Hedera SDK", "@hashgraph/sdk v2.46.0 providing gRPC node transport and transaction serialization."))
     
-    doc.append(h3("3.3.2 Environment Variables"))
+    doc.append(h3("3.3.2 Environment Variables", bookmark="sec_3_3_2"))
     doc.append(body(
         "All sensitive credentials, ports, and network targets are configured through environment variables loaded at startup. "
         "Table 3.1 details the required configuration parameters:"
@@ -588,7 +698,7 @@ def build_report():
     ]
     doc.append(table_academic(t31_headers, t31_rows, col_widths=[2200, 3100, 4060]))
     
-    doc.append(h3("3.3.3 Key Packages & Dependencies"))
+    doc.append(h3("3.3.3 Key Packages & Dependencies", bookmark="sec_3_3_3"))
     doc.append(body(
         "Table 3.2 summarizes the core software packages deployed across the backend relayer and frontend single-page application:"
     ))
@@ -609,7 +719,7 @@ def build_report():
     ]
     doc.append(table_academic(t32_headers, t32_rows, col_widths=[1800, 1100, 1300, 5160]))
     
-    doc.append(h3("3.3.4 Runtime Considerations"))
+    doc.append(h3("3.3.4 Runtime Considerations", bookmark="sec_3_3_4"))
     doc.append(body(
         "Operating an electronic voting system under production election traffic requires strict adherence to runtime constraints:"
     ))
@@ -630,7 +740,7 @@ def build_report():
         "eliminating table scans during high-traffic voting spikes."
     ))
     
-    doc.append(h3("3.3.5 Logging & Artifact Locations"))
+    doc.append(h3("3.3.5 Logging & Artifact Locations", bookmark="sec_3_3_5"))
     doc.append(body(
         "To enable comprehensive post-election audits and operational observability, the platform maintains structured logging "
         "across all system tiers, illustrated in Figure 3.5:"
@@ -655,9 +765,9 @@ def build_report():
     # ==========================================
     # CHAPTER 4: IMPLEMENTATION AND DETAILS
     # ==========================================
-    doc.append(h1("4. IMPLEMENTATION AND DETAILS"))
+    doc.append(h1("4. IMPLEMENTATION AND DETAILS", bookmark="sec_4"))
     
-    doc.append(h2("4.1 Orchestration and Entry Points"))
+    doc.append(h2("4.1 Orchestration and Entry Points", bookmark="sec_4_1"))
     doc.append(body(
         "The platform contains three primary execution entry points:"
     ))
@@ -678,7 +788,7 @@ def build_report():
         "and handles real-time toast notifications for system feedback."
     ))
     
-    doc.append(h2("4.2 Authentication and Role-Based Access Control"))
+    doc.append(h2("4.2 Authentication and Role-Based Access Control", bookmark="sec_4_2"))
     doc.append(body(
         "User authentication and route protection are handled via a decoupled JWT service. Figure 4.1 shows the credential "
         "verification and token issuance flow:"
@@ -697,14 +807,14 @@ def build_report():
         "accessing administrative election management endpoints."
     ))
     
-    doc.append(h2("4.3 Operator-Relayer Voting Engine & Concurrency Control"))
+    doc.append(h2("4.3 Operator-Relayer Voting Engine & Concurrency Control", bookmark="sec_4_3"))
     doc.append(body(
         "To allow voters to participate without personal Web3 wallets or gas fees, the backend implements an operator-relayer pattern. "
         "The server maintains a funded Hedera account (0.0.9757391). When an authenticated voter submits a ballot selection, the relayer "
         "constructs the transaction, signs it with the operator private key, and pays the fixed $0.0001 network fee on behalf of the voter."
     ))
     
-    doc.append(h2("4.4 The Atomic Ballot Claim & Ledger Rollback Algorithm"))
+    doc.append(h2("4.4 The Atomic Ballot Claim & Ledger Rollback Algorithm", bookmark="sec_4_4"))
     doc.append(body(
         "The primary challenge in electronic voting under high concurrency is preventing double-voting. If two requests for the same voter "
         "are processed simultaneously, a naive check-then-update pattern ('read hasVoted -> submit to ledger -> set hasVoted = true') "
@@ -754,7 +864,7 @@ def build_report():
     )
     doc.append(code_box("Listing 4.1: Atomic Ballot Claim & Ledger Rollback Implementation (backend/server.js)", atomic_code_snippet))
     
-    doc.append(h2("4.5 Mirror Node Public Audit & Explorer Verification"))
+    doc.append(h2("4.5 Mirror Node Public Audit & Explorer Verification", bookmark="sec_4_5"))
     doc.append(body(
         "To achieve zero-trust public verifiability, the election tally is not calculated from our internal MongoDB database. Instead, "
         "any auditor can query public Hedera Mirror Nodes directly via HTTP GET requests:\n"
@@ -769,9 +879,9 @@ def build_report():
     # ==========================================
     # CHAPTER 5: RESULTS AND ANALYSIS
     # ==========================================
-    doc.append(h1("5. RESULTS AND ANALYSIS"))
+    doc.append(h1("5. RESULTS AND ANALYSIS", bookmark="sec_5"))
     
-    doc.append(h2("5.1 Qualitative Results (Artifacts & Verification)"))
+    doc.append(h2("5.1 Qualitative Results (Artifacts & Verification)", bookmark="sec_5_1"))
     doc.append(body(
         "The functional correctness of the system was validated through an end-to-end election simulation. "
         "Figures D.1 through D.8 (detailed in Appendix D) capture key execution milestones:"
@@ -782,7 +892,7 @@ def build_report():
     doc.append(bullet("Cryptographic Confirmation", "Modal dialog prompting final ballot confirmation prior to Hedera submission."))
     doc.append(bullet("Consensus Receipt", "Voters receive a unique transaction ID verifiable on the public HashScan block explorer."))
     
-    doc.append(h2("5.2 Quantitative Performance Metrics"))
+    doc.append(h2("5.2 Quantitative Performance Metrics", bookmark="sec_5_2"))
     doc.append(body(
         "Performance benchmarks were conducted by executing concurrent voter load tests against the backend relayer connected "
         "to the live Hedera Testnet. Table 5.1 summarizes system performance across varying concurrency levels:"
@@ -840,7 +950,7 @@ def build_report():
     ]
     doc.append(table_academic(t54_headers, t54_rows, col_widths=[2000, 2400, 3460, 1500]))
     
-    doc.append(h2("5.3 Edge Cases and Limitations"))
+    doc.append(h2("5.3 Edge Cases and Limitations", bookmark="sec_5_3"))
     doc.append(body(
         "Four critical edge cases were identified and addressed during evaluation:"
     ))
@@ -866,7 +976,7 @@ def build_report():
         "as enforced by the database claim."
     ))
     
-    doc.append(h2("5.4 Log Analysis & Observability"))
+    doc.append(h2("5.4 Log Analysis & Observability", bookmark="sec_5_4"))
     doc.append(body(
         "Examination of server and mirror node logs during load testing validated the strict ordering of consensus events. "
         "Each transaction receipt contains a sequence number that increments monotonically (e.g., Sequence #1, #2, #3), guaranteeing "
@@ -878,9 +988,9 @@ def build_report():
     # ==========================================
     # CHAPTER 6: CONCLUSION AND FUTURE WORK
     # ==========================================
-    doc.append(h1("6. CONCLUSION AND FUTURE WORK"))
+    doc.append(h1("6. CONCLUSION AND FUTURE WORK", bookmark="sec_6"))
     
-    doc.append(h2("6.1 Conclusion"))
+    doc.append(h2("6.1 Conclusion", bookmark="sec_6_1"))
     doc.append(body(
         "This project successfully designed, implemented, and experimentally evaluated a hybrid Web2.5 electronic voting platform "
         "combining the accessibility of modern web technologies with the tamper resistance of the Hedera Consensus Service. "
@@ -895,7 +1005,7 @@ def build_report():
         "ledger architectures provide a practical, highly secure foundation for institutional, collegiate, and municipal elections."
     ))
     
-    doc.append(h2("6.2 Future Enhancements"))
+    doc.append(h2("6.2 Future Enhancements", bookmark="sec_6_2"))
     doc.append(body(
         "Future iterations will extend the platform in three strategic directions:"
     ))
@@ -920,7 +1030,7 @@ def build_report():
     # ==========================================
     # SUPPORTING MATERIALS / REFERENCES
     # ==========================================
-    doc.append(h1("SUPPORTING MATERIALS / REFERENCES"))
+    doc.append(h1("SUPPORTING MATERIALS / REFERENCES", bookmark="sec_ref"))
     doc.append(body("The following academic literature, standards, and technical specifications informed the design and implementation of this project:"))
     
     references = [
@@ -955,9 +1065,9 @@ def build_report():
     # ==========================================
     # APPENDIX
     # ==========================================
-    doc.append(h1("APPENDIX"))
+    doc.append(h1("APPENDIX", bookmark="sec_app"))
     
-    doc.append(h2("Appendix A: Full Code Listing of Key Modules"))
+    doc.append(h2("Appendix A: Full Code Listing of Key Modules", bookmark="sec_app_a"))
     doc.append(body("This appendix presents the complete, verified source code listings for the core modules supporting the voting platform."))
     
     doc.append(code_box("Listing A.1: Backend Relayer & Consensus Engine (backend/server.js)", server_code))
@@ -968,7 +1078,7 @@ def build_report():
     
     doc.append(page_break())
     
-    doc.append(h2("Appendix B: Deployment & Docker Configuration"))
+    doc.append(h2("Appendix B: Deployment & Docker Configuration", bookmark="sec_app_b"))
     doc.append(body("This appendix contains the production environment configuration and container orchestration files."))
     
     doc.append(code_box("Listing B.1: Environment Variable Specification (backend/.env)", env_code))
@@ -976,8 +1086,8 @@ def build_report():
     
     doc.append(page_break())
     
-    doc.append(h2("Appendix C: User Manual and Operator Guide"))
-    doc.append(h3("C.1 System Requirements & Installation"))
+    doc.append(h2("Appendix C: User Manual and Operator Guide", bookmark="sec_app_c"))
+    doc.append(h3("C.1 System Requirements & Installation", bookmark="sec_app_c_1"))
     doc.append(body(
         "1. Clone the project repository to your local workstation.\n"
         "2. Ensure Node.js (v20+ or v22 LTS) and MongoDB are installed and active.\n"
@@ -994,7 +1104,7 @@ def build_report():
         "8. Access the web portal at http://localhost:5173 (or http://localhost:80 via Docker)."
     ))
     
-    doc.append(h3("C.2 Voter Guide: Casting a Verified Ballot"))
+    doc.append(h3("C.2 Voter Guide: Casting a Verified Ballot", bookmark="sec_app_c_2"))
     doc.append(body(
         "1. Open the application in any modern web browser.\n"
         "2. On the login screen, select 'Login as Voter'. For demo testing, click the 'Voter Demo' button to autofill credentials.\n"
@@ -1004,7 +1114,7 @@ def build_report():
         "6. Upon completion, copy your Transaction ID and verify your ballot on the public HashScan explorer."
     ))
     
-    doc.append(h3("C.3 Auditor Guide: Public Ledger Verification on HashScan"))
+    doc.append(h3("C.3 Auditor Guide: Public Ledger Verification on HashScan", bookmark="sec_app_c_3"))
     doc.append(body(
         "1. Open https://hashscan.io/testnet in a browser.\n"
         "2. Enter Topic ID 0.0.10697996 in the search bar.\n"
@@ -1016,7 +1126,7 @@ def build_report():
     
     doc.append(page_break())
     
-    doc.append(h2("Appendix D: Sample Output Visuals (Figures D.1 – D.8)"))
+    doc.append(h2("Appendix D: Sample Output Visuals (Figures D.1 – D.8)", bookmark="sec_app_d"))
     doc.append(body("This appendix documents the production visual artifacts produced during a standard election cycle."))
     
     doc.append(image_box(drawings[7], "Figure D.1: Dual-Role Authentication Interface with Voter/Admin demo fast-login buttons"))
@@ -1030,7 +1140,7 @@ def build_report():
     
     doc.append(page_break())
     
-    doc.append(h2("Appendix E: Technical Acronyms and Formal Domain Glossary"))
+    doc.append(h2("Appendix E: Technical Acronyms and Formal Domain Glossary", bookmark="sec_app_e"))
     doc.append(body("Table E.1 defines key architectural terms and distributed ledger concepts referenced throughout this report:"))
     
     # Table E.1: Glossary
@@ -1084,6 +1194,10 @@ def build_report():
                     
     print(f"✅ Success! Enhanced academic DOCX created at: {OUTPUT_DOCX}")
     print(f"File size: {os.path.getsize(OUTPUT_DOCX)} bytes.")
+    import shutil
+    main_docx = '/home/vedya/Developer/Projects/Blockchain-Based-Voting-System/report_output/main.docx'
+    shutil.copyfile(OUTPUT_DOCX, main_docx)
+    print(f"✅ Copied to {main_docx}")
 
 if __name__ == "__main__":
     build_report()

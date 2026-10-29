@@ -1,133 +1,43 @@
-\babel@toc {english}{}\relax 
-\contentsline {chapter}{Abstract}{v}{chapter*.2}%
-\contentsline {chapter}{Acknowledgments}{viii}{chapter*.3}%
-\contentsline {chapter}{List of Abbreviations}{xix}{chapter*.7}%
-\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Background and Motivation}{1}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Problem Statement}{2}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Objectives}{2}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}Primary Objective}{2}{subsection.1.3.1}%
-\contentsline {subsection}{\numberline {1.3.2}Secondary Objectives}{3}{subsection.1.3.2}%
-\contentsline {section}{\numberline {1.4}Scope and Limitations}{3}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1}In Scope}{3}{subsection.1.4.1}%
-\contentsline {subsection}{\numberline {1.4.2}Out of Scope}{3}{subsection.1.4.2}%
-\contentsline {section}{\numberline {1.5}Report Organization}{4}{section.1.5}%
-\contentsline {chapter}{\numberline {2}Literature Review and State of the Art}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Traditional E-Voting Systems}{5}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Direct Recording Electronic (DRE) Machines}{5}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Internet Voting Systems}{5}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}End-to-End Verifiable Voting}{6}{subsection.2.1.3}%
-\contentsline {section}{\numberline {2.2}Blockchain-Based Voting}{6}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Smart Contract Platforms}{6}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Permissioned and Consortium Ledgers}{6}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Hedera Hashgraph and HCS}{6}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3}Hybrid Cloud-DLT Architectures}{7}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Gap Analysis}{8}{section.2.4}%
-\contentsline {chapter}{\numberline {3}System Architecture and Design}{9}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Architectural Overview}{9}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Component Architecture}{10}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Frontend Components}{10}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Backend Services}{10}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Data Models}{11}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}Vote Transaction Lifecycle}{11}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Security Architecture}{13}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Deployment Architecture}{13}{section.3.5}%
-\contentsline {chapter}{\numberline {4}Implementation}{14}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Development Environment}{14}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Backend Implementation}{15}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Server Initialization}{15}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Authentication \& Authorization}{15}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Vote Casting Endpoint}{16}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Admin Endpoints}{16}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}Data Seeding}{17}{subsection.4.2.5}%
-\contentsline {section}{\numberline {4.3}Frontend Implementation}{17}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Routing \& Auth State}{17}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}ManifestoDashboard}{18}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}VoterBooth}{18}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}AdminConsole}{19}{subsection.4.3.4}%
-\contentsline {subsection}{\numberline {4.3.5}UI/UX Design System}{19}{subsection.4.3.5}%
-\contentsline {section}{\numberline {4.4}Blockchain Integration}{21}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Hedera Client Configuration}{21}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Message Format}{21}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}Mirror Node Query}{22}{subsection.4.4.3}%
-\contentsline {section}{\numberline {4.5}Testing Strategy}{22}{section.4.5}%
-\contentsline {chapter}{\numberline {5}Results and Evaluation}{23}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Functional Testing Results}{23}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Performance Metrics}{23}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Security Evaluation}{24}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}OWASP Top 10 Coverage}{24}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Vote Integrity Verification}{24}{subsection.5.3.2}%
-\contentsline {section}{\numberline {5.4}Usability Testing}{25}{section.5.4}%
-\contentsline {section}{\numberline {5.5}Cost Analysis}{25}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Discussion}{26}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Achievement of Objectives}{26}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Technical Challenges and Solutions}{27}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Limitations}{27}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Current Limitations}{27}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}Comparison with Alternatives}{28}{subsection.6.3.2}%
-\contentsline {section}{\numberline {6.4}Future Work}{28}{section.6.4}%
-\contentsline {subsection}{\numberline {6.4.1}Short Term (3--6 months)}{28}{subsection.6.4.1}%
-\contentsline {subsection}{\numberline {6.4.2}Medium Term (6--12 months)}{28}{subsection.6.4.2}%
-\contentsline {subsection}{\numberline {6.4.3}Long Term (12+ months)}{29}{subsection.6.4.3}%
-\contentsline {section}{\numberline {6.5}Ethical and Societal Considerations}{29}{section.6.5}%
-\contentsline {chapter}{\numberline {7}Conclusion}{30}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Summary of Contributions}{30}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Impact and Significance}{31}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Final Remarks}{31}{section.7.3}%
-\contentsline {chapter}{Bibliography}{33}{chapter*.26}%
-\contentsline {chapter}{\numberline {A}Source Code Structure}{35}{appendix.1.A}%
-\contentsline {section}{\numberline {A.1}Complete Directory Tree}{35}{section.1.A.1}%
-\contentsline {section}{\numberline {A.2}Key File Descriptions}{38}{section.1.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Backend}{38}{subsection.1.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Frontend}{38}{subsection.1.A.2.2}%
-\contentsline {section}{\numberline {A.3}Lines of Code Summary}{39}{section.1.A.3}%
-\contentsline {chapter}{\numberline {B}API Documentation}{40}{appendix.1.B}%
-\contentsline {section}{\numberline {B.1}Base URL}{40}{section.1.B.1}%
-\contentsline {section}{\numberline {B.2}Authentication}{40}{section.1.B.2}%
-\contentsline {section}{\numberline {B.3}Public Endpoints}{41}{section.1.B.3}%
-\contentsline {section}{\numberline {B.4}Authenticated Endpoints (Voter)}{41}{section.1.B.4}%
-\contentsline {section}{\numberline {B.5}Admin Endpoints}{42}{section.1.B.5}%
-\contentsline {section}{\numberline {B.6}Request/Response Examples}{42}{section.1.B.6}%
-\contentsline {subsection}{\numberline {B.6.1}Login}{42}{subsection.1.B.6.1}%
-\contentsline {subsection}{\numberline {B.6.2}Vote Submission}{42}{subsection.1.B.6.2}%
-\contentsline {subsection}{\numberline {B.6.3}Error Responses}{43}{subsection.1.B.6.3}%
-\contentsline {chapter}{\numberline {C}Deployment Guide}{44}{appendix.1.C}%
-\contentsline {section}{\numberline {C.1}Prerequisites}{44}{section.1.C.1}%
-\contentsline {section}{\numberline {C.2}Environment Configuration}{44}{section.1.C.2}%
-\contentsline {section}{\numberline {C.3}Local Development with Docker Compose}{45}{section.1.C.3}%
-\contentsline {section}{\numberline {C.4}Local Development Without Docker}{45}{section.1.C.4}%
-\contentsline {section}{\numberline {C.5}Illustrative Production Deployment (AWS)}{46}{section.1.C.5}%
-\contentsline {subsection}{\numberline {C.5.1}Proposed Architecture}{46}{subsection.1.C.5.1}%
-\contentsline {subsection}{\numberline {C.5.2}Key Production Changes}{46}{subsection.1.C.5.2}%
-\contentsline {section}{\numberline {C.6}Hedera Mainnet Considerations}{47}{section.1.C.6}%
-\contentsline {section}{\numberline {C.7}Monitoring \& Maintenance}{47}{section.1.C.7}%
-\contentsline {chapter}{\numberline {D}User Manual}{48}{appendix.1.D}%
-\contentsline {section}{\numberline {D.1}Voter Guide}{48}{section.1.D.1}%
-\contentsline {subsection}{\numberline {D.1.1}Getting Started}{48}{subsection.1.D.1.1}%
-\contentsline {subsection}{\numberline {D.1.2}Reviewing Candidates}{48}{subsection.1.D.1.2}%
-\contentsline {subsection}{\numberline {D.1.3}Understanding Campus Issues}{49}{subsection.1.D.1.3}%
-\contentsline {subsection}{\numberline {D.1.4}Reviewing Evidence}{49}{subsection.1.D.1.4}%
-\contentsline {subsection}{\numberline {D.1.5}Casting Your Vote}{49}{subsection.1.D.1.5}%
-\contentsline {subsection}{\numberline {D.1.6}Important Notes}{49}{subsection.1.D.1.6}%
-\contentsline {section}{\numberline {D.2}Admin Guide}{50}{section.1.D.2}%
-\contentsline {subsection}{\numberline {D.2.1}Initial Setup}{50}{subsection.1.D.2.1}%
-\contentsline {subsection}{\numberline {D.2.2}Managing Candidates}{50}{subsection.1.D.2.2}%
-\contentsline {subsection}{\numberline {D.2.3}Managing Voters}{50}{subsection.1.D.2.3}%
-\contentsline {subsection}{\numberline {D.2.4}Managing Campus Issues}{51}{subsection.1.D.2.4}%
-\contentsline {subsection}{\numberline {D.2.5}Managing Evidence Documents}{51}{subsection.1.D.2.5}%
-\contentsline {subsection}{\numberline {D.2.6}Election Controls (Settings Tab)}{51}{subsection.1.D.2.6}%
-\contentsline {section}{\numberline {D.3}Troubleshooting}{51}{section.1.D.3}%
-\contentsline {chapter}{\numberline {E}Test Cases and Results}{52}{appendix.1.E}%
-\contentsline {section}{\numberline {E.1}Unit Tests}{52}{section.1.E.1}%
-\contentsline {section}{\numberline {E.2}Integration Tests}{52}{section.1.E.2}%
-\contentsline {section}{\numberline {E.3}End-to-End Manual Test Checklist}{53}{section.1.E.3}%
-\contentsline {section}{\numberline {E.4}Load Test Results}{53}{section.1.E.4}%
-\contentsline {chapter}{\numberline {F}Configuration Files}{54}{appendix.1.F}%
-\contentsline {section}{\numberline {F.1}Backend package.json}{54}{section.1.F.1}%
-\contentsline {section}{\numberline {F.2}Frontend package.json}{55}{section.1.F.2}%
-\contentsline {section}{\numberline {F.3}Docker Compose}{55}{section.1.F.3}%
-\contentsline {section}{\numberline {F.4}Vite Configuration}{56}{section.1.F.4}%
-\contentsline {section}{\numberline {F.5}Nginx Configuration}{57}{section.1.F.5}%
-\contentsline {section}{\numberline {F.6}Backend Dockerfile}{58}{section.1.F.6}%
-\contentsline {section}{\numberline {F.7}Frontend Dockerfile}{58}{section.1.F.7}%
-\contentsline {chapter}{\numberline {G}Glossary}{59}{appendix.1.G}%
+\contentsline {section}{Abstract}{i}{Doc-Start}%
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Background and Motivation}{1}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Problem Statement}{1}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Project Objectives and Scope}{2}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Literature Review and Core Concepts}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Review of Distributed Voting Systems}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Consensus Mechanisms \& Hedera Hashgraph}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Decentralized Identity \& Authentication}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Cryptographic Auditing \& Public Ledgers}{5}{subsection.2.4}%
+\contentsline {section}{\numberline {3}System Architecture and Methodology}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Proposed System Architecture}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Module Interoperability and Data Flow}{9}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Implementation Environment}{12}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Required System Tools}{12}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Environment Variables}{12}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Key Packages \& Dependencies}{13}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Runtime Considerations}{14}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}Logging \& Artifact Locations}{15}{subsubsection.3.3.5}%
+\contentsline {section}{\numberline {4}Implementation and Details}{16}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Orchestration and Entry Points}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Authentication and Role-Based Access Control}{16}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Operator-Relayer Voting Engine \& Concurrency Control}{18}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}The Atomic Ballot Claim \& Ledger Rollback Algorithm}{18}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Mirror Node Public Audit \& Explorer Verification}{19}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Results and Analysis}{21}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Qualitative Results (Artifacts \& Verification)}{21}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Quantitative Performance Metrics}{21}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Edge Cases and Limitations}{25}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Log Analysis \& Observability}{26}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Conclusion and Future Work}{27}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Conclusion}{27}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Future Enhancements}{27}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Supporting Materials / References}{29}{section.7}%
+\contentsline {section}{\numberline {A}Appendix}{31}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Appendix A: Full Code Listing of Key Modules}{31}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Appendix B: Deployment \& Docker Configuration}{40}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Appendix C: User Manual and Operator Guide}{42}{subsection.A.3}%
+\contentsline {subsubsection}{\numberline {A.3.1}C.1 System Requirements \& Installation}{42}{subsubsection.A.3.1}%
+\contentsline {subsubsection}{\numberline {A.3.2}C.2 Voter Guide: Casting a Verified Ballot}{43}{subsubsection.A.3.2}%
+\contentsline {subsubsection}{\numberline {A.3.3}C.3 Auditor Guide: Public Ledger Verification on HashScan}{43}{subsubsection.A.3.3}%
+\contentsline {subsection}{\numberline {A.4}Appendix D: Sample Output Visuals (Figures D.1 -- D.8)}{44}{subsection.A.4}%
+\contentsline {subsection}{\numberline {A.5}Appendix E: Technical Acronyms and Formal Domain Glossary}{48}{subsection.A.5}%
