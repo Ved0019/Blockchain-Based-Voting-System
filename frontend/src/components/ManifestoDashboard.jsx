@@ -204,7 +204,7 @@ function CandidateCard({ candidate: c, index, onSelectManifesto, onProceedToVote
   const [imgError, setImgError] = useState(false);
   const avatarUrl = !imgError && (c.avatarUrl || (c.avatarIpfs ? `https://gateway.pinata.cloud/ipfs/${c.avatarIpfs}` : null));
   const initials = c.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
-  const colors = ["#173b78", "#0f4c3a", "#2563eb"];
+  const colors = ["#121212", "#3d6b5d", "#475569"];
 
   return (
     <motion.div

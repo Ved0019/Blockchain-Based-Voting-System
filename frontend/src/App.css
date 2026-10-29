@@ -1540,12 +1540,12 @@ p {
 /* Material-inspired product surfaces */
 .auth-layout {
   grid-template-columns: minmax(0, 1fr) minmax(380px, 480px);
-  background: #eef3fb;
+  background: var(--color-bg, #faf9f6);
 }
 
 .auth-intro {
   padding: clamp(40px, 7vw, 96px);
-  background: linear-gradient(145deg, #173b78 0%, #2563eb 58%, #4f8df7 100%);
+  background: #121212;
 }
 
 .auth-intro h1,
@@ -1562,7 +1562,7 @@ p {
 }
 
 .auth-intro h1 em {
-  color: #bfdbfe;
+  color: #a1a1aa;
 }
 
 .auth-intro .intro-copy {
@@ -1836,15 +1836,15 @@ body {
 }
 
 .auth-layout {
-  background: #eef3fb;
+  background: var(--color-bg, #faf9f6);
 }
 
 .auth-intro {
-  background: linear-gradient(145deg, #173b78 0%, #2563eb 58%, #4f8df7 100%);
+  background: #121212;
 }
 
 .auth-intro h1 em {
-  color: #bfdbfe;
+  color: #a1a1aa;
 }
 
 .auth-panel,
@@ -1965,7 +1965,7 @@ body {
 .auth-landing {
   min-height: 100svh;
   grid-template-columns: minmax(0, 1.12fr) minmax(380px, .88fr);
-  background: #eef3fb;
+  background: var(--color-bg, #faf9f6);
 }
 
 .auth-landing .auth-intro {
@@ -1974,7 +1974,7 @@ body {
   justify-content: space-between;
   min-height: 100svh;
   padding: clamp(32px, 5vw, 72px);
-  background: linear-gradient(145deg, #173b78 0%, #2563eb 58%, #4f8df7 100%);
+  background: #121212;
 }
 
 .auth-brand-row {

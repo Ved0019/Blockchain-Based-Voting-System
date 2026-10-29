@@ -374,7 +374,7 @@ const CARD_NODES = [
     render: () => (
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", padding: "12px 14px" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <span style={{ fontSize: "10px", fontWeight: "700", color: "#2563eb", background: "#dbeafe", padding: "2px 8px", borderRadius: "9999px" }}>⟳ IN PROGRESS</span>
+          <span style={{ fontSize: "10px", fontWeight: "700", color: "#121212", background: "#f0eee8", padding: "2px 8px", borderRadius: "9999px" }}>⟳ IN PROGRESS</span>
           <div className="americana-symbol" style={{ width: "18px", height: "18px" }} />
         </div>
         <div>
@@ -542,11 +542,11 @@ const CARD_NODES = [
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <span className="icons-header">INFRASTRUCTURE EXPANSION</span>
-          <span style={{ fontSize: "10px", fontWeight: "700", color: "#2563eb" }}>→ PROPOSED</span>
+          <span style={{ fontSize: "10px", fontWeight: "700", color: "#3d6b5d" }}>→ PROPOSED</span>
         </div>
         <div>
-          <div style={{ fontSize: "15px", fontWeight: "900", color: "#1e3a8a" }}>Hostel B, C, D Wi-Fi 6</div>
-          <div style={{ fontSize: "11px", color: "#2563eb" }}>Zero Dead Zones · 80 Mbps</div>
+          <div style={{ fontSize: "15px", fontWeight: "900", color: "#121212" }}>Hostel B, C, D Wi-Fi 6</div>
+          <div style={{ fontSize: "11px", color: "#666666" }}>Zero Dead Zones · 80 Mbps</div>
         </div>
       </div>
     )
@@ -1097,10 +1097,10 @@ export function InteractiveTreeCatalog({ onBackToHome, onOpenBallot }) {
                 </span>
               </div>
 
-              <h2 style={{ fontSize: "22px", fontWeight: "800", letterSpacing: "-0.02em", color: "#0f1d3a", margin: "0 0 4px" }}>
+              <h2 style={{ fontSize: "22px", fontWeight: "800", letterSpacing: "-0.02em", color: "#121212", margin: "0 0 4px" }}>
                 {selectedCard.title}
               </h2>
-              <div style={{ fontSize: "13px", fontWeight: "600", color: "#2563eb", marginBottom: "16px" }}>
+              <div style={{ fontSize: "13px", fontWeight: "600", color: "#3d6b5d", marginBottom: "16px" }}>
                 {selectedCard.candidateName} {selectedCard.party && `· ${selectedCard.party}`}
               </div>
 

@@ -81,13 +81,13 @@ export function Login({ onLogin }) {
             padding: "7px 14px",
             fontSize: "12px",
             fontWeight: "600",
-            color: "#173b78",
+            color: "#121212",
             cursor: "pointer",
             transition: "all 0.18s ease",
             display: "inline-flex",
             alignItems: "center",
             gap: "6px",
-            boxShadow: "0 2px 8px rgba(23, 59, 120, 0.08)"
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)"
           }}
           title="Explore the 3D Hardware Reticle and Interactive Node Graph"
         >
@@ -129,15 +129,15 @@ export function Login({ onLogin }) {
             style={{
               flex: 1,
               padding: "8px 10px",
-              background: role === "voter" ? "#eff6ff" : "#f8fafc",
-              border: `1.5px solid ${role === "voter" ? "#2563eb" : "#e2e8f0"}`,
+              background: role === "voter" ? "#f2f0e9" : "#faf9f5",
+              border: `1.5px solid ${role === "voter" ? "#121212" : "#eae8e1"}`,
               borderRadius: "8px",
               cursor: "pointer",
               textAlign: "left"
             }}
           >
-            <div style={{ fontSize: "11px", fontWeight: "700", color: "#1e3a5f" }}>Voter Demo</div>
-            <div style={{ fontSize: "10px", color: "#64748b", fontFamily: "var(--font-mono)" }}>VOTER001</div>
+            <div style={{ fontSize: "11px", fontWeight: "700", color: "#121212" }}>Voter Demo</div>
+            <div style={{ fontSize: "10px", color: "#666666", fontFamily: "var(--font-mono)" }}>VOTER001</div>
           </button>
           <button
             type="button"
@@ -145,15 +145,15 @@ export function Login({ onLogin }) {
             style={{
               flex: 1,
               padding: "8px 10px",
-              background: role === "admin" ? "#eff6ff" : "#f8fafc",
-              border: `1.5px solid ${role === "admin" ? "#2563eb" : "#e2e8f0"}`,
+              background: role === "admin" ? "#f2f0e9" : "#faf9f5",
+              border: `1.5px solid ${role === "admin" ? "#121212" : "#eae8e1"}`,
               borderRadius: "8px",
               cursor: "pointer",
               textAlign: "left"
             }}
           >
-            <div style={{ fontSize: "11px", fontWeight: "700", color: "#1e3a5f" }}>Admin Demo</div>
-            <div style={{ fontSize: "10px", color: "#64748b", fontFamily: "var(--font-mono)" }}>ADMIN001</div>
+            <div style={{ fontSize: "11px", fontWeight: "700", color: "#121212" }}>Admin Demo</div>
+            <div style={{ fontSize: "10px", color: "#666666", fontFamily: "var(--font-mono)" }}>ADMIN001</div>
           </button>
         </div>
 
